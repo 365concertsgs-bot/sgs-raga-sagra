@@ -556,7 +556,10 @@ export default function App() {
 
 
       {/* ✨ TITLE */}
-      <div style={styles.title}>Ragini Ragini Atlas</div>
+      <div style={styles.title}>
+        SGS Raga Sagara Universe
+        <span style={{fontSize: '12px', marginLeft: '12px', background: '#ffd700', color: '#000', padding: '2px 8px', borderRadius: '3px', fontWeight: 'bold'}}>v1.1.0</span>
+      </div>
 
       {/* 🪔 SWAMIJI LOGO - TOP LEFT */}
       <img
