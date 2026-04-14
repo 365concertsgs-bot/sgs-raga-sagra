@@ -10,7 +10,7 @@ const styles = {
     inset: 0,
     background: "rgba(0, 0, 0, 0.95)",
     zIndex: 50,
-    overflowY: "auto",
+    overflowY: "hidden",
     overflowX: "hidden",
     padding: "clamp(20px, 5vw, 40px)",
     display: "flex",
@@ -21,8 +21,8 @@ const styles = {
   modalContent: {
     width: "clamp(320px, 90vw, 900px)",
     color: "#fff",
-    maxHeight: "100%",
-    overflowY: "auto",
+    maxHeight: "100vh",
+    overflowY: "hidden",
     WebkitOverflowScrolling: "touch",
   },
   modalHeader: {
@@ -162,7 +162,7 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
 
         {/* Description with improved scrolling */}
         {event.description && (
-          <div style={{ marginBottom: "20px", maxHeight: "350px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "10px", background: "rgba(255, 215, 0, 0.05)", borderRadius: "6px", border: "1px solid rgba(255, 215, 0, 0.2)" }}>
+          <div style={{ marginBottom: "20px", maxHeight: "200px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "10px", background: "rgba(255, 215, 0, 0.05)", borderRadius: "6px", border: "1px solid rgba(255, 215, 0, 0.2)" }}>
             <strong style={{ color: "#ffd700", display: "block", marginBottom: "10px" }}>📝 Description</strong>
             <p style={{ margin: "0", lineHeight: "1.6", color: "#fff" }}>{event.description}</p>
           </div>
