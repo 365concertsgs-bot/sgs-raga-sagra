@@ -14,6 +14,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  /* Responsive base font size */
+  font-size: clamp(10px, 2vw, 16px);
 }
 
 html, body {
@@ -41,10 +43,10 @@ a:hover {
 }
 
 button {
-  border-radius: 6px;
+  border-radius: clamp(3px, 0.8vw, 6px);
   border: 1px solid transparent;
-  padding: 0.5em 1em;
-  font-size: 1em;
+  padding: clamp(8px, 1.2vw, 12px) clamp(10px, 1.8vw, 14px);
+  font-size: clamp(11px, 1.3vw, 14px);
   font-weight: 500;
   font-family: inherit;
   background-color: transparent;
@@ -70,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Remove default input styling */
 input, select, textarea {
   font-family: inherit;
-  font-size: 1em;
+  font-size: clamp(11px, 1.3vw, 14px);
 }
 
 /* Prevent zoom on iOS input focus */
@@ -79,4 +81,70 @@ input[type="number"],
 textarea,
 select {
   font-size: 16px;
+}
+
+/* Responsive design for all screen sizes */
+@media (max-width: 2560px) {
+  :root { font-size: 14px; }
+}
+
+/* Large touchscreen 65" and above */
+@media (min-width: 2560px) {
+  :root { font-size: 18px; }
+}
+
+/* Tablet and iPad landscape */
+@media (max-width: 1440px) and (min-height: 800px) {
+  :root { font-size: 13px; }
+}
+
+/* Tablet and iPad */
+@media (max-width: 1024px) {
+  :root { font-size: 12px; }
+}
+
+/* Large mobile devices (phablet) */
+@media (max-width: 768px) {
+  :root { font-size: 11px; }
+}
+
+/* Mobile devices */
+@media (max-width: 480px) {
+  :root { font-size: 10px; }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  button, input[type="range"], select, input[type="text"], input[type="number"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  button { 
+    padding: max(10px, 5vw) max(12px, 7vw) !important; 
+  }
+}
+
+/* Landscape mode optimizations */
+@media (max-height: 500px) {
+  body { font-size: 11px; }
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffd700;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffed4e;
 }

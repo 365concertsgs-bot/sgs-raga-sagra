@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase, supabaseError } from "./supabaseClient";
 
@@ -14,12 +14,13 @@ link.rel = "stylesheet";
 document.head.appendChild(link);
 
 /* 🎵 AUDIO/VIDEO PLAYER COMPONENT - SUPPORTS MULTIPLE PLATFORMS */
-const AudioPlayer = ({ audioUrl, autoPlay = false }) => {
+const AudioPlayer = memo(({ audioUrl, autoPlay = false }) => {
   const [error, setError] = useState(null);
   const [loaded, setLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(autoPlay);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const audioRef = useRef(null);
+  const playAttempted = useRef(false);
 
   // Check if the URL is valid
   const isValidUrl = (url) => {
@@ -1634,4 +1635,9 @@ function getContinentCenter(continent) {
       return { lat: 20, lng: 0 };
   }
 }
+
+
+
+
+
 
