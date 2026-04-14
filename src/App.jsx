@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import Globe from "react-globe.gl";
+import React, { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase, supabaseError } from "./supabaseClient";
+
+// Lazy load the Globe to reduce initial bundle size
+const Globe = lazy(() => import("react-globe.gl").then(m => ({ default: m.default })));
 
 
 /* 🔤 FONT */
