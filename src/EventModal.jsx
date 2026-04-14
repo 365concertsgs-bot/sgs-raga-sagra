@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState, Suspense, lazy } from "react";
+import React, { useEffect, useRef, useState, Suspense, lazy, memo } from "react";
 import { motion } from "framer-motion";
 
 // Lazy load AudioPlayer to split vendor code
 const AudioPlayer = lazy(() => Promise.resolve({
-  default: ({ audioUrl, autoPlay = false }) => {
+  default: ({ audioUrl, autoPlay = false, muted = false }) => {
     const [error, setError] = useState(null);
     const [loaded, setLoaded] = useState(false);
 
@@ -125,13 +125,19 @@ const styles = {
     background: "rgba(0, 0, 0, 0.95)",
     zIndex: 50,
     overflowY: "auto",
+    overflowX: "hidden",
     padding: "clamp(20px, 5vw, 40px)",
     display: "flex",
     justifyContent: "center",
+    WebkitOverflowScrolling: "touch",
+    scrollBehavior: "smooth",
   },
   modalContent: {
     width: "clamp(320px, 90vw, 900px)",
     color: "#fff",
+    maxHeight: "100%",
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
   },
   modalHeader: {
     flexShrink: 0,
@@ -182,7 +188,7 @@ const styles = {
   },
 };
 
-export default function EventModal({ event, onClose, carouselRef, currentSlideIndex, setCurrentSlideIndex }) {
+export default memo(function EventModal({ event, onClose, carouselRef, currentSlideIndex, setCurrentSlideIndex }) {
   if (!event) return null;
 
   return (
@@ -260,11 +266,11 @@ export default function EventModal({ event, onClose, carouselRef, currentSlideIn
           </>
         )}
 
-        {/* Description */}
+        {/* Description with improved scrolling */}
         {event.description && (
-          <div style={{ marginBottom: "20px", maxHeight: "200px", overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
-            <strong style={{ color: "#ffd700" }}>📝 Description</strong>
-            <p style={{ margin: "10px 0" }}>{event.description}</p>
+          <div style={{ marginBottom: "20px", maxHeight: "350px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "10px", background: "rgba(255, 215, 0, 0.05)", borderRadius: "6px", border: "1px solid rgba(255, 215, 0, 0.2)" }}>
+            <strong style={{ color: "#ffd700", display: "block", marginBottom: "10px" }}>📝 Description</strong>
+            <p style={{ margin: "0", lineHeight: "1.6", color: "#fff" }}>{event.description}</p>
           </div>
         )}
 
@@ -272,11 +278,11 @@ export default function EventModal({ event, onClose, carouselRef, currentSlideIn
         {event.audioUrl && (
           <div style={{ marginBottom: "20px" }}>
             <Suspense fallback={<p>Loading media...</p>}>
-              <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} />
+              <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
             </Suspense>
           </div>
         )}
       </div>
     </motion.div>
   );
-}
+});

@@ -1,0 +1,37 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#1a1a2e" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  
+  <!-- Head -->
+  <circle cx="100" cy="70" r="25" fill="#c9998f"/>
+  
+  <!-- Hair/Turban -->
+  <ellipse cx="100" cy="55" rx="30" ry="15" fill="#ff6600"/>
+  <circle cx="85" cy="50" r="8" fill="#ff6600"/>
+  <circle cx="115" cy="50" r="8" fill="#ff6600"/>
+  
+  <!-- Face features -->
+  <circle cx="95" cy="68" r="3" fill="#000"/>
+  <circle cx="105" cy="68" r="3" fill="#000"/>
+  <path d="M 100 72 Q 98 75 100 76 Q 102 75 100 72" fill="#c9998f"/>
+  
+  <!-- Body -->
+  <ellipse cx="100" cy="110" rx="22" ry="30" fill="#ff6600"/>
+  
+  <!-- Arms -->
+  <ellipse cx="75" cy="105" rx="12" ry="28" fill="#c9998f" transform="rotate(-20 75 105)"/>
+  <ellipse cx="125" cy="105" rx="12" ry="28" fill="#c9998f" transform="rotate(20 125 105)"/>
+  
+  <!-- Text -->
+  <text x="100" y="160" font-size="16" fill="#ffd700" text-anchor="middle" font-weight="bold">Atlas</text>
+</svg>

@@ -66,7 +66,7 @@ export default function App() {
       .select("*");
 
     if (eventsError) {
-      console.error("Error loading events_365:", eventsError.message);
+      // console.error("Error loading events_365:", eventsError.message);
       setAppError(`Supabase error: ${eventsError.message}`);
       setEvents([]);
       setLoading(false);
@@ -78,7 +78,7 @@ export default function App() {
       .select("*");
 
     if (mediaError) {
-      console.error("Error loading events365_media:", mediaError.message);
+      // console.error("Error loading events365_media:", mediaError.message);
       setAppError(`Supabase error: ${mediaError.message}`);
       setEvents([]);
       setLoading(false);
@@ -183,8 +183,8 @@ export default function App() {
     [events, selectedYear, selectedEventNumber, selectedContinent, searchCountry, searchEventName]
   );
 
-  // Handle country search with autocomplete
-  const handleCountryChange = (value) => {
+  // Handle country search with autocomplete (optimized with useCallback)
+  const handleCountryChange = useCallback((value) => {
     setSearchCountry(value);
     if (value.length > 0) {
       const matches = allCountries.filter((country) =>
@@ -196,7 +196,7 @@ export default function App() {
       setFilteredCountries([]);
       setShowCountrySuggestions(false);
     }
-  };
+  }, [allCountries]);
 
   const selectCountry = (country) => {
     setSearchCountry(country);
@@ -254,7 +254,7 @@ export default function App() {
     }
   };
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSelectedYear("");
     setSelectedEventNumber("");
     setSearchCountry("");
@@ -265,7 +265,7 @@ export default function App() {
     setFilteredEventNames([]);
     setShowEventNameSuggestions(false);
     setSelectedEvent(null);
-  };
+  }, []);
 
   const countryLabels = [
     { lat: 20.5937, lng: 78.9629, text: "India" },
@@ -558,11 +558,18 @@ export default function App() {
       {/* ✨ TITLE */}
       <div style={styles.title}>Ragini Ragini Atlas</div>
 
-      {/* 🪔 SWAMIJI LOGO */}
+      {/* 🪔 SWAMIJI LOGO - TOP LEFT */}
       <img
-        src="/swamiji-keyboard.png"
-        alt="Swamiji"
-        style={styles.logo}
+        src="/swamiji-left.svg"
+        alt="Swamiji Left"
+        style={styles.logoTopLeft}
+      />
+
+      {/* 🪔 SWAMIJI ICON - TOP RIGHT */}
+      <img
+        src="/swamiji-right.svg"
+        alt="Swamiji Right"
+        style={styles.logoTopRight}
       />
 
       {/* 🌍 GLOBE */}
@@ -829,28 +836,43 @@ const styles = {
   },
 
 
-  logo: {
+  logoTopLeft: {
     position: "absolute",
-    top: 30,
-    left: 30,
-    height: "clamp(60px, 12vw, 120px)",
+    top: "clamp(10px, 2vh, 30px)",
+    left: "clamp(10px, 2vw, 30px)",
+    height: "clamp(50px, 10vh, 100px)",
+    width: "auto",
     zIndex: 20,
     background: "transparent",
-    mixBlendMode: "screen",
+    filter: "drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
+    objectFit: "contain",
+  },
+
+  logoTopRight: {
+    position: "absolute",
+    top: "clamp(10px, 2vh, 30px)",
+    right: "clamp(10px, 2vw, 30px)",
+    height: "clamp(50px, 10vh, 100px)",
+    width: "auto",
+    zIndex: 20,
+    background: "transparent",
+    filter: "drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
+    objectFit: "contain",
   },
 
 
   title: {
     position: "absolute",
-    top: 20,
+    top: "clamp(15px, 3vh, 25px)",
     left: "50%",
     transform: "translateX(-50%)",
     color: "#ffd700",
     fontSize: "clamp(18px, 4vw, 28px)",
     fontFamily: "'Philosopher', serif",
     fontWeight: "bold",
-    zIndex: 25,
+    zIndex: 15,
     whiteSpace: "nowrap",
+    textShadow: "0 0 10px rgba(255, 215, 0, 0.3)",
   },
 
 
