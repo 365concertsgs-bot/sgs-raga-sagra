@@ -3,201 +3,127 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase, supabaseError } from "./supabaseClient";
 
 // Lazy load the Globe to reduce initial bundle size
-const Globe = lazy(() => import("react-globe.gl").then(m => ({ default: m.default })));
+const Globe = lazy(() => import("react-globe.gl"));
 
+// Lazy load heavy components
+const AudioPlayer = lazy(() => Promise.resolve({
+  default: memo(({ audioUrl, autoPlay = false }) => {
+    const [error, setError] = useState(null);
+    const [loaded, setLoaded] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [volume, setVolume] = useState(1);
+    const audioRef = useRef(null);
 
-/* 🔤 FONT */
-const link = document.createElement("link");
-link.href =
-  "https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&display=swap";
-link.rel = "stylesheet";
-document.head.appendChild(link);
-
-/* 🎵 AUDIO/VIDEO PLAYER COMPONENT - SUPPORTS MULTIPLE PLATFORMS */
-const AudioPlayer = memo(({ audioUrl, autoPlay = false }) => {
-  const [error, setError] = useState(null);
-  const [loaded, setLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(1);
-  const audioRef = useRef(null);
-  const playAttempted = useRef(false);
-
-  // Check if the URL is valid
-  const isValidUrl = (url) => {
-    try {
-      new URL(url);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
-
-  // Detect platform type from URL
-  const getPlatformType = (url) => {
-    if (url.includes('vimeo.com') || url.includes('vimeopro.com')) return 'vimeo';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
-    if (url.includes('spotify.com')) return 'spotify';
-    if (url.includes('facebook.com') || url.includes('fb.watch')) return 'facebook';
-    if (url.includes('soundcloud.com')) return 'soundcloud';
-    if (url.match(/\.(mp3|wav|ogg|m4a|aac)$/i)) return 'audio';
-    return 'unknown';
-  };
-
-  // Extract video ID from YouTube URL
-  const getYoutubeVideoId = (url) => {
-    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-    return match ? match[1] : null;
-  };
-
-  // Extract video ID from Vimeo or Vimeo Pro URL
-  const getVimeoVideoId = (url) => {
-    const match = url.match(/(?:vimeo\.com\/(?:video\/)?|vimeopro\.com\/.+\/video\/)(\d+)/);
-    return match ? match[1] : null;
-  };
-
-  // Convert Spotify URL to embed format
-  const getSpotifyEmbedUrl = (url) => {
-    // Replace open.spotify.com with open.spotify.com/embed
-    return url.replace('open.spotify.com', 'open.spotify.com/embed');
-  };
-
-  // Auto-play when component mounts
-  useEffect(() => {
-    if (audioRef.current && autoPlay && loaded) {
-      // Set volume to 1 (unmuted) before attempting autoplay
-      audioRef.current.volume = 1;
-      audioRef.current.muted = false;
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.log("Auto-play prevented or failed:", err);
-          // Try muted first if unmuted fails
-          audioRef.current.muted = true;
-          audioRef.current.play().catch(() => {
-            console.log("Even muted playback failed");
-          });
-        });
+    const isValidUrl = (url) => {
+      try {
+        new URL(url);
+        return true;
+      } catch (e) {
+        return false;
       }
-    }
-  }, [autoPlay, loaded, audioUrl]);
+    };
 
-  const handleError = () => {
-    setError("Media failed to load. Please check the link.");
-  };
+    const getPlatformType = (url) => {
+      if (url.includes('vimeo.com') || url.includes('vimeopro.com')) return 'vimeo';
+      if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
+      if (url.includes('spotify.com')) return 'spotify';
+      if (url.includes('soundcloud.com')) return 'soundcloud';
+      if (url.match(/\.(mp3|wav|ogg|m4a|aac)$/i)) return 'audio';
+      return 'unknown';
+    };
 
-  const handleLoadedData = () => {
-    setLoaded(true);
-    setError(null);
-  };
+    const getYoutubeVideoId = (url) => {
+      const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+      return match ? match[1] : null;
+    };
 
-  const togglePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
+    const getVimeoVideoId = (url) => {
+      const match = url.match(/(?:vimeo\.com\/(?:video\/)?|vimeopro\.com\/.+\/video\/)(\d+)/);
+      return match ? match[1] : null;
+    };
+
+    useEffect(() => {
+      if (audioRef.current && autoPlay && loaded) {
+        audioRef.current.volume = 1;
         audioRef.current.muted = false;
-        audioRef.current.volume = volume;
-        audioRef.current.play().catch(() => {
-          // Fallback: try muted
-          audioRef.current.muted = true;
-          audioRef.current.play();
-        });
-        setIsPlaying(true);
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            audioRef.current.muted = true;
+            audioRef.current.play().catch(() => null);
+          });
+        }
       }
+    }, [autoPlay, loaded, audioUrl]);
+
+    if (!audioUrl || audioUrl.trim() === "") {
+      return <p style={{ color: '#ff6b6b' }}>No media available</p>;
     }
-  };
 
-  const handleVolumeChange = (e) => {
-    const newVolume = e.target.value;
-    setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
+    if (!isValidUrl(audioUrl)) {
+      return <p style={{ color: '#ff6b6b' }}>Invalid media link</p>;
     }
-  };
 
-  if (!audioUrl || audioUrl.trim() === "") {
-    return <p style={{ color: '#ff6b6b' }}>No media available</p>;
-  }
+    const platform = getPlatformType(audioUrl);
 
-  if (!isValidUrl(audioUrl)) {
-    return <p style={{ color: '#ff6b6b' }}>Invalid media link</p>;
-  }
+    if (platform === 'vimeo') {
+      const vimeoId = getVimeoVideoId(audioUrl);
+      if (!vimeoId) return <p style={{ color: '#ff6b6b' }}>Invalid Vimeo link</p>;
+      return (
+        <div style={{ width: "100%", marginTop: "10px" }}>
+          <iframe
+            loading="lazy"
+            src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlay ? 1 : 0}&playsinline=1`}
+            style={{ width: "100%", height: "400px", border: "none", borderRadius: "6px" }}
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      );
+    }
 
-  const platform = getPlatformType(audioUrl);
+    if (platform === 'youtube') {
+      const youtubeId = getYoutubeVideoId(audioUrl);
+      if (!youtubeId) return <p style={{ color: '#ff6b6b' }}>Invalid YouTube link</p>;
+      return (
+        <div style={{ width: "100%", marginTop: "10px" }}>
+          <iframe
+            loading="lazy"
+            width="100%"
+            height="400"
+            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${autoPlay ? 1 : 0}`}
+            style={{ borderRadius: "6px", border: "none" }}
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+          ></iframe>
+        </div>
+      );
+    }
 
-  // Handle Vimeo
-  if (platform === 'vimeo') {
-    const vimeoId = getVimeoVideoId(audioUrl);
-    if (!vimeoId) return <p style={{ color: '#ff6b6b' }}>Invalid Vimeo link</p>;
-    
-    return (
-      <div style={{ width: "100%", marginTop: "10px" }}>
-        <iframe
-          loading="lazy"
-          src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlay ? 1 : 0}&playsinline=1`}
-          style={{
-            width: "100%",
-            height: "400px",
-            border: "none",
-            borderRadius: "6px",
-          }}
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
-          title="Vimeo Video"
-        ></iframe>
-      </div>
-    );
-  }
+    if (platform === 'spotify') {
+      return (
+        <div style={{ width: "100%", marginTop: "10px" }}>
+          <iframe
+            loading="lazy"
+            title="Spotify"
+            src={audioUrl.replace('open.spotify.com', 'open.spotify.com/embed')}
+            width="100%"
+            height="352"
+            frameBorder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen"
+            style={{ borderRadius: "6px" }}
+          ></iframe>
+        </div>
+      );
+    }
 
-  // Handle YouTube
-  if (platform === 'youtube') {
-    const youtubeId = getYoutubeVideoId(audioUrl);
-    if (!youtubeId) return <p style={{ color: '#ff6b6b' }}>Invalid YouTube link</p>;
-    
-    return (
-      <div style={{ width: "100%", marginTop: "10px" }}>
-        <iframe
-          loading="lazy"
-          width="100%"
-          height="400"
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${autoPlay ? 1 : 0}&playsinline=1`}
-          title="YouTube Video"
-          style={{ borderRadius: "6px", border: "none" }}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
-    );
-  }
-
-  // Handle Spotify
-  if (platform === 'spotify') {
-    const spotifyEmbedUrl = getSpotifyEmbedUrl(audioUrl);
-    
-    return (
-      <div style={{ width: "100%", marginTop: "10px" }}>
-        <iframe
-          loading="lazy"
-          title="Spotify"
-          src={spotifyEmbedUrl}
-          width="100%"
-          height="352"
-          frameBorder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          style={{ borderRadius: "6px" }}
-        ></iframe>
-      </div>
-    );
-  }
-
-  // Handle SoundCloud
-  if (platform === 'soundcloud') {
-    return (
-      <div style={{ width: "100%", marginTop: "10px" }}>
-        <iframe
-          title="SoundCloud"
-          width="100%"
+    if (platform === 'soundcloud') {
+      return (
+        <div style={{ width: "100%", marginTop: "10px" }}>
+          <iframe
+            loading="lazy"
+            title="SoundCloud"
+            width="100%"
           height="166"
           scrolling="no"
           frameBorder="no"
