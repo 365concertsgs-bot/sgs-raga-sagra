@@ -1,15 +1,9 @@
 {
-  "buildCommand": "npm install && npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "react",
-  "env": [
-    {
-      "key": "VITE_SUPABASE_URL",
-      "value": "YOUR_SUPABASE_URL"
-    },
-    {
-      "key": "VITE_SUPABASE_KEY",
-      "value": "YOUR_SUPABASE_KEY"
-    }
-  ]
+  "framework": "vite",
+  "env": {
+    "VITE_SUPABASE_URL": "@supabase_url",
+    "VITE_SUPABASE_ANON_KEY": "@supabase_key"
+  }
 }
