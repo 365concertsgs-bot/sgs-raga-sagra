@@ -123,7 +123,15 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
             <p style={{ margin: "5px 0 0 0" }}>{event.city || "Unknown"}</p>
           </div>
           <div style={styles.detailItem}>
-            <strong style={{ color: "#ffd700" }}>🗓️ Year</strong>
+            <strong style={{ color: "#ffd700" }}>� Date</strong>
+            <p style={{ margin: "5px 0 0 0" }}>
+              {event.date 
+                ? new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                : "Unknown"}
+            </p>
+          </div>
+          <div style={styles.detailItem}>
+            <strong style={{ color: "#ffd700" }}>�🗓️ Year</strong>
             <p style={{ margin: "5px 0 0 0" }}>{event.year}</p>
           </div>
           <div style={styles.detailItem}>

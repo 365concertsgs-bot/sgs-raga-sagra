@@ -98,8 +98,14 @@ export default function App() {
           "venue",
         ]) || null,
         continent: row.continent,
-        lat: row.latitude ? parseFloat(row.latitude) : null,
-        lng: row.longitude ? parseFloat(row.longitude) : null,
+        lat: (() => {
+          const val = parseFloat(row.latitude);
+          return !isNaN(val) ? val : null;
+        })(),
+        lng: (() => {
+          const val = parseFloat(row.longitude);
+          return !isNaN(val) ? val : null;
+        })(),
         date: row.date,
         year: yearValue,
         location: row.city || row.country,
@@ -160,6 +166,22 @@ export default function App() {
   const filteredData = useMemo(
     () =>
       events.filter((event) => {
+        // Validate coordinates: must be valid numbers and within valid ranges
+        if (
+          event.lat === null || 
+          event.lng === null || 
+          event.lat === undefined || 
+          event.lng === undefined ||
+          isNaN(event.lat) ||
+          isNaN(event.lng) ||
+          event.lat < -90 || 
+          event.lat > 90 ||
+          event.lng < -180 || 
+          event.lng > 180
+        ) {
+          return false;
+        }
+        
         if (selectedYear && event.year !== Number(selectedYear)) {
           return false;
         }
@@ -556,7 +578,7 @@ export default function App() {
 
 
       {/* ✨ TITLE */}
-      <div style={styles.title}>SGS Raga Sagara Universe v1.1.0</div>
+      <div style={styles.title}>Ragini Ragini Atlas</div>
 
       {/* 🪔 SWAMIJI LOGO - TOP LEFT */}
       <img
@@ -1312,6 +1334,7 @@ function getContinentCenter(continent) {
       return { lat: 20, lng: 0 };
   }
 }
+
 
 
 
