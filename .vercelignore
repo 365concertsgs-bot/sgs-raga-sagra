@@ -1,0 +1,2 @@
+# This file is intentionally simple to force clean rebuilds
+# Vercel will rebuild when this file changes
