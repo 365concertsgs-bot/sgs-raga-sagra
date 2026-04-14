@@ -866,7 +866,7 @@ const styles = {
     top: "clamp(15px, 3vh, 25px)",
     left: "50%",
     transform: "translateX(-50%)",
-    color: "#ffd700",
+    color: "#00ff00",
     fontSize: "clamp(18px, 4vw, 28px)",
     fontFamily: "'Philosopher', serif",
     fontWeight: "bold",
