@@ -4,14 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase, supabaseError } from "./supabaseClient";
 
 
-/* ðŸ”¤ FONT */
+/* 🔤 FONT */
 const link = document.createElement("link");
 link.href =
   "https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&display=swap";
 link.rel = "stylesheet";
 document.head.appendChild(link);
 
-/* ðŸŽµ AUDIO/VIDEO PLAYER COMPONENT - SUPPORTS MULTIPLE PLATFORMS */
+/* 🎵 AUDIO/VIDEO PLAYER COMPONENT - SUPPORTS MULTIPLE PLATFORMS */
 const AudioPlayer = ({ audioUrl, autoPlay = false }) => {
   const [error, setError] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -223,10 +223,10 @@ const AudioPlayer = ({ audioUrl, autoPlay = false }) => {
             fontWeight: "bold",
           }}
         >
-          {isPlaying ? "â¸ Pause" : "â–¶ Play"}
+          {isPlaying ? "⏸ Pause" : "▶ Play"}
         </button>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
-          <span style={{ fontSize: "12px", color: "#ffd700" }}>ðŸ”Š</span>
+          <span style={{ fontSize: "12px", color: "#ffd700" }}>🔊</span>
           <input
             type="range"
             min="0"
@@ -263,7 +263,7 @@ const AudioPlayer = ({ audioUrl, autoPlay = false }) => {
   );
 };
 
-/* ðŸŒ CONTINENT LIST */
+/* 🌍 CONTINENT LIST */
 const continents = [
   "Asia",
   "Europe",
@@ -536,7 +536,7 @@ export default function App() {
   ];
 
 
-  /* ðŸŒ AUTO ROTATE */
+  /* 🌍 AUTO ROTATE */
   useEffect(() => {
     let frame;
 
@@ -562,7 +562,7 @@ export default function App() {
   }, [isUserActive]);
 
 
-  /* ðŸ‘† USER ACTIVITY */
+  /* 👆 USER ACTIVITY */
   const activityTimer = useRef(null);
   const isUserActiveRef = useRef(false);
 
@@ -679,7 +679,7 @@ export default function App() {
           color: "#fff",
         }}
       >
-        Loading eventsâ€¦
+        Loading events…
       </div>
     );
   }
@@ -804,23 +804,23 @@ export default function App() {
         }
       `}</style>
 
-      {/* ðŸŒŒ STARS */}
+      {/* 🌌 STARS */}
       <div style={styles.stars}></div>
       <div style={styles.stars2}></div>
       <div style={styles.stars3}></div>
 
 
-      {/* âœ¨ TITLE */}
+      {/* ✨ TITLE */}
       <div style={styles.title}>Ragini Ragini Atlas</div>
 
-      {/* ðŸª” SWAMIJI LOGO */}
+      {/* 🪔 SWAMIJI LOGO */}
       <img
         src="/swamiji-keyboard.png"
         alt="Swamiji"
         style={styles.logo}
       />
 
-      {/* ðŸŒ GLOBE */}
+      {/* 🌍 GLOBE */}
       <Globe
         ref={globeRef}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
@@ -835,7 +835,7 @@ export default function App() {
         pointLabel={(point) =>
           `<div style="background: rgba(0,0,0,0.95); padding: 12px 16px; border-radius: 10px; color: #ffd700; font-size: 14px; font-family: Philosopher, serif; white-space: nowrap; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);">
             <div style="font-weight: bold; margin-bottom: 4px;">${point.eventName}</div>
-            <div style="font-size: 12px; color: #fff;">ðŸ“ ${point.place || point.location || 'Venue'} [${point.city || 'City'}]</div>
+            <div style="font-size: 12px; color: #fff;">📍 ${point.place || point.location || 'Venue'} [${point.city || 'City'}]</div>
           </div>`
         }
         onPointClick={(point) => {
@@ -852,7 +852,7 @@ export default function App() {
         labelAltitude={0.02}
       />
 
-      {/* ðŸ”½ FILTERS */}
+      {/* 🔽 FILTERS */}
       <div style={styles.filterStack}>
         {/* Clear Filters Button */}
         <button onClick={(e) => {
@@ -994,9 +994,9 @@ export default function App() {
           </div>
         </div>
 
-        {/* ðŸŽµ Media Links Section */}
+        {/* 🎵 Media Links Section */}
         <div style={styles.mediaLinksSection}>
-          <div style={styles.mediaLinksLabel}>ðŸ“ Quick Access</div>
+          <div style={styles.mediaLinksLabel}>📁 Quick Access</div>
           <div style={styles.mediaLinksContainer}>
             <a
               href="https://www.dattapeetham.org"
@@ -1006,7 +1006,7 @@ export default function App() {
               onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
               onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
             >
-              ðŸ”— Dattapeetham
+              🔗 Dattapeetham
             </a>
             <a
               href="https://www.yogasangeeta.org"
@@ -1016,7 +1016,7 @@ export default function App() {
               onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
               onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
             >
-              ðŸŽ¶ YogaSangeeta
+              🎶 YogaSangeeta
             </a>
             <a
               href="https://www.sgsragasagara.com"
@@ -1026,13 +1026,13 @@ export default function App() {
               onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
               onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
             >
-              ðŸŒ Ragini Atlas
+              🌐 Ragini Atlas
             </a>
           </div>
         </div>
       </div>
 
-      {/* ðŸŒ CONTINENT FILTER - BOTTOM */}
+      {/* 🌍 CONTINENT FILTER - BOTTOM */}
       <div style={styles.continentFilter}>
         {continents.map((continent) => (
           <button
@@ -1053,7 +1053,7 @@ export default function App() {
       </div>
 
 
-      {/* ðŸ“¸ MODAL */}
+      {/* 📸 MODAL */}
       <AnimatePresence>
         {selectedEvent && (
           <motion.div
@@ -1073,7 +1073,7 @@ export default function App() {
                     margin: "5px 0 0 0",
                   }}
                 >
-                  ðŸ“… Date: {selectedEvent.date}
+                  📅 Date: {selectedEvent.date}
                 </p>
               </div>
               <button
@@ -1099,7 +1099,7 @@ export default function App() {
                   e.target.style.transform = "scale(1)";
                 }}
               >
-                âœ•
+                ✕
               </button>
             </div>
 
@@ -1159,7 +1159,7 @@ export default function App() {
 }
 
 
-/* ðŸŽ¨ STYLES */
+/* 🎨 STYLES */
 const styles = {
   container: {
     width: "100vw",
@@ -1613,7 +1613,7 @@ const styles = {
 };
 
 
-/* ðŸŒ CONTINENT CENTER */
+/* 🌍 CONTINENT CENTER */
 function getContinentCenter(continent) {
   switch (continent) {
     case "Asia":
