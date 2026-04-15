@@ -195,8 +195,7 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
                 const cleanedLine = line
                   .trim()
                   .replace(/^[-•*]\s*/, '')
-                  .replace(/[\u25A0-\u25FF\u2600-\u27BF\u2700-\u27BF\u2B00-\u2BFF]/g, '')
-                  .replace(/[◇◈◆♦✦✧◊◌◍◎●○◯◰◱◲◳◴◵◶◷◸◹◺◻◼◽◾◿]/g, '')
+                  .replace(/[^\w\s.,;:\-–—'""()\[\]&]/g, '')
                   .replace(/–|—/g, '-')
                   .replace(/['']/g, "'")
                   .replace(/[""]/g, '"')
