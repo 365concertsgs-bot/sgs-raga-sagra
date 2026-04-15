@@ -166,12 +166,6 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
             <strong style={{ color: "#ffd700" }}>#️⃣ Event Number</strong>
             <p style={{ margin: "5px 0 0 0" }}>{event.eventNumber}</p>
           </div>
-          {event.raga && (
-            <div style={styles.detailItem}>
-              <strong style={{ color: "#ffd700" }}>🎵 Raga</strong>
-              <p style={{ margin: "5px 0 0 0" }}>{event.raga}</p>
-            </div>
-          )}
         </div>
 
         {/* Image Gallery - Auto-Rotating Single Image */}
