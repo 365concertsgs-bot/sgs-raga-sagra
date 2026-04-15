@@ -786,7 +786,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <div style={styles.mediaLinksLabel}>📁 Quick Access</div>
           <div style={styles.mediaLinksContainer}>
             <a
-              href="https://www.sgsragasagara.com"
+              href="https://www.dattapeetham.org"
               target="_blank"
               rel="noreferrer"
               style={styles.mediaLink}
