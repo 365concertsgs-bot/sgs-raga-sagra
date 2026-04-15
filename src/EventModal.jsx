@@ -12,17 +12,20 @@ const styles = {
     zIndex: 50,
     overflowY: "auto",
     overflowX: "hidden",
-    padding: "clamp(20px, 5vw, 40px)",
+    padding: "0",
     display: "flex",
     justifyContent: "center",
     WebkitOverflowScrolling: "touch",
     scrollBehavior: "smooth",
   },
   modalContent: {
-    width: "clamp(320px, 90vw, 900px)",
+    width: "100%",
+    maxWidth: "1000px",
     color: "#fff",
     overflowY: "visible",
     WebkitOverflowScrolling: "touch",
+    padding: "20px",
+    margin: "0 auto",
   },
   modalHeader: {
     flexShrink: 0,
@@ -202,7 +205,7 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
 
         {/* Audio/Video Player */}
         {event.audioUrl && (
-          <div style={{ marginBottom: "0", marginTop: "8px", padding: "0", background: "transparent", borderRadius: "0", border: "none", overflow: "hidden" }}>
+          <div style={{ marginBottom: "0", marginTop: "8px", padding: "0", background: "transparent", borderRadius: "0", border: "none", overflow: "hidden", marginLeft: "-20px", marginRight: "-20px", width: "calc(100% + 40px)" }}>
             <Suspense fallback={<p>Loading media...</p>}>
               <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
             </Suspense>
