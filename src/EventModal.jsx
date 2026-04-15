@@ -46,28 +46,29 @@ const styles = {
   eventDetails: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: "20px",
-    marginBottom: "20px",
+    gap: "8px",
+    marginBottom: "8px",
     flexGrow: 1,
   },
   detailItem: {
     background: "rgba(255, 215, 0, 0.1)",
-    padding: "12px",
+    padding: "6px 8px",
     borderRadius: "6px",
     border: "1px solid rgba(255, 215, 0, 0.2)",
+    fontSize: "12px",
   },
   imageGallery: {
-    marginBottom: "20px",
+    marginBottom: "8px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "15px",
+    gap: "8px",
   },
   mainImage: {
     width: "100%",
     maxWidth: "600px",
     height: "auto",
-    maxHeight: "500px",
+    maxHeight: "350px",
     objectFit: "contain",
     borderRadius: "8px",
     border: "2px solid rgba(255, 215, 0, 0.3)",
@@ -112,9 +113,9 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
       style={styles.modal}
       onClick={(e) => e.stopPropagation()}
     >
-      <div style={styles.modalContent}>
+      <div style={{...styles.modalContent, paddingBottom: "10px"}}>
         {/* Header */}
-        <div style={styles.modalHeader}>
+        <div style={{...styles.modalHeader, marginBottom: "10px", paddingBottom: "8px"}}>
           <div>
             <h2 style={{ margin: 0, fontSize: "clamp(18px, 3vw, 24px)", color: "#ffd700" }}>
               {event.eventName}
@@ -190,13 +191,13 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
 
         {/* Description with improved scrolling */}
         {event.description && (
-          <div style={{ marginBottom: "20px", maxHeight: "300px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "15px", background: "rgba(255, 215, 0, 0.1)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)" }}>
-            <strong style={{ color: "#ffd700", display: "block", marginBottom: "12px", fontSize: "16px" }}>📝 Description</strong>
-            <ul style={{ margin: "0", paddingLeft: "20px", lineHeight: "1.8", color: "#fff", fontSize: "14px" }}>
+          <div style={{ marginBottom: "8px", maxHeight: "200px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "10px", background: "rgba(255, 215, 0, 0.1)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)" }}>
+            <strong style={{ color: "#ffd700", display: "block", marginBottom: "6px", fontSize: "14px" }}>📝 Description</strong>
+            <ul style={{ margin: "0", paddingLeft: "18px", lineHeight: "1.6", color: "#fff", fontSize: "12px" }}>
               {event.description.split('\n').filter(line => line.trim()).map((point, idx) => {
                 const cleanedPoint = point.trim().replace(/^-\s*/, '');
                 return (
-                  <li key={idx} style={{ marginBottom: "8px" }}>
+                  <li key={idx} style={{ marginBottom: "4px" }}>
                     {cleanedPoint}
                   </li>
                 );
@@ -207,7 +208,7 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
 
         {/* Audio/Video Player */}
         {event.audioUrl && (
-          <div style={{ marginBottom: "20px", padding: "0", background: "transparent", borderRadius: "0", border: "none", overflow: "hidden" }}>
+          <div style={{ marginBottom: "0", marginTop: "8px", padding: "0", background: "transparent", borderRadius: "0", border: "none", overflow: "hidden" }}>
             <Suspense fallback={<p>Loading media...</p>}>
               <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
             </Suspense>
