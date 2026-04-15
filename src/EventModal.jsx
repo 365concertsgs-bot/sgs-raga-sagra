@@ -193,11 +193,14 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
           <div style={{ marginBottom: "20px", maxHeight: "300px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "15px", background: "rgba(255, 215, 0, 0.1)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)" }}>
             <strong style={{ color: "#ffd700", display: "block", marginBottom: "12px", fontSize: "16px" }}>📝 Description</strong>
             <ul style={{ margin: "0", paddingLeft: "20px", lineHeight: "1.8", color: "#fff", fontSize: "14px" }}>
-              {event.description.split('\n').filter(line => line.trim()).map((point, idx) => (
-                <li key={idx} style={{ marginBottom: "8px" }}>
-                  {point.trim()}
-                </li>
-              ))}
+              {event.description.split('\n').filter(line => line.trim()).map((point, idx) => {
+                const cleanedPoint = point.trim().replace(/^-\s*/, '');
+                return (
+                  <li key={idx} style={{ marginBottom: "8px" }}>
+                    {cleanedPoint}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}
