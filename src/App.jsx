@@ -585,7 +585,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
 
       {/* ✨ TITLE */}
-      <div style={styles.title}>Ragini Ragini Atlas</div>
+      <div style={styles.title}>Raga Ragini Atlas</div>
 
       {/* 🔗 LEFT LOGO - Dynamic */}
       {leftLogoUrl && (
