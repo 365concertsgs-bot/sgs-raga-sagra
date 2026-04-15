@@ -190,9 +190,23 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
         {event.description && (
           <div style={{ marginBottom: "8px", maxHeight: "200px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "10px", background: "rgba(255, 215, 0, 0.1)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)" }}>
             <strong style={{ color: "#ffd700", display: "block", marginBottom: "6px", fontSize: "14px" }}>Description</strong>
-            <p style={{ margin: "0", lineHeight: "1.6", color: "#fff", fontSize: "12px", whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-              {event.description.split('\n').filter(line => line.trim()).map(line => line.trim().replace(/^[-•*]\s*/, '')).join('\n')}
-            </p>
+            <ul style={{ margin: "0", paddingLeft: "16px", lineHeight: "1.6", color: "#fff", fontSize: "12px" }}>
+              {event.description.split('\n').filter(line => line.trim()).map((line, idx) => {
+                const cleanedLine = line
+                  .trim()
+                  .replace(/^[-•*]\s*/, '')
+                  .replace(/[◇◈◆♦]/g, '')
+                  .replace(/–/g, '-')
+                  .replace(/['']/g, "'")
+                  .replace(/[""]/g, '"')
+                  .trim();
+                return (
+                  <li key={idx} style={{ marginBottom: "3px" }}>
+                    {cleanedLine}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         )}
 
