@@ -59,19 +59,22 @@ const styles = {
   carousel: {
     display: "flex",
     overflowX: "auto",
-    gap: "15px",
+    gap: "12px",
     marginBottom: "20px",
     scrollBehavior: "smooth",
     WebkitOverflowScrolling: "touch",
     paddingBottom: "10px",
+    justifyContent: "flex-start",
   },
   carouselImage: {
-    minWidth: "100%",
-    maxHeight: "400px",
+    minWidth: "180px",
+    maxWidth: "250px",
+    height: "200px",
     objectFit: "cover",
     borderRadius: "8px",
     cursor: "pointer",
     border: "2px solid rgba(255, 215, 0, 0.3)",
+    flexShrink: 0,
   },
 };
 
@@ -171,7 +174,13 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
         {event.description && (
           <div style={{ marginBottom: "20px", maxHeight: "300px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "15px", background: "rgba(255, 215, 0, 0.1)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)" }}>
             <strong style={{ color: "#ffd700", display: "block", marginBottom: "12px", fontSize: "16px" }}>📝 Description</strong>
-            <p style={{ margin: "0", lineHeight: "1.8", color: "#fff", fontSize: "14px" }}>{event.description}</p>
+            <ul style={{ margin: "0", paddingLeft: "20px", lineHeight: "1.8", color: "#fff", fontSize: "14px" }}>
+              {event.description.split('\n').filter(line => line.trim()).map((point, idx) => (
+                <li key={idx} style={{ marginBottom: "8px" }}>
+                  {point.trim()}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
