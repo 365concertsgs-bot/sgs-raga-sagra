@@ -786,14 +786,14 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <div style={styles.mediaLinksLabel}>📁 Quick Access</div>
           <div style={styles.mediaLinksContainer}>
             <a
-              href="https://www.dattapeetham.org"
+              href="https://www.sgsragasagara.com"
               target="_blank"
               rel="noreferrer"
               style={styles.mediaLink}
               onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
               onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
             >
-              🔗 Dattapeetham
+              🎵 SGS Raga Sagara
             </a>
             <a
               href="https://www.yogasangeeta.org"
@@ -939,26 +939,26 @@ const styles = {
     gap: 12,
     zIndex: 20,
     backgroundColor: "#ffcc00",
-    padding: "clamp(10px, 1.5vw, 14px)",
+    padding: "clamp(8px, 1vw, 10px)",
     borderRadius: "12px",
     boxShadow: "0 8px 16px rgba(0,0,0,0.3)",
-    minWidth: "clamp(280px, 24vw, 380px)",
-    maxWidth: "clamp(300px, 26vw, 420px)",
-    maxHeight: "65vh",
-    overflowY: "auto",
-    fontSize: "clamp(11px, 1.3vw, 13px)",
+    minWidth: "clamp(220px, 20vw, 320px)",
+    maxWidth: "clamp(240px, 22vw, 360px)",
+    maxHeight: "none",
+    overflowY: "visible",
+    fontSize: "clamp(9px, 1vw, 11px)",
     touchAction: "manipulation",
   },
 
   filterRow: {
     display: "flex",
     flexDirection: "column",
-    gap: 6,
+    gap: 4,
   },
 
   label: {
     color: "#000",
-    fontSize: "clamp(10px, 1.2vw, 13px)",
+    fontSize: "clamp(8px, 0.9vw, 10px)",
     fontFamily: "'Philosopher', serif",
     fontWeight: "bold",
     textTransform: "uppercase",
@@ -967,15 +967,15 @@ const styles = {
   mediaLinksSection: {
     display: "flex",
     flexDirection: "column",
-    gap: 6,
-    paddingTop: "8px",
+    gap: 3,
+    paddingTop: "4px",
     borderTop: "1px solid rgba(0, 0, 0, 0.1)",
-    marginTop: "8px",
+    marginTop: "4px",
   },
 
   mediaLinksLabel: {
     color: "#000",
-    fontSize: "clamp(10px, 1.1vw, 12px)",
+    fontSize: "clamp(8px, 0.9vw, 10px)",
     fontFamily: "'Philosopher', serif",
     fontWeight: "bold",
     textTransform: "uppercase",
@@ -991,13 +991,13 @@ const styles = {
   mediaLink: {
     display: "inline-flex",
     alignItems: "center",
-    gap: "6px",
-    padding: "clamp(5px, 1vw, 8px) clamp(6px, 1.5vw, 10px)",
+    gap: "4px",
+    padding: "clamp(3px, 0.7vw, 6px) clamp(4px, 1vw, 8px)",
     backgroundColor: "#000",
     color: "#ffd700",
     textDecoration: "none",
     borderRadius: "4px",
-    fontSize: "clamp(10px, 1.2vw, 12px)",
+    fontSize: "clamp(8px, 0.9vw, 10px)",
     fontFamily: "'Philosopher', serif",
     fontWeight: "500",
     cursor: "pointer",
@@ -1017,8 +1017,8 @@ const styles = {
   },
 
   selectInput: {
-    padding: "clamp(6px, 1vw, 10px) clamp(8px, 1.5vw, 12px)",
-    fontSize: "clamp(11px, 1.3vw, 13px)",
+    padding: "clamp(4px, 0.7vw, 8px) clamp(6px, 1vw, 10px)",
+    fontSize: "clamp(9px, 1vw, 11px)",
     borderRadius: "6px",
     border: "1px solid #ccc",
     background: "#fff",
@@ -1029,8 +1029,8 @@ const styles = {
   },
 
   textInput: {
-    padding: "clamp(8px, 1.2vw, 12px) clamp(10px, 1.5vw, 14px)",
-    fontSize: "clamp(12px, 1.3vw, 14px)",
+    padding: "clamp(6px, 0.9vw, 9px) clamp(8px, 1.2vw, 10px)",
+    fontSize: "clamp(9px, 1vw, 11px)",
     borderRadius: "6px",
     border: "1px solid #ccc",
     background: "#fff",
@@ -1052,10 +1052,10 @@ const styles = {
   },
 
   numberInput: {
-    width: "clamp(80px, 15vw, 120px)",
-    minWidth: "80px",
-    padding: "clamp(6px, 1vw, 10px) clamp(8px, 1.5vw, 12px)",
-    fontSize: "clamp(12px, 1.3vw, 13px)",
+    width: "clamp(60px, 12vw, 90px)",
+    minWidth: "60px",
+    padding: "clamp(4px, 0.7vw, 6px) clamp(6px, 1vw, 8px)",
+    fontSize: "clamp(9px, 1vw, 10px)",
     borderRadius: "6px",
     border: "1px solid #ccc",
     background: "#fff",
@@ -1065,8 +1065,8 @@ const styles = {
   },
 
   clearButton: {
-    padding: "clamp(10px, 1.5vw, 14px) clamp(12px, 2vw, 16px)",
-    fontSize: "clamp(12px, 1.3vw, 14px)",
+    padding: "clamp(6px, 1vw, 10px) clamp(8px, 1.5vw, 12px)",
+    fontSize: "clamp(9px, 1vw, 11px)",
     borderRadius: "6px",
     border: "none",
     background: "#ffd700",
@@ -1224,10 +1224,10 @@ const styles = {
   },
 
   dropdownItem: {
-    padding: "clamp(8px, 1vw, 12px) clamp(10px, 1.5vw, 14px)",
+    padding: "clamp(4px, 0.7vw, 8px) clamp(6px, 1vw, 10px)",
     cursor: "pointer",
     borderBottom: "1px solid #eee",
-    fontSize: "clamp(12px, 1.3vw, 13px)",
+    fontSize: "clamp(9px, 1vw, 11px)",
     color: "#000",
     touchAction: "manipulation",
   },
