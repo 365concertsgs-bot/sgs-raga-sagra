@@ -80,17 +80,6 @@ const styles = {
     justifyContent: "center",
     width: "100%",
   },
-  navButton: {
-    background: "rgba(255, 215, 0, 0.2)",
-    color: "#ffd700",
-    border: "1px solid #ffd700",
-    borderRadius: "6px",
-    padding: "10px 15px",
-    cursor: "pointer",
-    fontSize: "16px",
-    transition: "all 0.2s ease",
-    minWidth: "50px",
-  },
   imageCounter: {
     color: "#ffd700",
     fontSize: "14px",
@@ -104,13 +93,16 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
 
   if (!event) return null;
 
-  const handlePrevImage = () => {
-    setImageIndex((prev) => (prev === 0 ? event.images.length - 1 : prev - 1));
-  };
+  // Auto-rotate images every 4 seconds
+  useEffect(() => {
+    if (!event.images || event.images.length === 0) return;
 
-  const handleNextImage = () => {
-    setImageIndex((prev) => (prev === event.images.length - 1 ? 0 : prev + 1));
-  };
+    const interval = setInterval(() => {
+      setImageIndex((prev) => (prev === event.images.length - 1 ? 0 : prev + 1));
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [event.images]);
 
   return (
     <motion.div
@@ -181,7 +173,7 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
           )}
         </div>
 
-        {/* Image Gallery - Single Image at a Time */}
+        {/* Image Gallery - Auto-Rotating Single Image */}
         {event.images && event.images.length > 0 && (
           <div style={styles.imageGallery}>
             <img
@@ -190,38 +182,8 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
               style={styles.mainImage}
               onError={(e) => { e.target.src = ""; }}
             />
-            <div style={styles.imageControls}>
-              <button
-                onClick={handlePrevImage}
-                style={styles.navButton}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "rgba(255, 215, 0, 0.3)";
-                  e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "rgba(255, 215, 0, 0.2)";
-                  e.target.style.boxShadow = "none";
-                }}
-              >
-                ← Previous
-              </button>
-              <div style={styles.imageCounter}>
-                {imageIndex + 1} / {event.images.length}
-              </div>
-              <button
-                onClick={handleNextImage}
-                style={styles.navButton}
-                onMouseEnter={(e) => {
-                  e.target.style.background = "rgba(255, 215, 0, 0.3)";
-                  e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "rgba(255, 215, 0, 0.2)";
-                  e.target.style.boxShadow = "none";
-                }}
-              >
-                Next →
-              </button>
+            <div style={styles.imageCounter}>
+              Image {imageIndex + 1} / {event.images.length}
             </div>
           </div>
         )}
