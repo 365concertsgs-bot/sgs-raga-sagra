@@ -839,53 +839,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         ))}
       </div>
 
-      {/* 📋 EVENT LIST PANEL - RIGHT SIDE */}
-      <div style={styles.eventListPanel}>
-        <div style={styles.eventListHeader}>
-          📋 Events ({filteredData.length})
-        </div>
-        <div style={styles.eventListContainer}>
-          {filteredData.length > 0 ? (
-            filteredData.map((event, idx) => (
-              <div
-                key={idx}
-                onClick={() => {
-                  setSelectedEvent(event);
-                  focusEventOnGlobe(event);
-                }}
-                style={styles.eventListItem}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "rgba(255, 215, 0, 0.15)";
-                  e.currentTarget.style.transform = "translateX(5px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "rgba(255, 215, 0, 0.08)";
-                  e.currentTarget.style.transform = "translateX(0)";
-                }}
-              >
-                <div style={styles.eventListItemTitle}>
-                  <strong style={{ color: "#ffd700" }}>#{event.eventNumber}</strong> - {event.eventName}
-                </div>
-                <div style={styles.eventListItemMeta}>
-                  📍 {event.city || event.location || "Unknown"} • {event.year}
-                </div>
-                {event.description && (
-                  <div style={styles.eventListItemDescription}>
-                    {event.description.substring(0, 100)}
-                    {event.description.length > 100 ? "..." : ""}
-                  </div>
-                )}
-              </div>
-            ))
-          ) : (
-            <div style={{ padding: "20px", textAlign: "center", color: "#999" }}>
-              No events match your filters
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* 📸 MODAL */}
+      {/*  MODAL */}
       <AnimatePresence>
         {selectedEvent && (
           <Suspense fallback={<div>Loading...</div>}>
@@ -1302,88 +1256,6 @@ const styles = {
     fontWeight: "bold",
     transition: "all 0.3s ease",
     touchAction: "manipulation",
-  },
-
-  eventListPanel: {
-    position: "absolute",
-    top: "clamp(140px, 18vh, 180px)",
-    right: "clamp(15px, 2vw, 25px)",
-    display: "flex",
-    flexDirection: "column",
-    gap: 0,
-    zIndex: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.85)",
-    borderRadius: "12px",
-    boxShadow: "0 8px 16px rgba(0,0,0,0.5), inset 0 0 20px rgba(255, 215, 0, 0.1)",
-    minWidth: "clamp(280px, 24vw, 380px)",
-    maxWidth: "clamp(300px, 26vw, 420px)",
-    maxHeight: "65vh",
-    border: "2px solid rgba(255, 215, 0, 0.3)",
-    overflowY: "hidden",
-    fontSize: "clamp(11px, 1.3vw, 13px)",
-    touchAction: "manipulation",
-  },
-
-  eventListHeader: {
-    color: "#ffd700",
-    padding: "clamp(10px, 1.5vw, 14px)",
-    fontSize: "clamp(12px, 1.4vw, 14px)",
-    fontFamily: "'Philosopher', serif",
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    borderBottom: "2px solid rgba(255, 215, 0, 0.3)",
-    flexShrink: 0,
-  },
-
-  eventListContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    padding: "clamp(8px, 1.2vw, 12px)",
-    overflowY: "auto",
-    overflowX: "hidden",
-    WebkitOverflowScrolling: "touch",
-    maxHeight: "calc(65vh - 50px)",
-  },
-
-  eventListItem: {
-    backgroundColor: "rgba(255, 215, 0, 0.08)",
-    padding: "clamp(8px, 1.2vw, 12px)",
-    borderRadius: "8px",
-    border: "1px solid rgba(255, 215, 0, 0.2)",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-    display: "flex",
-    flexDirection: "column",
-    gap: "4px",
-  },
-
-  eventListItemTitle: {
-    color: "#fff",
-    fontSize: "clamp(11px, 1.2vw, 13px)",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-
-  eventListItemMeta: {
-    color: "#ffd700",
-    fontSize: "clamp(10px, 1vw, 11px)",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-
-  eventListItemDescription: {
-    color: "#ccc",
-    fontSize: "clamp(9px, 0.95vw, 11px)",
-    lineHeight: "1.5",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    display: "-webkit-box",
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: "vertical",
-    marginTop: "4px",
   },
 
   swamijiBg: {

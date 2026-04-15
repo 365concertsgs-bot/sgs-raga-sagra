@@ -168,9 +168,9 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
 
         {/* Description with improved scrolling */}
         {event.description && (
-          <div style={{ marginBottom: "20px", maxHeight: "200px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "10px", background: "rgba(255, 215, 0, 0.05)", borderRadius: "6px", border: "1px solid rgba(255, 215, 0, 0.2)" }}>
-            <strong style={{ color: "#ffd700", display: "block", marginBottom: "10px" }}>📝 Description</strong>
-            <p style={{ margin: "0", lineHeight: "1.6", color: "#fff" }}>{event.description}</p>
+          <div style={{ marginBottom: "20px", maxHeight: "300px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "15px", background: "rgba(255, 215, 0, 0.1)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)" }}>
+            <strong style={{ color: "#ffd700", display: "block", marginBottom: "12px", fontSize: "16px" }}>📝 Description</strong>
+            <p style={{ margin: "0", lineHeight: "1.8", color: "#fff", fontSize: "14px" }}>{event.description}</p>
           </div>
         )}
 
