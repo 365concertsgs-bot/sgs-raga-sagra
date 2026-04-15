@@ -56,30 +56,61 @@ const styles = {
     borderRadius: "6px",
     border: "1px solid rgba(255, 215, 0, 0.2)",
   },
-  carousel: {
-    display: "flex",
-    overflowX: "auto",
-    gap: "12px",
+  imageGallery: {
     marginBottom: "20px",
-    scrollBehavior: "smooth",
-    WebkitOverflowScrolling: "touch",
-    paddingBottom: "10px",
-    justifyContent: "flex-start",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "15px",
   },
-  carouselImage: {
-    minWidth: "180px",
-    maxWidth: "250px",
-    height: "200px",
-    objectFit: "cover",
+  mainImage: {
+    width: "100%",
+    maxWidth: "600px",
+    height: "auto",
+    maxHeight: "500px",
+    objectFit: "contain",
     borderRadius: "8px",
-    cursor: "pointer",
     border: "2px solid rgba(255, 215, 0, 0.3)",
-    flexShrink: 0,
+    display: "block",
+  },
+  imageControls: {
+    display: "flex",
+    gap: "15px",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  navButton: {
+    background: "rgba(255, 215, 0, 0.2)",
+    color: "#ffd700",
+    border: "1px solid #ffd700",
+    borderRadius: "6px",
+    padding: "10px 15px",
+    cursor: "pointer",
+    fontSize: "16px",
+    transition: "all 0.2s ease",
+    minWidth: "50px",
+  },
+  imageCounter: {
+    color: "#ffd700",
+    fontSize: "14px",
+    minWidth: "100px",
+    textAlign: "center",
   },
 };
 
 export default memo(function EventModal({ event, onClose, carouselRef, currentSlideIndex, setCurrentSlideIndex }) {
+  const [imageIndex, setImageIndex] = useState(0);
+
   if (!event) return null;
+
+  const handlePrevImage = () => {
+    setImageIndex((prev) => (prev === 0 ? event.images.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = () => {
+    setImageIndex((prev) => (prev === event.images.length - 1 ? 0 : prev + 1));
+  };
 
   return (
     <motion.div
@@ -150,24 +181,49 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
           )}
         </div>
 
-        {/* Image Carousel */}
+        {/* Image Gallery - Single Image at a Time */}
         {event.images && event.images.length > 0 && (
-          <>
-            <div style={styles.carousel} ref={carouselRef}>
-              {event.images.map((image, idx) => (
-                <img
-                  key={idx}
-                  src={image}
-                  alt={`${event.eventName} ${idx + 1}`}
-                  style={styles.carouselImage}
-                  onError={(e) => { e.target.src = ""; }}
-                />
-              ))}
+          <div style={styles.imageGallery}>
+            <img
+              src={event.images[imageIndex]}
+              alt={`${event.eventName} ${imageIndex + 1}`}
+              style={styles.mainImage}
+              onError={(e) => { e.target.src = ""; }}
+            />
+            <div style={styles.imageControls}>
+              <button
+                onClick={handlePrevImage}
+                style={styles.navButton}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(255, 215, 0, 0.3)";
+                  e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "rgba(255, 215, 0, 0.2)";
+                  e.target.style.boxShadow = "none";
+                }}
+              >
+                ← Previous
+              </button>
+              <div style={styles.imageCounter}>
+                {imageIndex + 1} / {event.images.length}
+              </div>
+              <button
+                onClick={handleNextImage}
+                style={styles.navButton}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(255, 215, 0, 0.3)";
+                  e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "rgba(255, 215, 0, 0.2)";
+                  e.target.style.boxShadow = "none";
+                }}
+              >
+                Next →
+              </button>
             </div>
-            <div style={{ textAlign: "center", color: "#ffd700", marginBottom: "20px" }}>
-              Image {currentSlideIndex + 1} of {event.images.length}
-            </div>
-          </>
+          </div>
         )}
 
         {/* Description with improved scrolling */}
