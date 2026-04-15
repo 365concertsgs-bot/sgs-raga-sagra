@@ -813,7 +813,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
               onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
             >
-              🌐 Ragini Atlas
+              🌐 SGS Raga Sagara
             </a>
           </div>
         </div>
