@@ -207,11 +207,15 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
 
         {/* Audio/Video Player */}
         {event.audioUrl && (
-          <div style={{ marginBottom: "20px", padding: "20px", background: "rgba(255, 215, 0, 0.08)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)" }}>
-            <strong style={{ color: "#ffd700", display: "block", marginBottom: "15px", fontSize: "16px" }}>🎵 Media Player</strong>
-            <Suspense fallback={<p>Loading media...</p>}>
-              <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
-            </Suspense>
+          <div style={{ marginBottom: "20px", padding: "0", background: "rgba(255, 215, 0, 0.08)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)", overflow: "hidden" }}>
+            <div style={{ padding: "15px", borderBottom: "1px solid rgba(255, 215, 0, 0.2)" }}>
+              <strong style={{ color: "#ffd700", display: "block", marginBottom: "0", fontSize: "16px" }}>🎵 Media Player</strong>
+            </div>
+            <div style={{ padding: "10px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <Suspense fallback={<p>Loading media...</p>}>
+                <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
+              </Suspense>
+            </div>
           </div>
         )}
       </div>

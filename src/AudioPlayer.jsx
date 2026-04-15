@@ -46,11 +46,11 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
     const vimeoId = getVimeoVideoId(audioUrl);
     if (!vimeoId) return <p style={{ color: '#ff6b6b' }}>Invalid Vimeo link</p>;
     return (
-      <div style={{ width: "100%", marginTop: "10px" }}>
+      <div style={{ width: "100%", maxWidth: "100%", marginTop: "0", aspectRatio: "16/9", display: "flex", justifyContent: "center" }}>
         <iframe
           loading="lazy"
           src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlay ? 1 : 0}&playsinline=1`}
-          style={{ width: "100%", height: "300px", border: "none", borderRadius: "6px" }}
+          style={{ width: "100%", height: "100%", border: "none", borderRadius: "6px", boxSizing: "border-box" }}
           allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
         ></iframe>
@@ -62,13 +62,11 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
     const youtubeId = getYoutubeVideoId(audioUrl);
     if (!youtubeId) return <p style={{ color: '#ff6b6b' }}>Invalid YouTube link</p>;
     return (
-      <div style={{ width: "100%", marginTop: "10px" }}>
+      <div style={{ width: "100%", maxWidth: "100%", marginTop: "0", aspectRatio: "16/9", display: "flex", justifyContent: "center" }}>
         <iframe
           loading="lazy"
-          width="100%"
-          height="300"
           src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${autoPlay ? 1 : 0}`}
-          style={{ borderRadius: "6px", border: "none" }}
+          style={{ width: "100%", height: "100%", borderRadius: "6px", border: "none", boxSizing: "border-box" }}
           allow="autoplay; encrypted-media"
           allowFullScreen
         ></iframe>
@@ -78,35 +76,39 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
 
   if (platform === 'spotify') {
     return (
-      <div style={{ width: "100%", marginTop: "10px" }}>
-        <iframe
-          loading="lazy"
-          title="Spotify"
-          src={audioUrl.replace('open.spotify.com', 'open.spotify.com/embed')}
-          width="100%"
-          height="300"
-          frameBorder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen"
-          style={{ borderRadius: "6px" }}
-        ></iframe>
+      <div style={{ width: "100%", maxWidth: "100%", marginTop: "0", display: "flex", justifyContent: "center" }}>
+        <div style={{ width: "100%", maxWidth: "100%" }}>
+          <iframe
+            loading="lazy"
+            title="Spotify"
+            src={audioUrl.replace('open.spotify.com', 'open.spotify.com/embed')}
+            width="100%"
+            height="280"
+            frameBorder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen"
+            style={{ borderRadius: "6px", boxSizing: "border-box" }}
+          ></iframe>
+        </div>
       </div>
     );
   }
 
   if (platform === 'soundcloud') {
     return (
-      <div style={{ width: "100%", marginTop: "10px" }}>
-        <iframe
-          loading="lazy"
-          title="SoundCloud"
-          width="100%"
-          height="300"
-          scrolling="no"
-          frameBorder="no"
-          allow="autoplay"
-          src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ffd700&auto_play=${autoPlay ? 'true' : 'false'}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=true`}
-          style={{ borderRadius: "6px" }}
-        ></iframe>
+      <div style={{ width: "100%", maxWidth: "100%", marginTop: "0", display: "flex", justifyContent: "center" }}>
+        <div style={{ width: "100%", maxWidth: "100%" }}>
+          <iframe
+            loading="lazy"
+            title="SoundCloud"
+            width="100%"
+            height="300"
+            scrolling="no"
+            frameBorder="no"
+            allow="autoplay"
+            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ffd700&auto_play=${autoPlay ? 'true' : 'false'}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=true`}
+            style={{ borderRadius: "6px", boxSizing: "border-box" }}
+          ></iframe>
+        </div>
       </div>
     );
   }
