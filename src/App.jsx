@@ -18,7 +18,7 @@ const continents = [
   "Australia",
 ];
 
-export default function App() {
+export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", rightLogoUrl = "https://i.imgur.com/opWvuCC.jpeg" }) {
   const globeRef = useRef();
   const carouselRef = useRef();
 
@@ -91,6 +91,7 @@ export default function App() {
 
       return {
         no: row.no != null ? Number(row.no) : null,
+        eventNumber: row.no != null ? Number(row.no) : null,
         eventName: getField(row, [
           "raga_sagara_name_event",
           "event_name",
@@ -112,7 +113,7 @@ export default function App() {
         place: row.venue,
         description: getField(row, ["description", "details", "event_description"]),
         images: mediaData.filter((m) => m.Event === row.no).map((m) => m.URL),
-        audio:
+        audioUrl:
           getField(row, [
             "link_for_audio_or_video",
             "audio",
@@ -166,7 +167,13 @@ export default function App() {
   const filteredData = useMemo(
     () =>
       events.filter((event) => {
-        // Validate coordinates: must be valid numbers and within valid ranges
+        // 🌍 GLOBAL COORDINATE VALIDATION
+        // Validates coordinates work globally including:
+        // - Southern Hemisphere: -90° to 0° latitude (e.g., Australia, Argentina, South Africa)
+        // - Northern Hemisphere: 0° to 90° latitude (e.g., India, USA, Europe)
+        // - Western Hemisphere: -180° to 0° longitude (e.g., Americas)
+        // - Eastern Hemisphere: 0° to 180° longitude (e.g., Asia, Europe, Africa)
+        
         if (
           event.lat === null || 
           event.lng === null || 
@@ -580,19 +587,25 @@ export default function App() {
       {/* ✨ TITLE */}
       <div style={styles.title}>Ragini Ragini Atlas</div>
 
-      {/* 🪔 SWAMIJI LOGO - TOP LEFT */}
-      <img
-        src="/swamiji-left.svg"
-        alt="Swamiji Left"
-        style={styles.logoTopLeft}
-      />
+      {/* 🔗 LEFT LOGO - Dynamic */}
+      {leftLogoUrl && (
+        <img
+          src={leftLogoUrl}
+          alt="Left Logo"
+          style={styles.logoTopLeft}
+          onError={(e) => { e.target.style.display = "none"; }}
+        />
+      )}
 
-      {/* 🪔 SWAMIJI ICON - TOP RIGHT */}
-      <img
-        src="/swamiji-right.svg"
-        alt="Swamiji Right"
-        style={styles.logoTopRight}
-      />
+      {/* 🔗 RIGHT LOGO - Dynamic */}
+      {rightLogoUrl && (
+        <img
+          src={rightLogoUrl}
+          alt="Right Logo"
+          style={styles.logoTopRight}
+          onError={(e) => { e.target.style.display = "none"; }}
+        />
+      )}
 
       {/* 🌍 GLOBE */}
       <Globe
@@ -889,7 +902,7 @@ const styles = {
     left: "50%",
     transform: "translateX(-50%)",
     color: "#00ff00",
-    fontSize: "clamp(18px, 4vw, 28px)",
+    fontSize: "clamp(14px, 2.5vw, 20px)",
     fontFamily: "'Philosopher', serif",
     fontWeight: "bold",
     zIndex: 15,
