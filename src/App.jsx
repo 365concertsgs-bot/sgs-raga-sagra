@@ -703,7 +703,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             ))}
           </select>
         </div>
-        </div>
 
         {/* Country Search with Autocomplete */}
         <div style={styles.filterRow}>
