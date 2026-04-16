@@ -680,15 +680,19 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
             style={{
-              ...styles.textInput,
-              color: selectedYear ? "#ffd700" : "#999",
+              padding: "clamp(6px, 0.9vw, 9px) clamp(8px, 1.2vw, 10px)",
+              fontSize: "clamp(9px, 1vw, 11px)",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+              background: "#fff",
+              color: selectedYear ? "#000" : "#999",
+              outline: "none",
+              width: "100%",
+              boxSizing: "border-box",
+              touchAction: "manipulation",
               cursor: "pointer",
-              appearance: "none",
-              paddingRight: "30px",
-              backgroundImage: "url('data:image/svg+xml;utf8,<svg fill=\"%23ffd700\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M7 10l5 5 5-5z\"/></svg>')",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right 8px center",
-              backgroundSize: "20px",
+              fontFamily: "'Philosopher', serif",
+              fontWeight: "500",
             }}
           >
             <option value="">All Years</option>
@@ -698,6 +702,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               </option>
             ))}
           </select>
+        </div>
         </div>
 
         {/* Country Search with Autocomplete */}
