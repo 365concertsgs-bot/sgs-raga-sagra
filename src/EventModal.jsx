@@ -124,7 +124,7 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
               {event.eventName}
             </h2>
             <p style={{ color: "#ffd700", margin: "5px 0 0 0", fontSize: "12px" }}>
-              Event #{event.eventNumber} • {event.year}
+              Event #{event.eventNumber}
             </p>
           </div>
           <button
