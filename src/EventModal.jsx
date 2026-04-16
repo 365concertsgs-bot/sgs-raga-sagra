@@ -188,14 +188,26 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
             <strong style={{ color: "#ffd700", display: "block", marginBottom: "6px", fontSize: "14px" }}>Description</strong>
             <ul style={{ margin: "0", paddingLeft: "16px", lineHeight: "1.6", color: "#fff", fontSize: "12px" }}>
               {event.description.split('\n').filter(line => line.trim()).map((line, idx) => {
-                const cleanedLine = line
-                  .trim()
+                const trimmedLine = line.trim();
+                const cleanedLine = trimmedLine
                   .replace(/^[-•*]\s*/, '')
                   .replace(/[^\w\s.,;:\-–—'""()\[\]&]/g, '')
                   .replace(/–|—/g, '-')
                   .replace(/['']/g, "'")
                   .replace(/[""]/g, '"')
                   .trim();
+                
+                // Check if this line is "Ragas Played" - render as subtitle
+                if (trimmedLine.toLowerCase().includes('ragas played')) {
+                  return (
+                    <div key={idx} style={{ marginBottom: "8px", marginTop: "8px" }}>
+                      <strong style={{ color: "#ffd700", display: "block", fontSize: "13px", marginBottom: "4px" }}>
+                        {cleanedLine}
+                      </strong>
+                    </div>
+                  );
+                }
+                
                 return (
                   <li key={idx} style={{ marginBottom: "3px" }}>
                     {cleanedLine}
