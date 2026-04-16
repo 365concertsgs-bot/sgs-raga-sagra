@@ -1,4 +1,4 @@
-# SGS Sphere Interactive Globe Demo
+# SGS Raga Ragini Atlas
 
 > **Responsive, High-Performance Music & Meditation Event Explorer**
 
