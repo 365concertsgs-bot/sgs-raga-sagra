@@ -672,6 +672,34 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             />
           </div>
         </div>
+
+        {/* Year Selection Dropdown */}
+        <div style={styles.filterRow}>
+          <label style={styles.label}>Year</label>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            style={{
+              ...styles.textInput,
+              color: selectedYear ? "#ffd700" : "#999",
+              cursor: "pointer",
+              appearance: "none",
+              paddingRight: "30px",
+              backgroundImage: "url('data:image/svg+xml;utf8,<svg fill=\"%23ffd700\" height=\"24\" viewBox=\"0 0 24 24\" width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M7 10l5 5 5-5z\"/></svg>')",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right 8px center",
+              backgroundSize: "20px",
+            }}
+          >
+            <option value="">All Years</option>
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Country Search with Autocomplete */}
         <div style={styles.filterRow}>
           <label style={styles.label}>Country</label>
