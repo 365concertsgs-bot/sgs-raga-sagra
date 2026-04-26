@@ -178,6 +178,10 @@ select {
   /* Show the mobile menu button */
   [data-mobile-menu-button] {
     display: block !important;
+    top: clamp(15px, 5vh, 25px) !important;
+    left: clamp(12px, 3vw, 18px) !important;
+    padding: clamp(8px, 2.5vw, 14px) !important;
+    font-size: clamp(16px, 4vw, 22px) !important;
   }
   
   /* Show the mobile overlay when it exists */
@@ -192,20 +196,45 @@ select {
     animation: slideUp 0.3s ease;
   }
   
-  /* Adjust continent filter for mobile */
+  /* Adjust top logos for mobile */
+  [data-logo-left] {
+    top: clamp(12px, 3vh, 20px) !important;
+    left: clamp(12px, 3vw, 18px) !important;
+    height: clamp(35px, 8vh, 60px) !important;
+  }
+  
+  [data-logo-right] {
+    top: clamp(12px, 3vh, 20px) !important;
+    right: clamp(12px, 3vw, 18px) !important;
+    height: clamp(35px, 8vh, 60px) !important;
+  }
+  
+  /* Adjust title for mobile */
+  [data-title] {
+    top: clamp(70px, 12vh, 95px) !important;
+    font-size: clamp(12px, 3vw, 16px) !important;
+    z-index: 18 !important;
+  }
+  
+  /* Adjust continent filter for mobile - moved to top area */
   [data-continent-filter] {
-    bottom: calc(80vh + 60px) !important;
+    bottom: auto !important;
+    top: clamp(105px, 16vh, 140px) !important;
     width: calc(100% - 20px) !important;
-    padding: 0 10px !important;
+    padding: 8px 10px !important;
     max-width: none !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
   }
   
   [data-continent-button] {
-    font-size: 10px !important;
-    padding: 6px 8px !important;
-    flex: 0 1 auto !important;
+    font-size: 9px !important;
+    padding: 5px 8px !important;
+    flex: 0 0 auto !important;
+    min-width: auto !important;
   }
 }
 

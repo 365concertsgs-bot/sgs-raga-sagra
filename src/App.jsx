@@ -587,7 +587,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
 
       {/* ✨ TITLE */}
-      <div style={styles.title}>SGS Raga Ragini Atlas</div>
+      <div style={styles.title} data-title>SGS Raga Ragini Atlas</div>
 
       {/* 🔗 LEFT LOGO - Dynamic */}
       {leftLogoUrl && (
@@ -595,6 +595,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           src={leftLogoUrl}
           alt="Left Logo"
           style={styles.logoTopLeft}
+          data-logo-left
           onError={(e) => { e.target.style.display = "none"; }}
         />
       )}
@@ -605,6 +606,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           src={rightLogoUrl}
           alt="Right Logo"
           style={styles.logoTopRight}
+          data-logo-right
           onError={(e) => { e.target.style.display = "none"; }}
         />
       )}
@@ -1111,7 +1113,7 @@ const styles = {
     left: "clamp(10px, 2vw, 30px)",
     height: "clamp(50px, 10vh, 100px)",
     width: "auto",
-    zIndex: 20,
+    zIndex: 18,
     background: "transparent",
     filter: "drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
     objectFit: "contain",
@@ -1123,7 +1125,7 @@ const styles = {
     right: "clamp(10px, 2vw, 30px)",
     height: "clamp(50px, 10vh, 100px)",
     width: "auto",
-    zIndex: 20,
+    zIndex: 18,
     background: "transparent",
     filter: "drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
     objectFit: "contain",
@@ -1139,7 +1141,7 @@ const styles = {
     fontSize: "clamp(14px, 2.5vw, 20px)",
     fontFamily: "'Philosopher', serif",
     fontWeight: "bold",
-    zIndex: 15,
+    zIndex: 19,
     whiteSpace: "nowrap",
     textShadow: "0 0 10px rgba(255, 215, 0, 0.3)",
   },
@@ -1211,7 +1213,7 @@ const styles = {
     position: "fixed",
     top: "clamp(15px, 3vh, 20px)",
     left: "clamp(15px, 3vw, 20px)",
-    zIndex: 50,
+    zIndex: 51,
     background: "#ffcc00",
     color: "#000",
     border: "none",
@@ -1222,6 +1224,8 @@ const styles = {
     fontWeight: "bold",
     boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
     touchAction: "manipulation",
+    width: "auto",
+    height: "auto",
   },
 
   mobileMenuOverlay: {
@@ -1525,7 +1529,7 @@ const styles = {
     transform: "translateX(-50%)",
     display: "flex",
     gap: 8,
-    zIndex: 20,
+    zIndex: 19,
     flexWrap: "wrap",
     justifyContent: "center",
     maxWidth: "800px",
