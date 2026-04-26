@@ -148,3 +148,84 @@ select {
 ::-webkit-scrollbar-thumb:hover {
   background: #ffed4e;
 }
+
+/* Default styles for mobile menu button and overlay */
+[data-mobile-menu-button] {
+  display: none;
+}
+
+[data-mobile-overlay] {
+  display: block;
+}
+
+/* ===== MOBILE RESPONSIVE STYLES ===== */
+/* Extra small devices (landscape mobile) */
+@media (max-width: 600px) and (max-height: 600px) {
+  :root { font-size: 9px; }
+  
+  body {
+    font-size: 12px;
+  }
+}
+
+/* Portrait mobile devices and tablets */
+@media (max-width: 768px) {
+  /* Hide the desktop filterStack on mobile */
+  [data-filter-stack="desktop"] {
+    display: none !important;
+  }
+  
+  /* Show the mobile menu button */
+  [data-mobile-menu-button] {
+    display: block !important;
+  }
+  
+  /* Show the mobile overlay when it exists */
+  [data-mobile-overlay] {
+    display: block !important;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  /* Mobile menu slides in from bottom */
+  [data-filter-stack="mobile"] {
+    display: flex !important;
+    animation: slideUp 0.3s ease;
+  }
+  
+  /* Adjust continent filter for mobile */
+  [data-continent-filter] {
+    bottom: calc(80vh + 60px) !important;
+    width: calc(100% - 20px) !important;
+    padding: 0 10px !important;
+    max-width: none !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  
+  [data-continent-button] {
+    font-size: 10px !important;
+    padding: 6px 8px !important;
+    flex: 0 1 auto !important;
+  }
+}
+
+/* Animations for mobile menu */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

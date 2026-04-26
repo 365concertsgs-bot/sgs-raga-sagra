@@ -37,6 +37,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   const [isUserActive, setIsUserActive] = useState(false);
   const [appError, setAppError] = useState(supabaseError || null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const hasValue = (value) =>
     value != null &&
@@ -294,6 +295,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setFilteredEventNames([]);
     setShowEventNameSuggestions(false);
     setSelectedEvent(null);
+    setShowMobileMenu(false);
   }, []);
 
   const countryLabels = [
@@ -639,8 +641,228 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         labelAltitude={0.02}
       />
 
-      {/* 🔽 FILTERS */}
-      <div style={styles.filterStack}>
+      {/* 🔽 MOBILE MENU BUTTON */}
+      <button
+        data-mobile-menu-button
+        style={styles.mobileMenuButton}
+        onClick={() => setShowMobileMenu(!showMobileMenu)}
+        title={showMobileMenu ? "Close menu" : "Open filters"}
+      >
+        {showMobileMenu ? "✕" : "☰"}
+      </button>
+
+      {/* 🔽 MOBILE MENU OVERLAY */}
+      {showMobileMenu && (
+        <div
+          style={styles.mobileMenuOverlay}
+          onClick={() => setShowMobileMenu(false)}
+          data-mobile-overlay
+        />
+      )}
+
+      {/* 🔽 FILTERS - MOBILE VERSION */}
+      {showMobileMenu && (
+        <div
+          style={{...styles.filterStackMobile}}
+          onClick={(e) => e.stopPropagation()}
+          data-filter-stack="mobile"
+        >
+          {/* Clear Filters Button */}
+          <button onClick={(e) => {
+            e.stopPropagation();
+            clearFilters();
+          }} style={styles.clearButton}>
+            Clear Filters
+          </button>
+
+          {/* Event Number - Slider and Input */}
+          <div style={styles.filterRow}>
+            <label style={styles.label}>Event Number</label>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <input
+                type="range"
+                min="1"
+                max="365"
+                value={selectedEventNumber}
+                onChange={(e) => handleEventNumberChange(e.target.value)}
+                style={styles.slider}
+              />
+              <input
+                type="number"
+                min="1"
+                max="365"
+                value={selectedEventNumber}
+                onChange={(e) => handleEventNumberChange(e.target.value)}
+                placeholder="Type #"
+                style={styles.numberInput}
+              />
+            </div>
+          </div>
+
+          {/* Year Selection Dropdown */}
+          <div style={styles.filterRow}>
+            <label style={styles.label}>Year</label>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              style={{
+                padding: "clamp(6px, 0.9vw, 9px) clamp(8px, 1.2vw, 10px)",
+                fontSize: "clamp(9px, 1vw, 11px)",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                background: "#fff",
+                color: selectedYear ? "#000" : "#999",
+                outline: "none",
+                width: "100%",
+                boxSizing: "border-box",
+                touchAction: "manipulation",
+                cursor: "pointer",
+                fontFamily: "'Philosopher', serif",
+                fontWeight: "500",
+              }}
+            >
+              <option value="">All Years</option>
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Country Search with Autocomplete */}
+          <div style={styles.filterRow}>
+            <label style={styles.label}>Country</label>
+            <div style={{ position: "relative" }}>
+              <input
+                type="text"
+                placeholder="Search country..."
+                value={searchCountry}
+                onChange={(e) => handleCountryChange(e.target.value)}
+                onFocus={() => {
+                  if (searchCountry.length > 0) {
+                    setShowCountrySuggestions(true);
+                  }
+                }}
+                style={styles.textInput}
+              />
+              {showCountrySuggestions && filteredCountries.length > 0 && (
+                <div style={styles.dropdown}>
+                  {filteredCountries.map((country) => (
+                    <div
+                      key={country}
+                      style={styles.dropdownItem}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        selectCountry(country);
+                      }}
+                    >
+                      {country}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Event Name Search with Autocomplete */}
+          <div style={styles.filterRow}>
+            <label style={styles.label}>Event Name</label>
+            <div style={{ position: "relative" }}>
+              <input
+                type="text"
+                placeholder="Search event name..."
+                value={searchEventName}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSearchEventName(val);
+                  if (val.length > 0) {
+                    const filtered = allEventNames.filter((name) =>
+                      name.toLowerCase().includes(val.toLowerCase())
+                    );
+                    setFilteredEventNames(filtered);
+                    setShowEventNameSuggestions(true);
+                  } else {
+                    setFilteredEventNames([]);
+                    setShowEventNameSuggestions(false);
+                  }
+                }}
+                onFocus={() => {
+                  if (searchEventName.length > 0) {
+                    setShowEventNameSuggestions(true);
+                  }
+                }}
+                style={styles.textInput}
+              />
+              {showEventNameSuggestions && filteredEventNames.length > 0 && (
+                <div style={styles.dropdown}>
+                  {filteredEventNames.map((eventName) => (
+                    <div
+                      key={eventName}
+                      style={styles.dropdownItem}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const selectedEvent = events.find((e) => e.eventName === eventName);
+                        setSearchEventName(eventName);
+                        setShowEventNameSuggestions(false);
+                        setFilteredEventNames([]);
+                        if (selectedEvent) {
+                          focusEventOnGlobe(selectedEvent);
+                        }
+                      }}
+                    >
+                      {eventName}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 🎵 Media Links Section */}
+          <div style={styles.mediaLinksSection}>
+            <div style={styles.mediaLinksLabel}>📁 Quick Access</div>
+            <div style={styles.mediaLinksContainer}>
+              <a
+                href="https://www.dattapeetham.org"
+                target="_blank"
+                rel="noreferrer"
+                style={styles.mediaLink}
+                onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
+                onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
+              >
+                🧭 Datta peetam official
+              </a>
+              <a
+                href="https://www.yogasangeeta.org"
+                target="_blank"
+                rel="noreferrer"
+                style={styles.mediaLink}
+                onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
+                onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
+              >
+                🎶 YogaSangeeta
+              </a>
+              <a
+                href="https://www.sgsragasagara.com"
+                target="_blank"
+                rel="noreferrer"
+                style={styles.mediaLink}
+                onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
+                onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
+              >
+                🌐 SGS Raga Sagara
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🔽 FILTERS - DESKTOP VERSION */}
+      <div 
+        style={styles.filterStack}
+        data-filter-stack="desktop"
+      >
         {/* Clear Filters Button */}
         <button onClick={(e) => {
           e.stopPropagation();
@@ -832,7 +1054,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       </div>
 
       {/* 🌍 CONTINENT FILTER - BOTTOM */}
-      <div style={styles.continentFilter}>
+      <div style={styles.continentFilter} data-continent-filter>
         {continents.map((continent) => (
           <button
             key={continent}
@@ -845,6 +1067,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               backgroundColor: selectedContinent === continent ? "#ffd700" : "rgba(0,0,0,0.6)",
               color: selectedContinent === continent ? "#000" : "#ffd700",
             }}
+            data-continent-button
           >
             {continent}
           </button>
@@ -959,6 +1182,57 @@ const styles = {
     maxHeight: "none",
     overflowY: "visible",
     fontSize: "clamp(9px, 1vw, 11px)",
+    touchAction: "manipulation",
+  },
+
+  filterStackMobile: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    maxHeight: "80vh",
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    zIndex: 1000,
+    backgroundColor: "#ffcc00",
+    padding: "clamp(15px, 4vw, 20px)",
+    borderTopLeftRadius: "16px",
+    borderTopRightRadius: "16px",
+    boxShadow: "0 -8px 16px rgba(0,0,0,0.3)",
+    fontSize: "clamp(11px, 1.5vw, 14px)",
+    touchAction: "manipulation",
+  },
+
+  mobileMenuButton: {
+    display: "none",
+    position: "fixed",
+    top: "clamp(15px, 3vh, 20px)",
+    left: "clamp(15px, 3vw, 20px)",
+    zIndex: 50,
+    background: "#ffcc00",
+    color: "#000",
+    border: "none",
+    borderRadius: "8px",
+    padding: "clamp(8px, 2vw, 12px)",
+    fontSize: "clamp(14px, 2vw, 18px)",
+    cursor: "pointer",
+    fontWeight: "bold",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+    touchAction: "manipulation",
+  },
+
+  mobileMenuOverlay: {
+    display: "none",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.5)",
+    zIndex: 900,
     touchAction: "manipulation",
   },
 
