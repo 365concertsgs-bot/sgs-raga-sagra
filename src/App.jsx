@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { supabase, supabaseError } from "./supabaseClient";
+import { supabase, supabaseError, supabaseUrl, supabaseKeySet } from "./supabaseClient";
 
 // Lazy load the Globe to reduce initial bundle size
 const Globe = lazy(() => import("react-globe.gl"));
@@ -442,6 +442,24 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               <li>Ensure Supabase service is running</li>
               <li>Check browser console for more details (F12)</li>
             </ul>
+          </div>
+
+          <div style={{
+            background: "#111",
+            color: "#fff",
+            padding: "15px",
+            borderRadius: "12px",
+            marginBottom: "20px",
+            textAlign: "left",
+            fontSize: "12px",
+          }}>
+            <p style={{ margin: "0 0 8px 0" }}><strong>Config check:</strong></p>
+            <p style={{ margin: "0 0 4px 0" }}>
+              Supabase URL: {supabaseUrl ? <span style={{ color: "#0f0" }}>{supabaseUrl}</span> : <span style={{ color: "#f00" }}>not set</span>}
+            </p>
+            <p style={{ margin: "0" }}>
+              Supabase key: {supabaseKeySet ? <span style={{ color: "#0f0" }}>set</span> : <span style={{ color: "#f00" }}>missing</span>}
+            </p>
           </div>
 
           <p style={{ fontSize: "12px", marginBottom: "20px" }}>

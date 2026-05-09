@@ -26,4 +26,6 @@ if (supabaseUrl && supabaseAnonKey) {
   console.error(supabaseError)
 }
 
-export { supabase, supabaseError }
+const supabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
+const supabaseKeySet = Boolean(supabaseAnonKey)
+export { supabase, supabaseError, supabaseUrl, supabaseConfigured, supabaseKeySet }
