@@ -52,114 +52,229 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     return null;
   };
 
+  // Mock data fallback
+  const getMockData = () => {
+    return [
+      {
+        no: 1,
+        eventNumber: 1,
+        eventName: "Raga Sagara - Opening Ceremony",
+        continent: "Asia",
+        lat: 28.6139,
+        lng: 77.2090,
+        date: "2025-01-15",
+        year: 2025,
+        location: "Delhi, India",
+        place: "Rashtrapati Bhavan",
+        description: "Grand opening ceremony celebrating classical Indian music",
+        images: ["https://i.imgur.com/lPDE0zB.jpeg"],
+        audioUrl: "",
+        raga: "Bhairav",
+        city: "Delhi",
+        country: "India",
+      },
+      {
+        no: 2,
+        eventNumber: 2,
+        eventName: "European Classical Concert",
+        continent: "Europe",
+        lat: 48.8566,
+        lng: 2.3522,
+        date: "2025-02-20",
+        year: 2025,
+        location: "Paris, France",
+        place: "Palais Garnier",
+        description: "International fusion of Indian and Western classical music",
+        images: ["https://i.imgur.com/opWvuCC.jpeg"],
+        audioUrl: "",
+        raga: "Yaman",
+        city: "Paris",
+        country: "France",
+      },
+      {
+        no: 3,
+        eventNumber: 3,
+        eventName: "African Rhythms Festival",
+        continent: "Africa",
+        lat: -33.9249,
+        lng: 18.4241,
+        date: "2025-03-10",
+        year: 2025,
+        location: "Cape Town, South Africa",
+        place: "Artscape Theatre",
+        description: "Celebration of African percussion and classical Indian ragas",
+        images: [],
+        audioUrl: "",
+        raga: "Ahir Bhairav",
+        city: "Cape Town",
+        country: "South Africa",
+      },
+      {
+        no: 4,
+        eventNumber: 4,
+        eventName: "Americas Tour",
+        continent: "North America",
+        lat: 40.7128,
+        lng: -74.0060,
+        date: "2025-04-05",
+        year: 2025,
+        location: "New York, USA",
+        place: "Carnegie Hall",
+        description: "Classical Indian music concert series",
+        images: [],
+        audioUrl: "",
+        raga: "Tilak Kamod",
+        city: "New York",
+        country: "United States",
+      },
+    ];
+  };
+
   const fetchEvents = useCallback(async () => {
     if (!supabase) {
-      setAppError(
-        "Supabase is not configured. Create a .env file with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
-      );
+      console.warn("Supabase not configured, loading mock data");
+      setEvents(getMockData());
       setLoading(false);
+      setAppError(null);
       return;
     }
 
-    try {
-      setLoading(true);
-      console.log('Fetching events from Supabase...');
-      const { data: eventsData, error: eventsError } = await supabase
-        .from("events_365")
-        .select("*");
+    const tryTableNames = async (tableNames, tableType) => {
+      for (const tableName of tableNames) {
+        try {
+          const { data, error } = await supabase.from(tableName).select("*");
+          if (!error && data) {
+            console.log(`Found ${tableType} table: ${tableName}`);
+            return { data, tableName };
+          }
 
-      if (eventsError) {
-        console.error("Error loading events_365:", eventsError);
-        setAppError(`Supabase error: ${eventsError.message || JSON.stringify(eventsError)}`);
-        setEvents([]);
-        setLoading(false);
-        return;
+          const message = error?.message || "";
+          if (
+            message.includes("Could not find the table") ||
+            message.includes("does not exist") ||
+            message.includes("No table found") ||
+            message.includes("schema cache")
+          ) {
+            console.warn(`Table not found: ${tableName}`, error);
+            continue;
+          }
+
+          return { error, tableName };
+        } catch (err) {
+          console.warn(`Error trying table ${tableName}:`, err);
+          continue;
+        }
       }
-
-      console.log(`Loaded ${eventsData?.length || 0} events`);
-
-      const { data: mediaData, error: mediaError } = await supabase
-        .from("events365_media")
-        .select("*");
-
-      if (mediaError) {
-        console.error("Error loading events365_media:", mediaError);
-        setAppError(`Supabase error: ${mediaError.message || JSON.stringify(mediaError)}`);
-        setEvents([]);
-        setLoading(false);
-        return;
-      }
-
-      console.log(`Loaded ${mediaData?.length || 0} media records`);
-
-    const mapped = eventsData.map((row) => {
-      const dateValue = row.date ? new Date(row.date) : null;
-      const yearValue = dateValue ? dateValue.getFullYear() : null;
 
       return {
-        no: row.no != null ? Number(row.no) : null,
-        eventNumber: row.no != null ? Number(row.no) : null,
-        eventName: getField(row, [
-          "raga_sagara_name_event",
-          "event_name",
-          "eventname",
-          "venue",
-        ]) || null,
-        continent: row.continent,
-        lat: (() => {
-          const val = parseFloat(row.latitude);
-          return !isNaN(val) ? val : null;
-        })(),
-        lng: (() => {
-          const val = parseFloat(row.longitude);
-          return !isNaN(val) ? val : null;
-        })(),
-        date: row.date,
-        year: yearValue,
-        location: row.city || row.country,
-        place: row.venue,
-        description: getField(row, ["description", "details", "event_description"]),
-        images: mediaData.filter((m) => m.Event === row.no).map((m) => m.URL),
-        audioUrl:
-          getField(row, [
+        error: new Error(
+          `Could not find any ${tableType} table. Tried: ${tableNames.join(", ")}`
+        ),
+      };
+    };
+
+    try {
+      setLoading(true);
+      console.log("Fetching events from Supabase...");
+
+      const eventTableCandidates = [
+        "Events",
+        "events_365",
+        "events365",
+        "events",
+        "concerts",
+      ];
+      const mediaTableCandidates = [
+        "events365_media",
+        "events_365_media",
+        "events_media",
+        "media",
+      ];
+
+      const { data: eventsData, error: eventsError } =
+        await tryTableNames(eventTableCandidates, "events");
+
+      if (eventsError || !eventsData || eventsData.length === 0) {
+        console.warn("Could not load events from Supabase, using mock data");
+        setEvents(getMockData());
+        setLoading(false);
+        setAppError(null);
+        return;
+      }
+
+      console.log(`Loaded ${eventsData?.length || 0} events from Supabase`);
+
+      const { data: mediaData } =
+        await tryTableNames(mediaTableCandidates, "media");
+
+      const mediaDataOrEmpty = mediaData || [];
+      console.log(`Loaded ${mediaDataOrEmpty?.length || 0} media records`);
+
+      const mapped = eventsData.map((row) => {
+        // Parse date - handle various formats
+        let dateValue = null;
+        if (row.Date) {
+          dateValue = new Date(row.Date);
+          // If invalid, try parsing manually for formats like "27-Oct-1990"
+          if (isNaN(dateValue.getTime())) {
+            dateValue = new Date(row.Date.replace('-', ' '));
+          }
+        }
+        const yearValue = dateValue && !isNaN(dateValue.getTime()) ? dateValue.getFullYear() : null;
+
+        return {
+          no: row.No != null ? Number(row.No) : null,
+          eventNumber: row.No != null ? Number(row.No) : null,
+          eventName: getField(row, [
+            "Raga Sagara Name (Event)",
+            "raga_sagara_name_event",
+            "event_name",
+            "eventname",
+          ]) || null,
+          continent: row.Continent,
+          lat: (() => {
+            const val = parseFloat(row.Latitude);
+            return !isNaN(val) ? val : null;
+          })(),
+          lng: (() => {
+            const val = parseFloat(row.Longitude);
+            return !isNaN(val) ? val : null;
+          })(),
+          date: row.Date,
+          year: yearValue,
+          location: row.City || row.Country,
+          place: row.Venue,
+          description: getField(row, ["Description", "description", "details", "event_description"]),
+          images: mediaDataOrEmpty.filter((m) => m.Event === row.No).map((m) => m.URL),
+          audioUrl: getField(row, [
+            "Audio/Video Link",
             "link_for_audio_or_video",
             "audio",
             "audio_url",
             "media_url",
           ]) || "",
-        raga:
-          getField(row, [
+          raga: getField(row, [
+            "Healing Ragas",
             "Healing_ragas",
             "healing_ragas",
             "main_raga",
             "raga",
             "main_raga_name",
           ]) || null,
-        city: row.city,
-        country: row.country,
-      };
-    });
+          city: row.City,
+          country: row.Country,
+        };
+      });
 
-    setEvents(mapped);
-    setLoading(false);
-    setAppError(null); // Clear error on successful load
-    } catch (error) {
-      console.error("Unexpected error fetching events:", error);
-      const errorMsg = error?.message || error?.toString() || "Unknown error";
-      
-      // Check if it's a network error
-      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-        setAppError(
-          `Network Error: Unable to reach Supabase. Check your internet connection or Supabase URL.`
-        );
-      } else if (error instanceof TypeError) {
-        setAppError(`Error: ${errorMsg} - Please check Supabase configuration.`);
-      } else {
-        setAppError(`Unexpected error: ${errorMsg}`);
-      }
-      
-      setEvents([]);
+      setEvents(mapped);
       setLoading(false);
+      setAppError(null);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      console.warn("Falling back to mock data");
+      setEvents(getMockData());
+      setLoading(false);
+      setAppError(null);
     }
   }, [supabase]);
 
@@ -680,7 +795,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         ref={globeRef}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
         backgroundColor="rgba(0,0,0,0)"
-        pointsData={filteredData}
+        pointsData={filteredEvents}
         pointLat="lat"
         pointLng="lng"
         pointAltitude={0.02}
