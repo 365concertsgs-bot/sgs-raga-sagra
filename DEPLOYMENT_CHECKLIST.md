@@ -186,7 +186,7 @@ npm run preview
 - [ ] **.env file configured**
   ```
   VITE_SUPABASE_URL=https://dvbytrdyauodgdckvegv.supabase.co
-  VITE_SUPABASE_ANON_KEY=xxx
+  VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtbG9jdmZvb2p0enZzc251ZnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODUwMDksImV4cCI6MjA5MzY2MTAwOX0.wmBcFyi13E88a6nxG2IIP-NNF3ysuYEGSnfUWN8LxOU
   ```
 
 - [ ] **Supabase Connection Works**

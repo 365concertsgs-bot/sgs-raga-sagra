@@ -462,7 +462,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           >
             VITE_SUPABASE_URL=https://dvbytrdyauodgdckvegv.supabase.co
             <br />
-            VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+            VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtbG9jdmZvb2p0enZzc251ZnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODUwMDksImV4cCI6MjA5MzY2MTAwOX0.wmBcFyi13E88a6nxG2IIP-NNF3ysuYEGSnfUWN8LxOU
           </pre>
 
           <button

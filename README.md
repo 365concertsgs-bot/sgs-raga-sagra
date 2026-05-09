@@ -162,7 +162,7 @@ npm run build
 Create `.env` file:
 ```env
 VITE_SUPABASE_URL=https://dvbytrdyauodgdckvegv.supabase.co
-VITE_SUPABASE_ANON_KEY=your_anon_key_here
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtbG9jdmZvb2p0enZzc251ZnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODUwMDksImV4cCI6MjA5MzY2MTAwOX0.wmBcFyi13E88a6nxG2IIP-NNF3ysuYEGSnfUWN8LxOU
 ```
 
 Get these from your Supabase project settings.
