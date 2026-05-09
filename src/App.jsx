@@ -66,8 +66,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       console.log('Fetching events from Supabase...');
       const { data: eventsData, error: eventsError } = await supabase
         .from("events_365")
-        .select("*")
-        .timeout(10000); // Add timeout
+        .select("*");
 
       if (eventsError) {
         console.error("Error loading events_365:", eventsError);
@@ -81,8 +80,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
       const { data: mediaData, error: mediaError } = await supabase
         .from("events365_media")
-        .select("*")
-        .timeout(10000); // Add timeout
+        .select("*");
 
       if (mediaError) {
         console.error("Error loading events365_media:", mediaError);
