@@ -165,6 +165,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     }
   }, [supabase]);
 
+  // Fetch events once on component mount
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+
   const filteredEvents = useMemo(
     () =>
       events.filter((event) => {
@@ -189,6 +194,27 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         return true;
       }),
     [events, selectedYear, selectedEventNumber, selectedContinent, searchCountry, searchEventName]
+  );
+
+  const years = useMemo(
+    () =>
+      Array.from(new Set(events.map((event) => event.year).filter(Boolean))).sort(
+        (a, b) => a - b
+      ),
+    [events]
+  );
+
+  const allCountries = useMemo(
+    () => Array.from(new Set(events.map((event) => event.country).filter(Boolean))).sort(),
+    [events]
+  );
+
+  const allEventNames = useMemo(
+    () =>
+      Array.from(
+        new Set(events.map((event) => event.eventName).filter(Boolean))
+      ).sort(),
+    [events]
   );
 
   // Handle country search with autocomplete (optimized with useCallback)
