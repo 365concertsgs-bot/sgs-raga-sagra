@@ -10,6 +10,7 @@ let supabaseError = null
 // Log environment variables for debugging
 if (typeof window !== 'undefined') {
   console.log('Supabase URL:', supabaseUrl ? '✓ Set' : '✗ Missing')
+  console.log('Supabase runtime URL:', supabaseUrl)
   console.log('Supabase Key:', supabaseAnonKey ? '✓ Set' : '✗ Missing')
 }
 
