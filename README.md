@@ -161,7 +161,7 @@ npm run build
 
 Create `.env` file:
 ```env
-VITE_SUPABASE_URL=https://xxx.supabase.co
+VITE_SUPABASE_URL=https://qmlocvfoojtzvssnufro.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key_here
 ```
 

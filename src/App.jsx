@@ -61,30 +61,38 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       return;
     }
 
-    setLoading(true);
-    const { data: eventsData, error: eventsError } = await supabase
-      .from("events_365")
-      .select("*");
+    try {
+      setLoading(true);
+      console.log('Fetching events from Supabase...');
+      const { data: eventsData, error: eventsError } = await supabase
+        .from("events_365")
+        .select("*")
+        .timeout(10000); // Add timeout
 
-    if (eventsError) {
-      // console.error("Error loading events_365:", eventsError.message);
-      setAppError(`Supabase error: ${eventsError.message}`);
-      setEvents([]);
-      setLoading(false);
-      return;
-    }
+      if (eventsError) {
+        console.error("Error loading events_365:", eventsError);
+        setAppError(`Supabase error: ${eventsError.message || JSON.stringify(eventsError)}`);
+        setEvents([]);
+        setLoading(false);
+        return;
+      }
 
-    const { data: mediaData, error: mediaError } = await supabase
-      .from("events365_media")
-      .select("*");
+      console.log(`Loaded ${eventsData?.length || 0} events`);
 
-    if (mediaError) {
-      // console.error("Error loading events365_media:", mediaError.message);
-      setAppError(`Supabase error: ${mediaError.message}`);
-      setEvents([]);
-      setLoading(false);
-      return;
-    }
+      const { data: mediaData, error: mediaError } = await supabase
+        .from("events365_media")
+        .select("*")
+        .timeout(10000); // Add timeout
+
+      if (mediaError) {
+        console.error("Error loading events365_media:", mediaError);
+        setAppError(`Supabase error: ${mediaError.message || JSON.stringify(mediaError)}`);
+        setEvents([]);
+        setLoading(false);
+        return;
+      }
+
+      console.log(`Loaded ${mediaData?.length || 0} media records`);
 
     const mapped = eventsData.map((row) => {
       const dateValue = row.date ? new Date(row.date) : null;
@@ -136,60 +144,30 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
     setEvents(mapped);
     setLoading(false);
-  }, []);
+    setAppError(null); // Clear error on successful load
+    } catch (error) {
+      console.error("Unexpected error fetching events:", error);
+      const errorMsg = error?.message || error?.toString() || "Unknown error";
+      
+      // Check if it's a network error
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        setAppError(
+          `Network Error: Unable to reach Supabase. Check your internet connection or Supabase URL.`
+        );
+      } else if (error instanceof TypeError) {
+        setAppError(`Error: ${errorMsg} - Please check Supabase configuration.`);
+      } else {
+        setAppError(`Unexpected error: ${errorMsg}`);
+      }
+      
+      setEvents([]);
+      setLoading(false);
+    }
+  }, [supabase]);
 
-  // Fetch events once on component mount
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-
-  const years = useMemo(
-    () =>
-      Array.from(new Set(events.map((event) => event.year).filter(Boolean))).sort(
-        (a, b) => a - b
-      ),
-    [events]
-  );
-
-  const allCountries = useMemo(
-    () => Array.from(new Set(events.map((event) => event.country).filter(Boolean))).sort(),
-    [events]
-  );
-
-  const allEventNames = useMemo(
-    () =>
-      Array.from(
-        new Set(events.map((event) => event.eventName).filter(Boolean))
-      ).sort(),
-    [events]
-  );
-
-  const filteredData = useMemo(
+  const filteredEvents = useMemo(
     () =>
       events.filter((event) => {
-        // 🌍 GLOBAL COORDINATE VALIDATION
-        // Validates coordinates work globally including:
-        // - Southern Hemisphere: -90° to 0° latitude (e.g., Australia, Argentina, South Africa)
-        // - Northern Hemisphere: 0° to 90° latitude (e.g., India, USA, Europe)
-        // - Western Hemisphere: -180° to 0° longitude (e.g., Americas)
-        // - Eastern Hemisphere: 0° to 180° longitude (e.g., Asia, Europe, Africa)
-        
-        if (
-          event.lat === null || 
-          event.lng === null || 
-          event.lat === undefined || 
-          event.lng === undefined ||
-          isNaN(event.lat) ||
-          isNaN(event.lng) ||
-          event.lat < -90 || 
-          event.lat > 90 ||
-          event.lng < -180 || 
-          event.lng > 180
-        ) {
-          return false;
-        }
-        
         if (selectedYear && event.year !== Number(selectedYear)) {
           return false;
         }
@@ -416,27 +394,71 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           color: "#fff",
           padding: "20px",
           textAlign: "center",
+          overflowY: "auto",
         }}
       >
-        <div>
-          <h1>Unable to load the app</h1>
-          <p>{appError}</p>
-          <p>
-            Create a <code>.env</code> file in the project root with your
-            Supabase credentials.
+        <div style={{ maxWidth: "600px" }}>
+          <h1>⚠️ Unable to load the app</h1>
+          <p style={{ fontSize: "16px", marginBottom: "20px" }}>{appError}</p>
+          
+          <div style={{
+            background: "#111",
+            color: "#ffd700",
+            padding: "15px",
+            borderRadius: "12px",
+            marginBottom: "20px",
+            textAlign: "left",
+            fontSize: "13px",
+          }}>
+            <h3 style={{ margin: "0 0 10px 0" }}>Troubleshooting:</h3>
+            <ul style={{ margin: "0", paddingLeft: "20px" }}>
+              <li>Check that .env file exists in the project root</li>
+              <li>Verify VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set</li>
+              <li>Check your internet connection</li>
+              <li>Ensure Supabase service is running</li>
+              <li>Check browser console for more details (F12)</li>
+            </ul>
+          </div>
+
+          <p style={{ fontSize: "12px", marginBottom: "20px" }}>
+            Create or update a <code style={{ background: "#222", padding: "2px 6px", borderRadius: "3px" }}>.env</code> file in the project root:
           </p>
           <pre
             style={{
               background: "#111",
-              color: "#ffd700",
+              color: "#0f0",
               padding: "15px",
               borderRadius: "12px",
+              marginBottom: "20px",
+              textAlign: "left",
+              fontSize: "12px",
+              maxHeight: "200px",
+              overflowY: "auto",
             }}
           >
-            VITE_SUPABASE_URL=your_supabase_url
+            VITE_SUPABASE_URL=https://qmlocvfoojtzvssnufro.supabase.co
             <br />
             VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
           </pre>
+
+          <button
+            onClick={() => {
+              setAppError(null);
+              fetchEvents();
+            }}
+            style={{
+              background: "#ffd700",
+              color: "#000",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
+            🔄 Retry
+          </button>
         </div>
       </div>
     );
