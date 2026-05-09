@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-const PRODUCTION_SUPABASE_URL = 'https://dvbytrdyauodgdckvegv.supabase.co'
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || (import.meta.env.PROD ? PRODUCTION_SUPABASE_URL : undefined)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 let supabase = null
@@ -16,27 +15,7 @@ if (typeof window !== 'undefined') {
 
 if (supabaseUrl && supabaseAnonKey) {
   try {
-    supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: true,
-      },
-      global: {
-        fetch: (url, options) => {
-          // Add custom fetch with better error handling
-          return fetch(url, {
-            ...options,
-            // Add headers to help with CORS
-            headers: {
-              ...options?.headers,
-              'Content-Type': 'application/json',
-            },
-          }).catch(err => {
-            console.error('Fetch error:', err, 'URL:', url)
-            throw err
-          })
-        },
-      },
-    })
+    supabase = createClient(supabaseUrl, supabaseAnonKey)
     console.log('Supabase client initialized successfully')
   } catch (err) {
     supabaseError = `Failed to initialize Supabase: ${err.message}`

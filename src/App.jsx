@@ -445,7 +445,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
 
           <p style={{ fontSize: "12px", marginBottom: "20px" }}>
-            Create or update a <code style={{ background: "#222", padding: "2px 6px", borderRadius: "3px" }}>.env</code> file in the project root:
+            Create or update a <code style={{ background: "#222", padding: "2px 6px", borderRadius: "3px" }}>.env</code> file in the project root using your own Supabase project values:
           </p>
           <pre
             style={{
@@ -460,9 +460,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               overflowY: "auto",
             }}
           >
-            VITE_SUPABASE_URL=https://dvbytrdyauodgdckvegv.supabase.co
+            VITE_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
             <br />
-            VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtbG9jdmZvb2p0enZzc251ZnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODUwMDksImV4cCI6MjA5MzY2MTAwOX0.wmBcFyi13E88a6nxG2IIP-NNF3ysuYEGSnfUWN8LxOU
+            VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
           </pre>
 
           <button
