@@ -185,7 +185,7 @@ npm run preview
 
 - [ ] **.env file configured**
   ```
-  VITE_SUPABASE_URL=https://qmlocvfoojtzvssnufro.supabase.co
+  VITE_SUPABASE_URL=https://dvbytrdyauodgdckvegv.supabase.co
   VITE_SUPABASE_ANON_KEY=xxx
   ```
 

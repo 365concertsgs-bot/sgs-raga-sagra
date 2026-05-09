@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-const PRODUCTION_SUPABASE_URL = 'https://qmlocvfoojtzvssnufro.supabase.co'
+const PRODUCTION_SUPABASE_URL = 'https://dvbytrdyauodgdckvegv.supabase.co'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || (import.meta.env.PROD ? PRODUCTION_SUPABASE_URL : undefined)
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
