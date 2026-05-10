@@ -76,6 +76,9 @@ const styles = {
     borderRadius: "8px",
     border: "2px solid rgba(255, 215, 0, 0.3)",
     display: "block",
+    pointerEvents: "none",
+    cursor: "default",
+    userSelect: "none",
   },
   imageControls: {
     display: "flex",
