@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState, Suspense, lazy, memo } from "react";
 import { motion } from "framer-motion";
 
-// Lazy load AudioPlayer to split vendor code
+// Lazy load media players to split vendor code
 const AudioPlayer = lazy(() => import("./AudioPlayer.jsx"));
+const YouTubePlayer = lazy(() => import("./YouTubePlayer.jsx"));
+
+const isYouTubeLink = (url) =>
+  typeof url === "string" && /(?:youtu\.be|youtube\.com|youtube-nocookie\.com)/i.test(url);
 
 const styles = {
   modal: {
@@ -225,7 +229,11 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
         {event.audioUrl && (
           <div style={{ marginBottom: "0", marginTop: "8px", padding: "0", background: "transparent", borderRadius: "0", border: "none", overflow: "hidden", marginLeft: "-20px", marginRight: "-20px", width: "calc(100% + 40px)" }}>
             <Suspense fallback={<p>Loading media...</p>}>
-              <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
+              {isYouTubeLink(event.audioUrl) ? (
+                <YouTubePlayer videoUrl={event.audioUrl} title={event.eventName || "Event video"} />
+              ) : (
+                <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
+              )}
             </Suspense>
           </div>
         )}

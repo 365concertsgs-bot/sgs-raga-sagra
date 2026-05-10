@@ -15,7 +15,7 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
 
   const getPlatformType = (url) => {
     if (url.includes('vimeo.com') || url.includes('vimeopro.com')) return 'vimeo';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
+    if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('youtube-nocookie.com')) return 'youtube';
     if (url.includes('spotify.com')) return 'spotify';
     if (url.includes('soundcloud.com')) return 'soundcloud';
     if (url.match(/\.(mp3|wav|ogg|m4a|aac)$/i)) return 'audio';
@@ -23,8 +23,31 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
   };
 
   const getYoutubeVideoId = (url) => {
-    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-    return match ? match[1] : null;
+    if (!url || typeof url !== 'string') return null;
+
+    const urlString = url.trim();
+    const patterns = [
+      /(?:youtube(?:-nocookie)?\.com\/watch\?(?:.*&)?v=)([A-Za-z0-9_-]{11})/i,
+      /(?:youtu\.be\/)([A-Za-z0-9_-]{11})/i,
+      /(?:youtube(?:-nocookie)?\.com\/embed\/)([A-Za-z0-9_-]{11})/i,
+      /(?:youtube(?:-nocookie)?\.com\/v\/)([A-Za-z0-9_-]{11})/i,
+      /(?:youtube(?:-nocookie)?\.com\/shorts\/)([A-Za-z0-9_-]{11})/i,
+    ];
+
+    for (const pattern of patterns) {
+      const match = urlString.match(pattern);
+      if (match && match[1]) return match[1];
+    }
+
+    try {
+      const parsed = new URL(urlString);
+      const vParam = parsed.searchParams.get('v');
+      if (vParam) return vParam;
+    } catch (error) {
+      // ignore invalid URL parse failures
+    }
+
+    return null;
   };
 
   const getVimeoVideoId = (url) => {
