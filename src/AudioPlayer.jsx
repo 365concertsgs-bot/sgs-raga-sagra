@@ -61,13 +61,14 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
   if (platform === 'youtube') {
     const youtubeId = getYoutubeVideoId(audioUrl);
     if (!youtubeId) return <p style={{ color: '#ff6b6b' }}>Invalid YouTube link</p>;
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
     return (
       <div style={{ width: "100%", maxWidth: "100%", margin: "0", padding: "0", aspectRatio: "16/9", display: "flex", justifyContent: "center" }}>
         <iframe
           loading="lazy"
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${autoPlay ? 1 : 0}`}
+          src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=${autoPlay ? 1 : 0}&rel=0&modestbranding=1&iv_load_policy=3&controls=1&playsinline=1&showinfo=0&disablekb=1&origin=${encodeURIComponent(origin)}`}
           style={{ width: "100%", height: "100%", borderRadius: "0", border: "none", boxSizing: "border-box", margin: "0", padding: "0" }}
-          allow="autoplay; encrypted-media"
+          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
           allowFullScreen
         ></iframe>
       </div>
