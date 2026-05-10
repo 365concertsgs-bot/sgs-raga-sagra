@@ -340,8 +340,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       setFilteredCountries(matches);
       setShowCountrySuggestions(true);
     } else {
-      setFilteredCountries([]);
-      setShowCountrySuggestions(false);
+      setFilteredCountries(allCountries);
+      setShowCountrySuggestions(true);
     }
   }, [allCountries]);
 
@@ -923,6 +923,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
                 onFocus={() => {
                   if (searchCountry.length > 0) {
                     setShowCountrySuggestions(true);
+                  } else if (allCountries.length > 0) {
+                    setFilteredCountries(allCountries);
+                    setShowCountrySuggestions(true);
                   }
                 }}
                 style={styles.textInput}
@@ -933,6 +936,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
                     <div
                       key={country}
                       style={styles.dropdownItem}
+                      onMouseDown={(e) => e.preventDefault()}
                       onClick={(e) => {
                         e.stopPropagation();
                         selectCountry(country);
