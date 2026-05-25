@@ -740,7 +740,36 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         }
 
         @media (max-width: 480px) {
-          /* Extra small devices */
+          html, body, #root, #app {
+            min-height: 100svh;
+            height: auto !important;
+            overflow-x: hidden;
+          }
+
+          body {
+            padding: 0;
+            margin: 0;
+          }
+
+          #app {
+            min-height: 100svh;
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+
+          button[data-mobile-menu-button] {
+            display: block !important;
+          }
+
+          div[data-mobile-overlay] {
+            display: block !important;
+          }
+        }
+
+        @media (min-width: 1025px) {
+          button[data-mobile-menu-button], div[data-mobile-overlay] {
+            display: none !important;
+          }
         }
 
         /* Touch device optimizations */
@@ -815,6 +844,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       {/* 🌍 GLOBE */}
       <Globe
         ref={globeRef}
+        style={{ width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%" }}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
         backgroundColor="rgba(0,0,0,0)"
         pointsData={filteredEvents}
@@ -1436,7 +1466,7 @@ const styles = {
   },
 
   mobileMenuButton: {
-    display: "none",
+    display: "block",
     position: "fixed",
     top: "clamp(15px, 3vh, 20px)",
     left: "clamp(15px, 3vw, 20px)",
@@ -1456,7 +1486,7 @@ const styles = {
   },
 
   mobileMenuOverlay: {
-    display: "none",
+    display: "block",
     position: "fixed",
     top: 0,
     left: 0,
