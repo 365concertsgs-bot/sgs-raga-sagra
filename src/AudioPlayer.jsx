@@ -18,7 +18,8 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
     if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('youtube-nocookie.com')) return 'youtube';
     if (url.includes('spotify.com')) return 'spotify';
     if (url.includes('soundcloud.com')) return 'soundcloud';
-    if (url.match(/\.(mp3|wav|ogg|m4a|aac)$/i)) return 'audio';
+    if (url.match(/\.(mp3|wav|ogg|m4a|aac)(\?|$)/i)) return 'audio';
+    if (url.match(/\.(mp4|webm|ogg|mov|m4v)(\?|$)/i)) return 'video';
     return 'unknown';
   };
 
@@ -129,6 +130,23 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
           src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ffd700&auto_play=${autoPlay ? 'true' : 'false'}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=true`}
           style={{ borderRadius: "0", boxSizing: "border-box", margin: "0", padding: "0" }}
         ></iframe>
+      </div>
+    );
+  }
+
+  if (platform === 'video') {
+    return (
+      <div style={{ width: "100%", maxWidth: "100%", margin: "0", padding: "0", display: "flex", justifyContent: "center" }}>
+        <video
+          controls
+          playsInline
+          muted={muted}
+          autoPlay={autoPlay}
+          style={{ width: "100%", height: "auto", borderRadius: "0", boxSizing: "border-box", margin: "0", padding: "0" }}
+        >
+          <source src={audioUrl} />
+          Your browser does not support the video tag.
+        </video>
       </div>
     );
   }
