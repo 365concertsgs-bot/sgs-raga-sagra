@@ -1029,6 +1029,16 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
                 🎶 YogaSangeeta
               </a>
               <a
+                href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY"
+                target="_blank"
+                rel="noreferrer"
+                style={styles.mediaLink}
+                onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
+                onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
+              >
+                🎥 Raga Ragini Vidya - Documentary
+              </a>
+              <a
                 href="https://www.sgsragasagara.com"
                 target="_blank"
                 rel="noreferrer"
@@ -1223,6 +1233,16 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
             >
               🎶 YogaSangeeta
+            </a>
+            <a
+              href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY"
+              target="_blank"
+              rel="noreferrer"
+              style={styles.mediaLink}
+              onMouseEnter={(e) => Object.assign(e.target.style, styles.mediaLinkHover)}
+              onMouseLeave={(e) => Object.assign(e.target.style, { backgroundColor: "#000", color: "#ffd700", boxShadow: "none", transform: "translateY(0)" })}
+            >
+              🎥 Raga Ragini Vidya - Documentary
             </a>
             <a
               href="https://www.sgsragasagara.com"
