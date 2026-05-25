@@ -669,23 +669,41 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           user-select: text;
         }
 
-        body {
-          font-family: 'Philosopher', serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-          overflow-x: hidden;
-          overflow-y: auto;
-          min-height: 100%;
-          position: relative;
-          background: #000;
-        }
-
-        html, body {
+        html {
           width: 100%;
           min-height: 100%;
           margin: 0;
           padding: 0;
           position: relative;
+          overflow-x: hidden;
+          overflow-y: auto;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Philosopher', serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          width: 100%;
+          min-height: 100%;
+          margin: 0;
+          padding: 0;
+          position: relative;
+          background: #000;
+          overflow-x: hidden;
+          overflow-y: auto;
+          box-sizing: border-box;
+        }
+
+        *, *::before, *::after {
+          box-sizing: inherit;
+        }
+
+        #root, #app {
+          width: 100%;
+          min-height: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
         }
         
         a[href]:hover {
@@ -1306,9 +1324,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 const styles = {
   container: {
     width: "100%",
-    minHeight: "100vh",
+    minHeight: "100%",
+    height: "100%",
     position: "relative",
     overflow: "hidden",
+    maxWidth: "100%",
     background:
       "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)",
   },
