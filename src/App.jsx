@@ -22,24 +22,28 @@ const continents = [
 
 const triviaItems = [
   {
-    question: "What inspired Sri Datta Swamiji to develop Music for Healing and Meditation?",
-    insight:
-      "During 1980–1981, Sri Datta Swamiji explored celestial music believed to aid healing and spent 18 years researching the therapeutic effects of sound. His mission was to share divine music as a means of supporting those suffering from chronic illnesses.",
+    question: "What inspired Sri Datta Swamiji to develop the concept of Music for Healing and Meditation?",
+    insight: `During 1980–1981, Sri Datta Swamiji began exploring and presenting celestial music whose vibrations were believed to aid healing. He dedicated 18 years to researching the therapeutic effects of sound and music. His mother and Guru, Sri Jayalakshmi Mata, taught Him how musical vibrations positively influenced nature — helping crops grow better, cows produce more milk, and flowers bloom beautifully. She blessed Him with the mission of sharing this divine music for the welfare of humanity. Inspired by this vision, Sri Datta Swamiji undertook the task of helping people suffering from chronic illnesses who relied solely on medication, by introducing music as a means to support and accelerate the healing process. Thus, “Music for Healing & Meditation” is not a musical concert, but a spiritual and therapeutic experience where celestial sounds (Nada) are used to promote healing and inner well-being.`,
   },
   {
-    question: "What is Nada Chikitsa and why are crystals and mudras used?",
-    insight:
-      "Nada Chikitsa is the science of sound healing, where vibrations resonate through crystals, space, color, earth, and water. Crystals and mudras help focus energy, amplify vibrations, and guide the healing process deeper into the body and nervous system.",
+    question: "What is Nada Chikitsa and Music Therapy, and why does Sri Datta Swamiji incorporate crystals and mudras into the sessions?",
+    insight: `Music resonates through pure crystals, through Akasha (space), through colours, earth, and water. That is why Sri Datta Swamiji says, “After music, drink water.” Music responds to the Panchabhutas — the five elements — and these vibrations also exist within the human body, which itself is made of these elements: water, fire, earth, air, and space. When music is combined with crystals, especially pure and clear crystals symbolizing purity like Lord Shiva, it helps channel these vibrations more effectively. Mudras also play an important role by helping people focus and concentrate. When attention is centered on the crystal and the music, the healing vibrations can deeply reach the body and nervous system.`,
   },
   {
     question: "What is Raga Ragini Vidya?",
-    insight:
-      "Raga Ragini Vidya is an ancient science of melody rooted in the Vedas, describing how sound vibrations affect physical and mental wellbeing. It is a deep tradition best understood through study and practice rather than a short explanation.",
+    insight: `The science of Raga and Ragini has emerged from the Vedas. It is a vast and profound subject, not something that can be explained in just a few minutes. Entire scriptures and books have been written on it. Sri Datta Swamiji Himself conducted extensive research and authored a book on this subject. By studying it, one can understand what Raga Ragini Vidya truly is, how it contributes to physical and mental well-being, and how it can be practiced. This knowledge is ancient and rooted in traditional wisdom. It does not belong to just one era, but has existed since the times of the Treta and Dwapara Yugas. It is deeply connected with the science of sound — the true nature of vibration and Nada (sacred sound) — as well as the principles of sound-based pranayama. The entire nervous system is linked through prana, the life force. Through this pranic energy, sound vibrations travel within the nerve channels. These sound waves carry messages throughout the body. Different types of sounds create different effects within the human system. Some nerves become inactive or “dead,” while others remain active and connected. Through pranic sound vibrations, these inactive nerves can be stimulated and revitalized. However, only those who deeply understand life energy and sound can truly comprehend this subtle science.`,
   },
   {
-    question: "How does Sri Datta Swamiji conduct a Music for Healing session?",
-    insight:
-      "He carefully aligns rhythm, melody, and individual needs, preparing inwardly before offering music. Sessions are considered a spiritual process where music becomes a channel for grace and healing rather than a performance.",
+    question: "How does Sri Datta Swamiji conduct a Music for Healing & Meditation session?",
+    insight: `When Sri Datta Swamiji offers music to people, He carefully calculates and aligns the rhythm, melodies, vibrations, and the needs of the individuals listening — especially those suffering from illness. Sri Datta Swamiji first prepares and tunes Himself inwardly before bringing everything together through music. It involves immense effort and dedication. On nights before such musical offerings, Sri Datta Swamiji often remains awake, fully immersed in receiving countless vibrations and inspirations. His role is to channel these vibrations in a positive and beneficial way. At the same time, Sri Datta Swamiji guides the musicians, the audience, and Himself, while ultimately allowing the music itself to guide everything. This music does not belong to Him; it is entirely the grace of the Almighty. It is through God’s blessing that this music manifests.`,
+  },
+  {
+    question: "How can one learn more about Music for Healing and Meditation by H.H. Dr. Sri Ganapathy Sachchidananda Swamiji?",
+    insight: `Please refer to the Quick Links section on the main page to explore relevant resources available online. You may also obtain a copy of the book Raga Ragini Nada Yoga, available in both English and Telugu. The links are provided below.`,
+  },
+  {
+    question: "How can one purchase Sri Datta Swamiji’s Music for Healing and Meditation, and how can one attend a session?",
+    insight: `HH Dr. Sri Ganapathy Sachchidananda Swamiji’s music is available on iMusic, Amazon Music, Spotify, YouTube and other platforms for listening. One can explore albums to purchase on https://ragaraginistore.com/. To attend a Music for Healing and Meditation session by H.H. Dr. Sri Ganapathy Sachchidananda Swamiji, please refer to HH Dr. Sri Ganapathy Sachchidananda Swamiji’s calendar on www.dattapeetham.org to stay updated on upcoming sessions.`,
   },
 ];
 
@@ -941,18 +945,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         <div style={styles.filterPanelHeader}>
           <div>
             <div style={styles.menuSectionLabel}>Menu</div>
-            <div style={styles.menuHelpText}>Open a modal or use filters below.</div>
+            <div style={styles.menuHelpText}>Open a modal to view About, Trivia, Quick Links, or App Demo.</div>
           </div>
           <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-            <button
-              type="button"
-              onClick={clearFilters}
-              style={styles.clearIconButton}
-              aria-label="Clear filters"
-              title="Clear filters"
-            >
-              🧹
-            </button>
             <button
               type="button"
               onClick={() => setShowMenu(false)}
@@ -968,32 +963,29 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         <div style={styles.infoMenuInline}>
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("about")}>About</button>
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("trivia")}>Trivia</button>
+          <button style={styles.infoMenuItem} onClick={() => openInfoModal("quick-links")}>Quick Links</button>
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("app-demo")}>App Demo</button>
         </div>
+        </div>
+      )}
 
-        <div style={styles.infoPanel}>
-          <div style={styles.infoPanelTitle}>Quick Links</div>
-          <div style={styles.quickLinksList}>
-            <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-              <span style={styles.quickLinkIcon}>🕉️</span>
-              Datta Peetam Official
-            </a>
-            <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-              <span style={styles.quickLinkIcon}>🎶</span>
-              YogaSangeeta
-            </a>
-            <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-              <span style={styles.quickLinkIcon}>🎥</span>
-              Raga Ragini Vidya - Documentary
-            </a>
-            <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-              <span style={styles.quickLinkIcon}>🌐</span>
-              SGS Raga Sagara
-            </a>
+      <div style={styles.filterPanel}>
+        <div style={styles.filterPanelHeader}>
+          <div>
+            <div style={styles.menuSectionLabel}>Filters</div>
+            <div style={styles.menuHelpText}>Filter events by year, number, country or name.</div>
           </div>
+          <button
+            type="button"
+            onClick={clearFilters}
+            style={styles.clearIconButton}
+            aria-label="Clear filters"
+            title="Clear filters"
+          >
+            🧹
+          </button>
         </div>
 
-        {/* Event Number - Slider and Input */}
         <div style={styles.filterRow}>
           <label style={styles.label}>Event Number</label>
           <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -1017,7 +1009,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
         </div>
 
-        {/* Year Selection Dropdown */}
         <div style={styles.filterRow}>
           <label style={styles.label}>Year</label>
           <select
@@ -1048,7 +1039,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </select>
         </div>
 
-        {/* Country Search with Autocomplete */}
         <div style={styles.filterRow}>
           <label style={styles.label}>Country</label>
           <div style={{ position: "relative" }}>
@@ -1083,7 +1073,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
         </div>
 
-        {/* Event Name Search with Autocomplete */}
         <div style={styles.filterRow}>
           <label style={styles.label}>Event Name</label>
           <div style={{ position: "relative" }}>
@@ -1136,9 +1125,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             )}
           </div>
         </div>
+      </div>
 
-        </div>
-      )}
 
       {/* 🌍 CONTINENT FILTER - BOTTOM */}
       <div style={styles.continentFilter} data-continent-filter>
@@ -1188,11 +1176,36 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               <div style={{ fontSize: "11px", color: "rgba(255, 215, 0, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "600" }}>
                 Insight
               </div>
-              <p style={{ fontSize: "14px", color: "#f7f2e7", lineHeight: 1.7, margin: 0 }}>
+              <p style={{ fontSize: "14px", color: "#f7f2e7", lineHeight: 1.7, margin: 0, whiteSpace: "pre-line" }}>
                 {item.insight}
               </p>
             </div>
           ))}
+        </div>
+      </InfoModal>
+
+      <InfoModal
+        title="Quick Links"
+        isOpen={activeInfoModal === "quick-links"}
+        onClose={() => setActiveInfoModal(null)}
+      >
+        <div style={styles.quickLinksList}>
+          <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+            <span style={styles.quickLinkIcon}>🕉️</span>
+            Datta Peetam Official
+          </a>
+          <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+            <span style={styles.quickLinkIcon}>🎶</span>
+            YogaSangeeta
+          </a>
+          <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+            <span style={styles.quickLinkIcon}>🎥</span>
+            Raga Ragini Vidya - Documentary
+          </a>
+          <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+            <span style={styles.quickLinkIcon}>🌐</span>
+            SGS Raga Sagara
+          </a>
         </div>
       </InfoModal>
 
@@ -1363,6 +1376,22 @@ const styles = {
     border: "1px solid rgba(255, 215, 0, 0.2)",
     borderRadius: "16px",
     padding: "16px 12px",
+    zIndex: 36,
+    boxShadow: "0 8px 40px rgba(0, 0, 0, 0.6)",
+    WebkitOverflowScrolling: "touch",
+  },
+
+  filterPanel: {
+    position: "fixed",
+    top: "clamp(80px, 10vh, 100px)",
+    right: "clamp(15px, 3vw, 25px)",
+    width: "clamp(260px, 22vw, 340px)",
+    maxHeight: "calc(100vh - 180px)",
+    overflowY: "auto",
+    background: "rgba(0, 0, 0, 0.92)",
+    border: "1px solid rgba(255, 215, 0, 0.2)",
+    borderRadius: "16px",
+    padding: "16px 14px",
     zIndex: 36,
     boxShadow: "0 8px 40px rgba(0, 0, 0, 0.6)",
     WebkitOverflowScrolling: "touch",
