@@ -1555,14 +1555,17 @@ const styles = {
 
   titleRow: {
     position: "absolute",
-    top: "clamp(15px, 3vh, 25px)",
+    top: "clamp(20px, 4vh, 28px)",
     left: "50%",
     transform: "translateX(-50%)",
     display: "flex",
+    flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center",
-    gap: "clamp(12px, 2vw, 18px)",
+    gap: "clamp(10px, 2vw, 14px)",
     zIndex: 19,
+    maxWidth: "min(90vw, 760px)",
+    padding: "0 clamp(16px, 4vw, 24px)",
   },
 
   titleLogo: {
@@ -1576,7 +1579,7 @@ const styles = {
   infoButton: {
     position: "absolute",
     top: "clamp(15px, 3vh, 25px)",
-    right: "clamp(15px, 3vw, 25px)",
+    left: "clamp(15px, 3vw, 25px)",
     zIndex: 21,
     background: "rgba(0, 0, 0, 0.55)",
     border: "1px solid rgba(255, 255, 255, 0.32)",
@@ -1823,7 +1826,8 @@ const styles = {
     display: "block",
     position: "fixed",
     top: "clamp(15px, 3vh, 20px)",
-    left: "clamp(15px, 3vw, 20px)",
+    right: "clamp(15px, 3vw, 20px)",
+    left: "auto",
     zIndex: 51,
     background: "#ffcc00",
     color: "#000",
