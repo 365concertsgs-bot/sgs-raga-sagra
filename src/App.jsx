@@ -1486,47 +1486,6 @@ const styles = {
     zIndex: 20,
   },
 
-  filterStack: {
-    position: "absolute",
-    top: "clamp(140px, 16vh, 160px)",
-    left: "clamp(15px, 2vw, 25px)",
-    display: "flex",
-    flexDirection: "column",
-    gap: 14,
-    zIndex: 20,
-    backgroundColor: "#ffcc00",
-    padding: "clamp(14px, 2vw, 18px)",
-    borderRadius: "20px",
-    boxShadow: "0 12px 24px rgba(0,0,0,0.35)",
-    minWidth: "280px",
-    maxWidth: "320px",
-    maxHeight: "85vh",
-    overflowY: "auto",
-    fontSize: "clamp(10px, 1vw, 12px)",
-    touchAction: "manipulation",
-  },
-
-  filterPanelHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: "10px",
-  },
-
-  panelIconButton: {
-    width: "48px",
-    height: "48px",
-    borderRadius: "14px",
-    border: "none",
-    background: "#000",
-    color: "#ffd700",
-    cursor: "pointer",
-    display: "grid",
-    placeItems: "center",
-    fontSize: "1.2rem",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.25)",
-  },
-
   panelIconButtonMobile: {
     width: "44px",
     height: "44px",
@@ -1674,20 +1633,6 @@ const styles = {
     fontSize: "clamp(10px, 1vw, 12px)",
     textAlign: "center",
     fontWeight: "600",
-  },
-
-  clearIconButton: {
-    padding: "8px 10px",
-    borderRadius: "10px",
-    border: "none",
-    background: "#000",
-    color: "#ffd700",
-    cursor: "pointer",
-    fontSize: "clamp(14px, 1.2vw, 18px)",
-    lineHeight: 1,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
   },
 
   filterStackMobile: {
