@@ -5,6 +5,8 @@ import { supabase, supabaseError, supabaseUrl, supabaseKeySet } from "./supabase
 // Lazy load the Globe to reduce initial bundle size
 const Globe = lazy(() => import("react-globe.gl"));
 
+import InfoModal from "./InfoModal";
+
 // Lazy load EventModal component to reduce main bundle
 const EventModal = lazy(() => import("./EventModal"));
 
@@ -16,6 +18,29 @@ const continents = [
   "North America",
   "South America",
   "Australia",
+];
+
+const triviaItems = [
+  {
+    question: "What inspired Sri Datta Swamiji to develop Music for Healing and Meditation?",
+    insight:
+      "During 1980–1981, Sri Datta Swamiji explored celestial music believed to aid healing and spent 18 years researching the therapeutic effects of sound. His mission was to share divine music as a means of supporting those suffering from chronic illnesses.",
+  },
+  {
+    question: "What is Nada Chikitsa and why are crystals and mudras used?",
+    insight:
+      "Nada Chikitsa is the science of sound healing, where vibrations resonate through crystals, space, color, earth, and water. Crystals and mudras help focus energy, amplify vibrations, and guide the healing process deeper into the body and nervous system.",
+  },
+  {
+    question: "What is Raga Ragini Vidya?",
+    insight:
+      "Raga Ragini Vidya is an ancient science of melody rooted in the Vedas, describing how sound vibrations affect physical and mental wellbeing. It is a deep tradition best understood through study and practice rather than a short explanation.",
+  },
+  {
+    question: "How does Sri Datta Swamiji conduct a Music for Healing session?",
+    insight:
+      "He carefully aligns rhythm, melody, and individual needs, preparing inwardly before offering music. Sessions are considered a spiritual process where music becomes a channel for grace and healing rather than a performance.",
+  },
 ];
 
 export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", rightLogoUrl = "https://i.imgur.com/opWvuCC.jpeg" }) {
@@ -34,12 +59,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   const [showEventNameSuggestions, setShowEventNameSuggestions] = useState(false);
   const [selectedContinent, setSelectedContinent] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [selectedInfoTab, setSelectedInfoTab] = useState("about");
-  const [showInfoMenu, setShowInfoMenu] = useState(false);
+  const [activeInfoModal, setActiveInfoModal] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
   const [isUserActive, setIsUserActive] = useState(false);
   const [appError, setAppError] = useState(supabaseError || null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const hasValue = (value) =>
     value != null &&
@@ -414,14 +438,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setFilteredEventNames([]);
     setShowEventNameSuggestions(false);
     setSelectedEvent(null);
-    setSelectedInfoTab("about");
-    setShowMobileMenu(false);
-    setShowInfoMenu(false);
+    setActiveInfoModal(null);
+    setShowMenu(false);
   }, []);
 
-  const openAboutWindow = useCallback(() => {
-    const aboutWindow = window.open("/about.html", "_blank");
-    if (aboutWindow) aboutWindow.focus();
+  const openInfoModal = useCallback((modalKey) => {
+    setActiveInfoModal(modalKey);
+    setShowMenu(false);
   }, []);
 
   const handleInfoTabChange = useCallback(
@@ -866,7 +889,14 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       {/* 🌍 GLOBE */}
       <Globe
         ref={globeRef}
-        style={{ width: "100%", height: "100%", maxWidth: "100%", maxHeight: "100%" }}
+        style={{
+          width: "100%",
+          height: "100%",
+          maxWidth: "100%",
+          maxHeight: "100%",
+          pointerEvents: activeInfoModal || showMenu || selectedEvent ? "none" : "auto",
+          opacity: activeInfoModal || selectedEvent ? 0.6 : 1,
+        }}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
         backgroundColor="rgba(0,0,0,0)"
         pointsData={filteredEvents}
@@ -896,430 +926,81 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         labelAltitude={0.02}
       />
 
-      {/* 🔽 MOBILE MENU BUTTON */}
+      {/* ☰ TOP LEFT MENU */}
       <button
-        data-mobile-menu-button
-        style={styles.mobileMenuButton}
-        onClick={() => setShowMobileMenu(!showMobileMenu)}
-        title={showMobileMenu ? "Close menu" : "Open filters"}
+        type="button"
+        style={styles.menuButton}
+        aria-expanded={showMenu}
+        aria-label={showMenu ? "Close menu" : "Open menu"}
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowMenu((current) => !current);
+        }}
       >
-        {showMobileMenu ? "✕" : "☰"}
+        {showMenu ? "✕" : "☰"}
       </button>
 
-      {/* 🔽 MOBILE MENU OVERLAY */}
-      {showMobileMenu && (
-        <div
-          style={styles.mobileMenuOverlay}
-          onClick={() => setShowMobileMenu(false)}
-          data-mobile-overlay
-        />
-      )}
+      {showMenu && <div style={styles.menuBackdrop} onClick={() => setShowMenu(false)} />}
 
-      {/* 🔽 FILTERS - MOBILE VERSION */}
-      {showMobileMenu && (
-        <div
-          style={{...styles.filterStackMobile}}
+      {showMenu && (
+        <div 
+          style={styles.filterStack}
+          data-filter-stack="desktop"
           onClick={(e) => e.stopPropagation()}
-          data-filter-stack="mobile"
         >
-          <div style={styles.filterPanelHeaderMobile}>
+        <div style={styles.filterPanelHeader}>
+          <div>
+            <div style={styles.menuSectionLabel}>Menu</div>
+            <div style={styles.menuHelpText}>Open a modal or use filters below.</div>
+          </div>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowInfoMenu(!showInfoMenu);
-              }}
-              style={styles.panelIconButtonMobile}
-              aria-label="Info tabs"
-              title="Info tabs"
-            >
-              🖌️
-            </button>
-            <div style={styles.infoSelectorMobile}>
-              <label style={styles.label} htmlFor="mobile-info-select">Info</label>
-              <select
-                id="mobile-info-select"
-                value={selectedInfoTab}
-                onChange={(e) => handleInfoTabChange(e.target.value)}
-                style={styles.infoDropdown}
-              >
-                <option value="about">About</option>
-                <option value="trivia">Trivia</option>
-                <option value="quick-links">Quick Links</option>
-                <option value="app-demo">App Demo</option>
-              </select>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                clearFilters();
-              }}
+              type="button"
+              onClick={clearFilters}
               style={styles.clearIconButton}
               aria-label="Clear filters"
               title="Clear filters"
             >
               🧹
             </button>
-          </div>
-
-          <div style={styles.infoPanel}>
-            {selectedInfoTab === "about" && (
-              <>
-                <div style={styles.infoPanelTitle}>About</div>
-                <p style={styles.infoPanelText}>
-                  This section will describe the app in detail. Click the button below to open the About page in a new window.
-                </p>
-                <button style={styles.aboutOpenButton} onClick={openAboutWindow}>
-                  Open About Page
-                </button>
-              </>
-            )}
-
-            {selectedInfoTab === "trivia" && (
-              <>
-                <div style={styles.infoPanelTitle}>Trivia</div>
-                <div style={styles.infoPanelTextBlock}>
-                  <p>
-                    What inspired Sri Datta Swamiji to develop the concept of Music for Healing and Meditation? During 1980–1981, Sri Datta Swamiji began exploring and presenting celestial music whose vibrations were believed to aid healing. He dedicated 18 years to researching the therapeutic effects of sound and music. His mother and Guru, Sri Jayalakshmi Mata, taught Him how musical vibrations positively influenced nature — helping crops grow better, cows produce more milk, and flowers bloom beautifully. She blessed Him with the mission of sharing this divine music for the welfare of humanity. Inspired by this vision, Sri Datta Swamiji undertook the task of helping people suffering from chronic illnesses who relied solely on medication, by introducing music as a means to support and accelerate the healing process. Thus, “Music for Healing & Meditation” is not a musical concert, but a spiritual and therapeutic experience where celestial sounds (Nada) are used to promote healing and inner well-being.
-                  </p>
-                  <p>
-                    What is Nada Chikitsa and Music Therapy, and why does Sri Datta Swamiji incorporate crystals and mudras into the sessions? Music resonates through pure crystals, through Akasha (space), through colours, earth, and water. That is why Sri Datta Swamiji says, “After music, drink water.” Music responds to the Panchabhutas — the five elements — and these vibrations also exist within the human body, which itself is made of these elements: water, fire, earth, air, and space. When music is combined with crystals, especially pure and clear crystals symbolizing purity like Lord Shiva, it helps channel these vibrations more effectively. Mudras also play an important role by helping people focus and concentrate. When attention is centered on the crystal and the music, the healing vibrations can deeply reach the body and nervous system.
-                  </p>
-                  <p>
-                    What is Raga Ragini Vidya? The science of Raga and Ragini has emerged from the Vedas. It is a vast and profound subject, not something that can be explained in just a few minutes. Entire scriptures and books have been written on it. Sri Datta Swamiji Himself conducted extensive research and authored a book on this subject. By studying it, one can understand what Raga Ragini Vidya truly is, how it contributes to physical and mental well-being, and how it can be practiced. This knowledge is ancient and rooted in traditional wisdom. It does not belong to just one era, but has existed since the times of the Treta and Dwapara Yugas. It is deeply connected with the science of sound — the true nature of vibration and Nada (sacred sound) — as well as the principles of sound-based pranayama. The entire nervous system is linked through prana, the life force. Through this pranic energy, sound vibrations travel within the nerve channels. These sound waves carry messages throughout the body. Different types of sounds create different effects within the human system. Some nerves become inactive or “dead,” while others remain active and connected. Through pranic sound vibrations, these inactive nerves can be stimulated and revitalized. However, only those who deeply understand life energy and sound can truly comprehend this subtle science.
-                  </p>
-                  <p>
-                    How does Sri Datta Swamiji conduct a Music for Healing & Meditation session? When Sri Datta Swamiji offers music to people, He carefully calculates and aligns the rhythm, melodies, vibrations, and the needs of the individuals listening — especially those suffering from illness. Sri Datta Swamiji first prepares and tunes Himself inwardly before bringing everything together through music. It involves immense effort and dedication. On nights before such musical offerings, Sri Datta Swamiji often remains awake, fully immersed in receiving countless vibrations and inspirations. His role is to channel these vibrations in a positive and beneficial way. At the same time, Sri Datta Swamiji guides the musicians, the audience, and Himself, while ultimately allowing the music itself to guide everything. This music does not belong to Him; it is entirely the grace of the Almighty. It is through God’s blessing that this music manifests.
-                  </p>
-                  <p>
-                    How can one learn more about Music for Healing and Meditation by H.H. Dr. Sri Ganapathy Sachchidananda Swamiji? Please refer to the Quick Links section on the main page to explore relevant resources available online. You may also obtain a copy of the book Raga Ragini Nada Yoga, available in both English and Telugu. The links are provided below.
-                  </p>
-                  <p>
-                    How can one purchase Sri Datta Swamiji’s Music for Healing and Meditation? HH Dr. Sri Ganapathy Sachchidananda Swamiji’s music is available on iMusic, Amazon Music, Spotify, YouTube and other platforms for listening. One can explore albums to purchase on https://ragaraginistore.com/. How can one attend a Music for Healing and Meditation session by H.H. Dr. Sri Ganapathy Sachchidananda Swamiji? Please refer to HH Dr. Sri Ganapathy Sachchidananda Swamiji’s calendar on www.dattapeetham.org to stay updated on upcoming sessions.
-                  </p>
-                </div>
-              </>
-            )}
-
-            {selectedInfoTab === "quick-links" && (
-              <>
-                <div style={styles.infoPanelTitle}>Quick Links</div>
-                <div style={styles.quickLinksList}>
-                  <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-                    <span style={styles.quickLinkIcon}>🕉️</span>
-                    Datta Peetam Official
-                  </a>
-                  <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-                    <span style={styles.quickLinkIcon}>🎶</span>
-                    YogaSangeeta
-                  </a>
-                  <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-                    <span style={styles.quickLinkIcon}>🎥</span>
-                    Raga Ragini Vidya - Documentary
-                  </a>
-                  <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-                    <span style={styles.quickLinkIcon}>🌐</span>
-                    SGS Raga Sagara
-                  </a>
-                </div>
-              </>
-            )}
-
-            {selectedInfoTab === "app-demo" && (
-              <>
-                <div style={styles.infoPanelTitle}>App Demo</div>
-                <div style={styles.demoPlaceholder}>
-                  <div style={styles.demoPlaceholderText}>
-                    Telugu demo video placeholder. The video will be added here later.
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Event Number - Slider and Input */}
-          <div style={styles.filterRow}>
-            <label style={styles.label}>Event Number</label>
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <input
-                type="range"
-                min="1"
-                max="365"
-                value={selectedEventNumber}
-                onChange={(e) => handleEventNumberChange(e.target.value)}
-                style={styles.slider}
-              />
-              <input
-                type="number"
-                min="1"
-                max="365"
-                value={selectedEventNumber}
-                onChange={(e) => handleEventNumberChange(e.target.value)}
-                placeholder="Type #"
-                style={styles.numberInput}
-              />
-            </div>
-          </div>
-
-          {/* Year Selection Dropdown */}
-          <div style={styles.filterRow}>
-            <label style={styles.label}>Year</label>
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              style={{
-                padding: "clamp(6px, 0.9vw, 9px) clamp(8px, 1.2vw, 10px)",
-                fontSize: "clamp(9px, 1vw, 11px)",
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-                background: "#fff",
-                color: selectedYear ? "#000" : "#999",
-                outline: "none",
-                width: "100%",
-                boxSizing: "border-box",
-                touchAction: "manipulation",
-                cursor: "pointer",
-                fontFamily: "'Philosopher', serif",
-                fontWeight: "500",
-              }}
+            <button
+              type="button"
+              onClick={() => setShowMenu(false)}
+              style={styles.panelIconButton}
+              aria-label="Close menu"
+              title="Close menu"
             >
-              <option value="">All Years</option>
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Country Search with Autocomplete */}
-          <div style={styles.filterRow}>
-            <label style={styles.label}>Country</label>
-            <div style={{ position: "relative" }}>
-              <input
-                type="text"
-                placeholder="Search country..."
-                value={searchCountry}
-                onChange={(e) => handleCountryChange(e.target.value)}
-                onFocus={() => {
-                  if (searchCountry.length > 0) {
-                    setShowCountrySuggestions(true);
-                  } else if (allCountries.length > 0) {
-                    setFilteredCountries(allCountries);
-                    setShowCountrySuggestions(true);
-                  }
-                }}
-                style={styles.textInput}
-              />
-              {showCountrySuggestions && filteredCountries.length > 0 && (
-                <div style={styles.dropdown}>
-                  {filteredCountries.map((country) => (
-                    <div
-                      key={country}
-                      style={styles.dropdownItem}
-                      onMouseDown={(e) => e.preventDefault()}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        selectCountry(country);
-                      }}
-                    >
-                      {country}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Event Name Search with Autocomplete */}
-          <div style={styles.filterRow}>
-            <label style={styles.label}>Event Name</label>
-            <div style={{ position: "relative" }}>
-              <input
-                type="text"
-                placeholder="Search event name..."
-                value={searchEventName}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setSearchEventName(val);
-                  if (val.length > 0) {
-                    const filtered = allEventNames.filter((name) =>
-                      name.toLowerCase().includes(val.toLowerCase())
-                    );
-                    setFilteredEventNames(filtered);
-                    setShowEventNameSuggestions(true);
-                  } else {
-                    setFilteredEventNames([]);
-                    setShowEventNameSuggestions(false);
-                  }
-                }}
-                onFocus={() => {
-                  if (searchEventName.length > 0) {
-                    setShowEventNameSuggestions(true);
-                  }
-                }}
-                style={styles.textInput}
-              />
-              {showEventNameSuggestions && filteredEventNames.length > 0 && (
-                <div style={styles.dropdown}>
-                  {filteredEventNames.map((eventName) => (
-                    <div
-                      key={eventName}
-                      style={styles.dropdownItem}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const selectedEvent = events.find((e) => e.eventName === eventName);
-                        setSearchEventName(eventName);
-                        setShowEventNameSuggestions(false);
-                        setFilteredEventNames([]);
-                        if (selectedEvent) {
-                          focusEventOnGlobe(selectedEvent);
-                        }
-                      }}
-                    >
-                      {eventName}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+              ✕
+            </button>
           </div>
         </div>
-      )}
 
-      {/* 🔽 FILTERS - DESKTOP VERSION */}
-      <div 
-        style={styles.filterStack}
-        data-filter-stack="desktop"
-      >
-        <div style={styles.filterPanelHeader}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowInfoMenu(!showInfoMenu);
-              setShowMobileMenu(false);
-            }}
-            style={styles.panelIconButton}
-            aria-label="Info tabs"
-            title="Info tabs"
-          >
-            🖌️
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              clearFilters();
-            }}
-            style={styles.clearIconButton}
-            aria-label="Clear filters"
-            title="Clear filters"
-          >
-            🧹
-          </button>
+        <div style={styles.infoMenuInline}>
+          <button style={styles.infoMenuItem} onClick={() => openInfoModal("about")}>About</button>
+          <button style={styles.infoMenuItem} onClick={() => openInfoModal("trivia")}>Trivia</button>
+          <button style={styles.infoMenuItem} onClick={() => openInfoModal("app-demo")}>App Demo</button>
         </div>
-
-        {showInfoMenu && (
-          <div style={styles.infoMenuInline} onClick={(e) => e.stopPropagation()}>
-            <button
-              style={styles.infoMenuItem}
-              onClick={() => handleInfoTabChange("about")}
-            >
-              About
-            </button>
-            <button
-              style={styles.infoMenuItem}
-              onClick={() => handleInfoTabChange("trivia")}
-            >
-              Trivia
-            </button>
-            <button
-              style={styles.infoMenuItem}
-              onClick={() => handleInfoTabChange("quick-links")}
-            >
-              Quick Links
-            </button>
-            <button
-              style={styles.infoMenuItem}
-              onClick={() => handleInfoTabChange("app-demo")}
-            >
-              App Demo
-            </button>
-          </div>
-        )}
 
         <div style={styles.infoPanel}>
-          {selectedInfoTab === "about" && (
-            <>
-              <div style={styles.infoPanelTitle}>About</div>
-              <p style={styles.infoPanelText}>
-                This section will describe the app in detail. Click the button below to open the About page in a new window.
-              </p>
-              <button style={styles.aboutOpenButton} onClick={openAboutWindow}>
-                Open About Page
-              </button>
-            </>
-          )}
-
-          {selectedInfoTab === "trivia" && (
-            <>
-              <div style={styles.infoPanelTitle}>Trivia</div>
-              <div style={styles.infoPanelTextBlock}>
-                <p>
-                  What inspired Sri Datta Swamiji to develop the concept of Music for Healing and Meditation? During 1980–1981, Sri Datta Swamiji began exploring and presenting celestial music whose vibrations were believed to aid healing. He dedicated 18 years to researching the therapeutic effects of sound and music. His mother and Guru, Sri Jayalakshmi Mata, taught Him how musical vibrations positively influenced nature — helping crops grow better, cows produce more milk, and flowers bloom beautifully. She blessed Him with the mission of sharing this divine music for the welfare of humanity. Inspired by this vision, Sri Datta Swamiji undertook the task of helping people suffering from chronic illnesses who relied solely on medication, by introducing music as a means to support and accelerate the healing process. Thus, “Music for Healing & Meditation” is not a musical concert, but a spiritual and therapeutic experience where celestial sounds (Nada) are used to promote healing and inner well-being.
-                </p>
-                <p>
-                  What is Nada Chikitsa and Music Therapy, and why does Sri Datta Swamiji incorporate crystals and mudras into the sessions? Music resonates through pure crystals, through Akasha (space), through colours, earth, and water. That is why Sri Datta Swamiji says, “After music, drink water.” Music responds to the Panchabhutas — the five elements — and these vibrations also exist within the human body, which itself is made of these elements: water, fire, earth, air, and space. When music is combined with crystals, especially pure and clear crystals symbolizing purity like Lord Shiva, it helps channel these vibrations more effectively. Mudras also play an important role by helping people focus and concentrate. When attention is centered on the crystal and the music, the healing vibrations can deeply reach the body and nervous system.
-                </p>
-                <p>
-                  What is Raga Ragini Vidya? The science of Raga and Ragini has emerged from the Vedas. It is a vast and profound subject, not something that can be explained in just a few minutes. Entire scriptures and books have been written on it. Sri Datta Swamiji Himself conducted extensive research and authored a book on this subject. By studying it, one can understand what Raga Ragini Vidya truly is, how it contributes to physical and mental well-being, and how it can be practiced. This knowledge is ancient and rooted in traditional wisdom. It does not belong to just one era, but has existed since the times of the Treta and Dwapara Yugas. It is deeply connected with the science of sound — the true nature of vibration and Nada (sacred sound) — as well as the principles of sound-based pranayama. The entire nervous system is linked through prana, the life force. Through this pranic energy, sound vibrations travel within the nerve channels. These sound waves carry messages throughout the body. Different types of sounds create different effects within the human system. Some nerves become inactive or “dead,” while others remain active and connected. Through pranic sound vibrations, these inactive nerves can be stimulated and revitalized. However, only those who deeply understand life energy and sound can truly comprehend this subtle science.
-                </p>
-                <p>
-                  How does Sri Datta Swamiji conduct a Music for Healing & Meditation session? When Sri Datta Swamiji offers music to people, He carefully calculates and aligns the rhythm, melodies, vibrations, and the needs of the individuals listening — especially those suffering from illness. Sri Datta Swamiji first prepares and tunes Himself inwardly before bringing everything together through music. It involves immense effort and dedication. On nights before such musical offerings, Sri Datta Swamiji often remains awake, fully immersed in receiving countless vibrations and inspirations. His role is to channel these vibrations in a positive and beneficial way. At the same time, Sri Datta Swamiji guides the musicians, the audience, and Himself, while ultimately allowing the music itself to guide everything. This music does not belong to Him; it is entirely the grace of the Almighty. It is through God’s blessing that this music manifests.
-                </p>
-                <p>
-                  How can one learn more about Music for Healing and Meditation by H.H. Dr. Sri Ganapathy Sachchidananda Swamiji? Please refer to the Quick Links section on the main page to explore relevant resources available online. You may also obtain a copy of the book Raga Ragini Nada Yoga, available in both English and Telugu. The links are provided below.
-                </p>
-                <p>
-                  How can one purchase Sri Datta Swamiji’s Music for Healing and Meditation? HH Dr. Sri Ganapathy Sachchidananda Swamiji’s music is available on iMusic, Amazon Music, Spotify, YouTube and other platforms for listening. One can explore albums to purchase on https://ragaraginistore.com/. How can one attend a Music for Healing and Meditation session by H.H. Dr. Sri Ganapathy Sachchidananda Swamiji? Please refer to HH Dr. Sri Ganapathy Sachchidananda Swamiji’s calendar on www.dattapeetham.org to stay updated on upcoming sessions.
-                </p>
-              </div>
-            </>
-          )}
-
-          {selectedInfoTab === "quick-links" && (
-            <>
-              <div style={styles.infoPanelTitle}>Quick Links</div>
-              <div style={styles.quickLinksList}>
-                <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-                  <span style={styles.quickLinkIcon}>🕉️</span>
-                  Datta Peetam Official
-                </a>
-                <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-                  <span style={styles.quickLinkIcon}>🎶</span>
-                  YogaSangeeta
-                </a>
-                <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-                  <span style={styles.quickLinkIcon}>🎥</span>
-                  Raga Ragini Vidya - Documentary
-                </a>
-                <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-                  <span style={styles.quickLinkIcon}>🌐</span>
-                  SGS Raga Sagara
-                </a>
-              </div>
-            </>
-          )}
-
-          {selectedInfoTab === "app-demo" && (
-            <>
-              <div style={styles.infoPanelTitle}>App Demo</div>
-              <div style={styles.demoPlaceholder}>
-                <div style={styles.demoPlaceholderText}>
-                  Telugu demo video placeholder. The video will be added here later.
-                </div>
-              </div>
-            </>
-          )}
+          <div style={styles.infoPanelTitle}>Quick Links</div>
+          <div style={styles.quickLinksList}>
+            <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+              <span style={styles.quickLinkIcon}>🕉️</span>
+              Datta Peetam Official
+            </a>
+            <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+              <span style={styles.quickLinkIcon}>🎶</span>
+              YogaSangeeta
+            </a>
+            <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+              <span style={styles.quickLinkIcon}>🎥</span>
+              Raga Ragini Vidya - Documentary
+            </a>
+            <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+              <span style={styles.quickLinkIcon}>🌐</span>
+              SGS Raga Sagara
+            </a>
+          </div>
         </div>
 
         {/* Event Number - Slider and Input */}
@@ -1466,7 +1147,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
         </div>
 
-      </div>
+        </div>
+      )}
 
       {/* 🌍 CONTINENT FILTER - BOTTOM */}
       <div style={styles.continentFilter} data-continent-filter>
@@ -1490,6 +1172,53 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       </div>
 
       {/*  MODAL */}
+      <InfoModal
+        title="About"
+        isOpen={activeInfoModal === "about"}
+        onClose={() => setActiveInfoModal(null)}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+            This app showcases the global impact and reach of the Music for Healing & Meditation sessions. Navigate the globe to explore events across continents, and learn more through the modals and quick links.
+          </p>
+        </div>
+      </InfoModal>
+
+      <InfoModal
+        title="Trivia"
+        isOpen={activeInfoModal === "trivia"}
+        onClose={() => setActiveInfoModal(null)}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+          {triviaItems.map((item, idx) => (
+            <div key={idx} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <h4 style={{ fontSize: "16px", fontWeight: "700", color: "#ffd700", margin: 0, lineHeight: 1.3 }}>
+                {item.question}
+              </h4>
+              <div style={{ fontSize: "11px", color: "rgba(255, 215, 0, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "600" }}>
+                Insight
+              </div>
+              <p style={{ fontSize: "14px", color: "#f7f2e7", lineHeight: 1.7, margin: 0 }}>
+                {item.insight}
+              </p>
+            </div>
+          ))}
+        </div>
+      </InfoModal>
+
+      <InfoModal
+        title="App Demo"
+        isOpen={activeInfoModal === "app-demo"}
+        onClose={() => setActiveInfoModal(null)}
+      >
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          <div style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "14px" }}>
+            A demo video will be available here soon, showcasing how to navigate and use this interactive globe application.
+          </div>
+        </div>
+      </InfoModal>
+
+      {/*  EVENT MODAL */}
       <AnimatePresence>
         {selectedEvent && (
           <Suspense fallback={<div>Loading...</div>}>
@@ -1602,6 +1331,104 @@ const styles = {
     display: "block",
     lineHeight: 1,
     fontSize: "1.5rem",
+  },
+
+  menuButton: {
+    position: "fixed",
+    top: "clamp(15px, 3vh, 25px)",
+    left: "clamp(15px, 3vw, 25px)",
+    zIndex: 21,
+    background: "rgba(0, 0, 0, 0.7)",
+    border: "1px solid rgba(255, 215, 0, 0.3)",
+    color: "#ffd700",
+    borderRadius: "12px",
+    width: "52px",
+    height: "52px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    fontSize: "1.8rem",
+    fontWeight: "bold",
+    boxShadow: "0 0 20px rgba(0,0,0,0.4)",
+    transition: "all 0.2s ease",
+  },
+
+  menuBackdrop: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0, 0, 0, 0.4)",
+    zIndex: 35,
+    backdropFilter: "blur(2px)",
+  },
+
+  filterStack: {
+    position: "fixed",
+    top: "clamp(80px, 10vh, 100px)",
+    left: "clamp(15px, 3vw, 25px)",
+    maxWidth: "clamp(260px, 20vw, 340px)",
+    maxHeight: "calc(100vh - 200px)",
+    overflowY: "auto",
+    background: "rgba(0, 0, 0, 0.92)",
+    border: "1px solid rgba(255, 215, 0, 0.2)",
+    borderRadius: "16px",
+    padding: "16px 12px",
+    zIndex: 36,
+    boxShadow: "0 8px 40px rgba(0, 0, 0, 0.6)",
+    WebkitOverflowScrolling: "touch",
+  },
+
+  filterPanelHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: "12px",
+    marginBottom: "12px",
+    paddingBottom: "12px",
+    borderBottom: "1px solid rgba(255, 215, 0, 0.15)",
+  },
+
+  menuSectionLabel: {
+    color: "#ffd700",
+    fontSize: "12px",
+    fontWeight: "700",
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
+    marginBottom: "4px",
+  },
+
+  menuHelpText: {
+    color: "rgba(255, 255, 255, 0.6)",
+    fontSize: "11px",
+    lineHeight: 1.4,
+  },
+
+  panelIconButton: {
+    border: "none",
+    background: "rgba(255, 215, 0, 0.1)",
+    color: "#ffd700",
+    borderRadius: "10px",
+    padding: "8px 10px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "600",
+    minWidth: "40px",
+    lineHeight: 1,
+    transition: "all 0.2s ease",
+  },
+
+  clearIconButton: {
+    border: "none",
+    background: "rgba(255, 215, 0, 0.1)",
+    color: "#ffd700",
+    borderRadius: "10px",
+    padding: "8px 10px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "600",
+    minWidth: "40px",
+    lineHeight: 1,
+    transition: "all 0.2s ease",
   },
 
   infoMenu: {
