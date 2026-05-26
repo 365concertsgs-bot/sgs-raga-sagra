@@ -1383,8 +1383,8 @@ const styles = {
 
   filterPanel: {
     position: "fixed",
-    top: "clamp(80px, 10vh, 100px)",
-    right: "clamp(15px, 3vw, 25px)",
+    top: "calc(clamp(80px, 10vh, 100px) + 240px)",
+    left: "clamp(15px, 3vw, 25px)",
     width: "clamp(260px, 22vw, 340px)",
     maxHeight: "calc(100vh - 180px)",
     overflowY: "auto",
@@ -2114,6 +2114,8 @@ function getContinentCenter(continent) {
       return { lat: 20, lng: 0 };
   }
 }
+
+
 
 
 
