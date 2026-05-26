@@ -796,17 +796,17 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         }
 
         ::-webkit-scrollbar-track {
-          background: rgba(255, 215, 0, 0.1);
+          background: transparent;
           border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
-          background: #ffd700;
+          background: rgba(255, 255, 255, 0.18);
           border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-          background: #ffed4e;
+          background: rgba(255, 255, 255, 0.28);
         }
       `}</style>
 
