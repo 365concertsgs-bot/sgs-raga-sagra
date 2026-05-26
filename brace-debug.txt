@@ -1,0 +1,162 @@
+881 b=3 p=1 s=0 |           setSelectedEvent(point);
+882 b=3 p=1 s=0 |           focusEventOnGlobe(point);
+883 b=1 p=1 s=0 |         }}
+884 b=1 p=1 s=0 |         labelsData={countryLabels}
+885 b=1 p=1 s=0 |         labelLat="lat"
+886 b=1 p=1 s=0 |         labelLng="lng"
+887 b=1 p=1 s=0 |         labelText="text"
+888 b=1 p=1 s=0 |         labelSize={0.9}
+889 b=1 p=1 s=0 |         labelColor={() => "rgba(255,255,255,0.85)"}
+890 b=1 p=1 s=0 |         labelResolution={2}
+891 b=1 p=1 s=0 |         labelAltitude={0.02}
+892 b=1 p=1 s=0 |       />
+893 b=1 p=1 s=0 | 
+894 b=1 p=1 s=0 |       {/* 🔽 MOBILE MENU BUTTON */}
+895 b=1 p=1 s=0 |       <button
+896 b=1 p=1 s=0 |         data-mobile-menu-button
+897 b=1 p=1 s=0 |         style={styles.mobileMenuButton}
+898 b=1 p=1 s=0 |         onClick={() => setShowMobileMenu(!showMobileMenu)}
+899 b=1 p=1 s=0 |         title={showMobileMenu ? "Close menu" : "Open filters"}
+900 b=1 p=1 s=0 |       >
+901 b=1 p=1 s=0 |         {showMobileMenu ? "✕" : "☰"}
+902 b=1 p=1 s=0 |       </button>
+903 b=1 p=1 s=0 | 
+904 b=1 p=1 s=0 |       {/* 🔽 MOBILE MENU OVERLAY */}
+905 b=2 p=2 s=0 |       {showMobileMenu && (
+906 b=2 p=2 s=0 |         <div
+907 b=2 p=2 s=0 |           style={styles.mobileMenuOverlay}
+908 b=2 p=2 s=0 |           onClick={() => setShowMobileMenu(false)}
+909 b=2 p=2 s=0 |           data-mobile-overlay
+910 b=2 p=2 s=0 |         />
+911 b=1 p=1 s=0 |       )}
+912 b=1 p=1 s=0 | 
+913 b=1 p=1 s=0 |       {/* 🔽 FILTERS - MOBILE VERSION */}
+914 b=2 p=2 s=0 |       {showMobileMenu && (
+915 b=2 p=2 s=0 |         <div
+916 b=2 p=2 s=0 |           style={{...styles.filterStackMobile}}
+917 b=2 p=2 s=0 |           onClick={(e) => e.stopPropagation()}
+918 b=2 p=2 s=0 |           data-filter-stack="mobile"
+919 b=2 p=2 s=0 |         >
+920 b=2 p=2 s=0 |           <div style={styles.filterPanelHeaderMobile}>
+921 b=2 p=2 s=0 |             <div style={styles.infoSelectorMobile}>
+922 b=2 p=2 s=0 |               <label style={styles.label} htmlFor="mobile-info-select">Info</label>
+923 b=2 p=2 s=0 |               <select
+924 b=2 p=2 s=0 |                 id="mobile-info-select"
+925 b=2 p=2 s=0 |                 value={selectedInfoTab}
+926 b=2 p=2 s=0 |                 onChange={(e) => handleInfoTabChange(e.target.value)}
+927 b=2 p=2 s=0 |                 style={styles.infoDropdown}
+928 b=2 p=2 s=0 |               >
+929 b=2 p=2 s=0 |                 <option value="about">About</option>
+930 b=2 p=2 s=0 |                 <option value="trivia">Trivia</option>
+931 b=2 p=2 s=0 |                 <option value="quick-links">Quick Links</option>
+932 b=2 p=2 s=0 |                 <option value="app-demo">App Demo</option>
+933 b=2 p=2 s=0 |               </select>
+934 b=2 p=2 s=0 |             </div>
+935 b=2 p=2 s=0 |             <button
+936 b=4 p=2 s=0 |               onClick={(e) => {
+937 b=4 p=2 s=0 |                 e.stopPropagation();
+938 b=4 p=2 s=0 |                 clearFilters();
+939 b=2 p=2 s=0 |               }}
+940 b=2 p=2 s=0 |               style={styles.clearIconButton}
+941 b=2 p=2 s=0 |               aria-label="Clear filters"
+942 b=2 p=2 s=0 |               title="Clear filters"
+943 b=2 p=2 s=0 |             >
+944 b=2 p=2 s=0 |               🧹
+945 b=2 p=2 s=0 |             </button>
+946 b=2 p=2 s=0 |           </div>
+947 b=2 p=2 s=0 | 
+948 b=2 p=2 s=0 |           <div style={styles.infoPanel}>
+949 b=3 p=3 s=0 |             {selectedInfoTab === "about" && (
+950 b=3 p=3 s=0 |               <>
+951 b=3 p=3 s=0 |                 <div style={styles.infoPanelTitle}>About</div>
+952 b=3 p=3 s=0 |                 <p style={styles.infoPanelText}>
+953 b=3 p=3 s=0 |                   This section will describe the app in detail. Click the button below to open the About page in a new window.
+954 b=3 p=3 s=0 |                 </p>
+955 b=3 p=3 s=0 |                 <button style={styles.aboutOpenButton} onClick={openAboutWindow}>
+956 b=3 p=3 s=0 |                   Open About Page
+957 b=3 p=3 s=0 |                 </button>
+958 b=3 p=3 s=0 |               </>
+959 b=2 p=2 s=0 |             )}
+960 b=2 p=2 s=0 | 
+961 b=3 p=3 s=0 |             {selectedInfoTab === "trivia" && (
+962 b=3 p=3 s=0 |               <>
+963 b=3 p=3 s=0 |                 <div style={styles.infoPanelTitle}>Trivia</div>
+964 b=3 p=3 s=0 |                 <div style={styles.infoPanelTextBlock}>
+965 b=3 p=3 s=0 |                   <p>
+966 b=3 p=3 s=0 |                     What inspired Sri Datta Swamiji to develop the concept of Music for Healing and Meditation? During 1980–1981, Sri Datta Swamiji began exploring and presenting celestial music whose vibrations were believed to aid healing. He dedicated 18 years to researching the therapeutic effects of sound and music. His mother and Guru, Sri Jayalakshmi Mata, taught Him how musical vibrations positively influenced nature — helping crops grow better, cows produce more milk, and flowers bloom beautifully. She blessed Him with the mission of sharing this divine music for the welfare of humanity. Inspired by this vision, Sri Datta Swamiji undertook the task of helping people suffering from chronic illnesses who relied solely on medication, by introducing music as a means to support and accelerate the healing process. Thus, “Music for Healing & Meditation” is not a musical concert, but a spiritual and therapeutic experience where celestial sounds (Nada) are used to promote healing and inner well-being.
+967 b=3 p=3 s=0 |                   </p>
+968 b=3 p=3 s=0 |                   <p>
+969 b=3 p=3 s=0 |                     What is Nada Chikitsa and Music Therapy, and why does Sri Datta Swamiji incorporate crystals and mudras into the sessions? Music resonates through pure crystals, through Akasha (space), through colours, earth, and water. That is why Sri Datta Swamiji says, “After music, drink water.” Music responds to the Panchabhutas — the five elements — and these vibrations also exist within the human body, which itself is made of these elements: water, fire, earth, air, and space. When music is combined with crystals, especially pure and clear crystals symbolizing purity like Lord Shiva, it helps channel these vibrations more effectively. Mudras also play an important role by helping people focus and concentrate. When attention is centered on the crystal and the music, the healing vibrations can deeply reach the body and nervous system.
+970 b=3 p=3 s=0 |                   </p>
+971 b=3 p=3 s=0 |                   <p>
+972 b=3 p=3 s=0 |                     What is Raga Ragini Vidya? The science of Raga and Ragini has emerged from the Vedas. It is a vast and profound subject, not something that can be explained in just a few minutes. Entire scriptures and books have been written on it. Sri Datta Swamiji Himself conducted extensive research and authored a book on this subject. By studying it, one can understand what Raga Ragini Vidya truly is, how it contributes to physical and mental well-being, and how it can be practiced. This knowledge is ancient and rooted in traditional wisdom. It does not belong to just one era, but has existed since the times of the Treta and Dwapara Yugas. It is deeply connected with the science of sound — the true nature of vibration and Nada (sacred sound) — as well as the principles of sound-based pranayama. The entire nervous system is linked through prana, the life force. Through this pranic energy, sound vibrations travel within the nerve channels. These sound waves carry messages throughout the body. Different types of sounds create different effects within the human system. Some nerves become inactive or “dead,” while others remain active and connected. Through pranic sound vibrations, these inactive nerves can be stimulated and revitalized. However, only those who deeply understand life energy and sound can truly comprehend this subtle science.
+973 b=3 p=3 s=0 |                   </p>
+974 b=3 p=3 s=0 |                   <p>
+975 b=3 p=3 s=0 |                     How does Sri Datta Swamiji conduct a Music for Healing & Meditation session? When Sri Datta Swamiji offers music to people, He carefully calculates and aligns the rhythm, melodies, vibrations, and the needs of the individuals listening — especially those suffering from illness. Sri Datta Swamiji first prepares and tunes Himself inwardly before bringing everything together through music. It involves immense effort and dedication. On nights before such musical offerings, Sri Datta Swamiji often remains awake, fully immersed in receiving countless vibrations and inspirations. His role is to channel these vibrations in a positive and beneficial way. At the same time, Sri Datta Swamiji guides the musicians, the audience, and Himself, while ultimately allowing the music itself to guide everything. This music does not belong to Him; it is entirely the grace of the Almighty. It is through God’s blessing that this music manifests.
+976 b=3 p=3 s=0 |                   </p>
+977 b=3 p=3 s=0 |                   <p>
+978 b=3 p=3 s=0 |                     How can one learn more about Music for Healing and Meditation by H.H. Dr. Sri Ganapathy Sachchidananda Swamiji? Please refer to the Quick Links section on the main page to explore relevant resources available online. You may also obtain a copy of the book Raga Ragini Nada Yoga, available in both English and Telugu. The links are provided below.
+979 b=3 p=3 s=0 |                   </p>
+980 b=3 p=3 s=0 |                   <p>
+981 b=3 p=3 s=0 |                     How can one purchase Sri Datta Swamiji’s Music for Healing and Meditation? HH Dr. Sri Ganapathy Sachchidananda Swamiji’s music is available on iMusic, Amazon Music, Spotify, YouTube and other platforms for listening. One can explore albums to purchase on https://ragaraginistore.com/. How can one attend a Music for Healing and Meditation session by H.H. Dr. Sri Ganapathy Sachchidananda Swamiji? Please refer to HH Dr. Sri Ganapathy Sachchidananda Swamiji’s calendar on www.dattapeetham.org to stay updated on upcoming sessions.
+982 b=3 p=3 s=0 |                   </p>
+983 b=3 p=3 s=0 |                 </div>
+984 b=3 p=3 s=0 |               </>
+985 b=2 p=2 s=0 |             )}
+986 b=2 p=2 s=0 | 
+987 b=3 p=3 s=0 |             {selectedInfoTab === "quick-links" && (
+988 b=3 p=3 s=0 |               <>
+989 b=3 p=3 s=0 |                 <div style={styles.infoPanelTitle}>Quick Links</div>
+990 b=3 p=3 s=0 |                 <div style={styles.quickLinksList}>
+991 b=3 p=3 s=0 |                   <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.infoLink}>
+992 b=3 p=3 s=0 |                     https://www.dattapeetham.org/
+993 b=3 p=3 s=0 |                   </a>
+994 b=3 p=3 s=0 |                   <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.infoLink}>
+995 b=3 p=3 s=0 |                     https://www.yogasangeeta.org/
+996 b=3 p=3 s=0 |                   </a>
+997 b=3 p=3 s=0 |                   <a href="https://www.youtube.com/watch?si=hqO-Gc9U7r8fMmjY&v=gwraGV4o4VY&feature=youtu" target="_blank" rel="noreferrer" style={styles.infoLink}>
+998 b=3 p=3 s=0 |                     https://www.youtube.com/watch?si=hqO-Gc9U7r8fMmjY&v=gwraGV4o4VY&feature=youtu
+999 b=3 p=3 s=0 |                   </a>
+1000 b=3 p=3 s=0 |                   <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.infoLink}>
+1001 b=3 p=3 s=0 |                     https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY
+1002 b=3 p=3 s=0 |                   </a>
+1003 b=3 p=3 s=0 |                   <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.infoLink}>
+1004 b=3 p=3 s=0 |                     https://www.sgsragasagara.com/
+1005 b=3 p=3 s=0 |                   </a>
+1006 b=3 p=3 s=0 |                 </div>
+1007 b=3 p=3 s=0 |               </>
+1008 b=2 p=2 s=0 |             )}
+1009 b=2 p=2 s=0 | 
+1010 b=3 p=3 s=0 |             {selectedInfoTab === "app-demo" && (
+1011 b=3 p=3 s=0 |               <>
+1012 b=3 p=3 s=0 |                 <div style={styles.infoPanelTitle}>App Demo</div>
+1013 b=3 p=3 s=0 |                 <div style={styles.demoPlaceholder}>
+1014 b=3 p=3 s=0 |                   <div style={styles.demoPlaceholderText}>
+1015 b=3 p=3 s=0 |                     Telugu demo video placeholder. The video will be added here later.
+1016 b=3 p=3 s=0 |                   </div>
+1017 b=3 p=3 s=0 |                 </div>
+1018 b=3 p=3 s=0 |               </>
+1019 b=2 p=2 s=0 |             )}
+1020 b=2 p=2 s=0 |           </div>
+1021 b=2 p=2 s=0 | 
+1022 b=2 p=2 s=0 |           {/* Event Number - Slider and Input */}
+1023 b=2 p=2 s=0 |           <div style={styles.filterRow}>
+1024 b=2 p=2 s=0 |             <label style={styles.label}>Event Number</label>
+1025 b=2 p=2 s=0 |             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+1026 b=2 p=2 s=0 |               <input
+1027 b=2 p=2 s=0 |                 type="range"
+1028 b=2 p=2 s=0 |                 min="1"
+1029 b=2 p=2 s=0 |                 max="365"
+1030 b=2 p=2 s=0 |                 value={selectedEventNumber}
+1031 b=2 p=2 s=0 |                 onChange={(e) => handleEventNumberChange(e.target.value)}
+1032 b=2 p=2 s=0 |                 style={styles.slider}
+1033 b=2 p=2 s=0 |               />
+1034 b=2 p=2 s=0 |               <input
+1035 b=2 p=2 s=0 |                 type="number"
+1036 b=2 p=2 s=0 |                 min="1"
+1037 b=2 p=2 s=0 |                 max="365"
+1038 b=2 p=2 s=0 |                 value={selectedEventNumber}
+1039 b=2 p=2 s=0 |                 onChange={(e) => handleEventNumberChange(e.target.value)}
+1040 b=2 p=2 s=0 |                 placeholder="Type #"
+1041 b=2 p=2 s=0 |                 style={styles.numberInput}
+final 1 1 0
