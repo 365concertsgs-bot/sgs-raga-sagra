@@ -447,16 +447,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setShowMenu(false);
   }, []);
 
-  const handleInfoTabChange = useCallback(
-    (tab) => {
-      setSelectedInfoTab(tab);
-      if (tab === "about") {
-        openAboutWindow();
-      }
-    },
-    [openAboutWindow]
-  );
-
   const countryLabels = [
     { lat: 20.5937, lng: 78.9629, text: "India" },
     { lat: 37.0902, lng: -95.7129, text: "USA" },
