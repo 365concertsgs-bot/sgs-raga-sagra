@@ -1004,20 +1004,21 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               <>
                 <div style={styles.infoPanelTitle}>Quick Links</div>
                 <div style={styles.quickLinksList}>
-                  <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.infoLink}>
-                    https://www.dattapeetham.org/
+                  <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+                    <span style={styles.quickLinkIcon}>🕉️</span>
+                    Datta Peetam Official
                   </a>
-                  <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.infoLink}>
-                    https://www.yogasangeeta.org/
+                  <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+                    <span style={styles.quickLinkIcon}>🎶</span>
+                    YogaSangeeta
                   </a>
-                  <a href="https://www.youtube.com/watch?si=hqO-Gc9U7r8fMmjY&v=gwraGV4o4VY&feature=youtu" target="_blank" rel="noreferrer" style={styles.infoLink}>
-                    https://www.youtube.com/watch?si=hqO-Gc9U7r8fMmjY&v=gwraGV4o4VY&feature=youtu
+                  <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+                    <span style={styles.quickLinkIcon}>🎥</span>
+                    Raga Ragini Vidya - Documentary
                   </a>
-                  <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.infoLink}>
-                    https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY
-                  </a>
-                  <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.infoLink}>
-                    https://www.sgsragasagara.com/
+                  <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+                    <span style={styles.quickLinkIcon}>🌐</span>
+                    SGS Raga Sagara
                   </a>
                 </div>
               </>
@@ -1802,7 +1803,33 @@ const styles = {
   quickLinksList: {
     display: "flex",
     flexDirection: "column",
-    gap: "8px",
+    gap: "10px",
+  },
+
+  quickLinkItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    padding: "12px 14px",
+    borderRadius: "12px",
+    backgroundColor: "#000",
+    color: "#ffd700",
+    textDecoration: "none",
+    fontSize: "clamp(11px, 1vw, 13px)",
+    fontWeight: "700",
+    border: "1px solid rgba(255,215,0,0.35)",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+  },
+
+  quickLinkIcon: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "32px",
+    height: "32px",
+    borderRadius: "10px",
+    background: "rgba(255,255,255,0.08)",
+    fontSize: "1rem",
   },
 
   infoLink: {
