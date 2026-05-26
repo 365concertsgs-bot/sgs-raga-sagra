@@ -35,6 +35,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   const [selectedContinent, setSelectedContinent] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedInfoTab, setSelectedInfoTab] = useState("about");
+  const [showInfoMenu, setShowInfoMenu] = useState(false);
   const [isUserActive, setIsUserActive] = useState(false);
   const [appError, setAppError] = useState(supabaseError || null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -415,6 +416,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setSelectedEvent(null);
     setSelectedInfoTab("about");
     setShowMobileMenu(false);
+    setShowInfoMenu(false);
   }, []);
 
   const openAboutWindow = useCallback(() => {
@@ -833,29 +835,84 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       <div style={styles.stars3}></div>
 
 
-      {/* ✨ TITLE */}
-      <div style={styles.title} data-title>SGS Raga Ragini Atlas</div>
+      {/* ✨ TITLE + LOGOS */}
+      <div style={styles.titleRow}>
+        {leftLogoUrl && (
+          <img
+            src={leftLogoUrl}
+            alt="Left Logo"
+            style={styles.titleLogo}
+            data-logo-left
+            onError={(e) => { e.target.style.display = "none"; }}
+          />
+        )}
 
-      {/* 🔗 LEFT LOGO - Dynamic */}
-      {leftLogoUrl && (
-        <img
-          src={leftLogoUrl}
-          alt="Left Logo"
-          style={styles.logoTopLeft}
-          data-logo-left
-          onError={(e) => { e.target.style.display = "none"; }}
-        />
-      )}
+        <div style={styles.title} data-title>
+          SGS Raga Ragini Atlas
+        </div>
 
-      {/* 🔗 RIGHT LOGO - Dynamic */}
-      {rightLogoUrl && (
-        <img
-          src={rightLogoUrl}
-          alt="Right Logo"
-          style={styles.logoTopRight}
-          data-logo-right
-          onError={(e) => { e.target.style.display = "none"; }}
-        />
+        {rightLogoUrl && (
+          <img
+            src={rightLogoUrl}
+            alt="Right Logo"
+            style={styles.titleLogo}
+            data-logo-right
+            onError={(e) => { e.target.style.display = "none"; }}
+          />
+        )}
+      </div>
+
+      <button
+        style={styles.infoButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowInfoMenu(!showInfoMenu);
+          setShowMobileMenu(false);
+        }}
+        title="Open Info Menu"
+      >
+        <span style={styles.infoButtonIcon}>☰</span>
+      </button>
+
+      {showInfoMenu && (
+        <div style={styles.infoMenu} onClick={(e) => e.stopPropagation()}>
+          <button
+            style={styles.infoMenuItem}
+            onClick={() => {
+              handleInfoTabChange("about");
+              setShowInfoMenu(false);
+            }}
+          >
+            About
+          </button>
+          <button
+            style={styles.infoMenuItem}
+            onClick={() => {
+              handleInfoTabChange("trivia");
+              setShowInfoMenu(false);
+            }}
+          >
+            Trivia
+          </button>
+          <button
+            style={styles.infoMenuItem}
+            onClick={() => {
+              handleInfoTabChange("quick-links");
+              setShowInfoMenu(false);
+            }}
+          >
+            Quick Links
+          </button>
+          <button
+            style={styles.infoMenuItem}
+            onClick={() => {
+              handleInfoTabChange("app-demo");
+              setShowInfoMenu(false);
+            }}
+          >
+            App Demo
+          </button>
+        </div>
       )}
 
       {/* 🌍 GLOBE */}
@@ -1175,21 +1232,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         data-filter-stack="desktop"
       >
         <div style={styles.filterPanelHeader}>
-          <div style={styles.infoSelector}>
-            <label style={styles.label} htmlFor="info-select">Info</label>
-            <select
-              id="info-select"
-              value={selectedInfoTab}
-              onChange={(e) => handleInfoTabChange(e.target.value)}
-              style={styles.infoDropdown}
-            >
-              <option value="about">About</option>
-              <option value="trivia">Trivia</option>
-              <option value="quick-links">Quick Links</option>
-              <option value="app-demo">App Demo</option>
-            </select>
-          </div>
-
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -1503,19 +1545,88 @@ const styles = {
 
 
   title: {
-    position: "absolute",
-    top: "clamp(15px, 3vh, 25px)",
-    left: "50%",
-    transform: "translateX(-50%)",
     color: "#00ff00",
     fontSize: "clamp(14px, 2.5vw, 20px)",
     fontFamily: "'Philosopher', serif",
     fontWeight: "bold",
-    zIndex: 19,
     whiteSpace: "nowrap",
     textShadow: "0 0 10px rgba(255, 215, 0, 0.3)",
   },
 
+  titleRow: {
+    position: "absolute",
+    top: "clamp(15px, 3vh, 25px)",
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "clamp(12px, 2vw, 18px)",
+    zIndex: 19,
+  },
+
+  titleLogo: {
+    height: "clamp(40px, 9vh, 70px)",
+    width: "auto",
+    maxWidth: "clamp(70px, 8vw, 120px)",
+    objectFit: "contain",
+    filter: "drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
+  },
+
+  infoButton: {
+    position: "absolute",
+    top: "clamp(15px, 3vh, 25px)",
+    right: "clamp(15px, 3vw, 25px)",
+    zIndex: 21,
+    background: "rgba(0, 0, 0, 0.55)",
+    border: "1px solid rgba(255, 255, 255, 0.32)",
+    color: "#ffd700",
+    borderRadius: "14px",
+    width: "52px",
+    height: "52px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    fontSize: "1.2rem",
+    boxShadow: "0 0 18px rgba(0,0,0,0.3)",
+  },
+
+  infoButtonIcon: {
+    display: "block",
+    lineHeight: 1,
+    fontSize: "1.5rem",
+  },
+
+  infoMenu: {
+    position: "absolute",
+    top: "clamp(70px, 6vh, 80px)",
+    right: "clamp(15px, 3vw, 25px)",
+    zIndex: 22,
+    background: "rgba(0, 0, 0, 0.96)",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+    padding: "10px",
+    borderRadius: "16px",
+    boxShadow: "0 16px 30px rgba(0,0,0,0.35)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    minWidth: "180px",
+  },
+
+  infoMenuItem: {
+    width: "100%",
+    textAlign: "left",
+    padding: "10px 12px",
+    border: "none",
+    background: "rgba(255,255,255,0.05)",
+    color: "#fff",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontFamily: "'Philosopher', serif",
+    fontSize: "clamp(10px, 1vw, 12px)",
+    transition: "background 0.2s ease",
+  },
 
   filter: {
     display: "flex",
