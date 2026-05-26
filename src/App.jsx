@@ -862,58 +862,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         )}
       </div>
 
-      <button
-        style={styles.infoButton}
-        onClick={(e) => {
-          e.stopPropagation();
-          setShowInfoMenu(!showInfoMenu);
-          setShowMobileMenu(false);
-        }}
-        title="Open Info Menu"
-      >
-        <span style={styles.infoButtonIcon}>☰</span>
-      </button>
-
-      {showInfoMenu && (
-        <div style={styles.infoMenu} onClick={(e) => e.stopPropagation()}>
-          <button
-            style={styles.infoMenuItem}
-            onClick={() => {
-              handleInfoTabChange("about");
-              setShowInfoMenu(false);
-            }}
-          >
-            About
-          </button>
-          <button
-            style={styles.infoMenuItem}
-            onClick={() => {
-              handleInfoTabChange("trivia");
-              setShowInfoMenu(false);
-            }}
-          >
-            Trivia
-          </button>
-          <button
-            style={styles.infoMenuItem}
-            onClick={() => {
-              handleInfoTabChange("quick-links");
-              setShowInfoMenu(false);
-            }}
-          >
-            Quick Links
-          </button>
-          <button
-            style={styles.infoMenuItem}
-            onClick={() => {
-              handleInfoTabChange("app-demo");
-              setShowInfoMenu(false);
-            }}
-          >
-            App Demo
-          </button>
-        </div>
-      )}
 
       {/* 🌍 GLOBE */}
       <Globe
@@ -975,6 +923,17 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           data-filter-stack="mobile"
         >
           <div style={styles.filterPanelHeaderMobile}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowInfoMenu(!showInfoMenu);
+              }}
+              style={styles.panelIconButtonMobile}
+              aria-label="Info tabs"
+              title="Info tabs"
+            >
+              🖌️
+            </button>
             <div style={styles.infoSelectorMobile}>
               <label style={styles.label} htmlFor="mobile-info-select">Info</label>
               <select
@@ -1235,6 +1194,19 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <button
             onClick={(e) => {
               e.stopPropagation();
+              setShowInfoMenu(!showInfoMenu);
+              setShowMobileMenu(false);
+            }}
+            style={styles.panelIconButton}
+            aria-label="Info tabs"
+            title="Info tabs"
+          >
+            🖌️
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
               clearFilters();
             }}
             style={styles.clearIconButton}
@@ -1244,6 +1216,35 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             🧹
           </button>
         </div>
+
+        {showInfoMenu && (
+          <div style={styles.infoMenuInline} onClick={(e) => e.stopPropagation()}>
+            <button
+              style={styles.infoMenuItem}
+              onClick={() => handleInfoTabChange("about")}
+            >
+              About
+            </button>
+            <button
+              style={styles.infoMenuItem}
+              onClick={() => handleInfoTabChange("trivia")}
+            >
+              Trivia
+            </button>
+            <button
+              style={styles.infoMenuItem}
+              onClick={() => handleInfoTabChange("quick-links")}
+            >
+              Quick Links
+            </button>
+            <button
+              style={styles.infoMenuItem}
+              onClick={() => handleInfoTabChange("app-demo")}
+            >
+              App Demo
+            </button>
+          </div>
+        )}
 
         <div style={styles.infoPanel}>
           {selectedInfoTab === "about" && (
@@ -1617,6 +1618,21 @@ const styles = {
     minWidth: "180px",
   },
 
+  infoMenuInline: {
+    position: "relative",
+    zIndex: 20,
+    background: "rgba(0, 0, 0, 0.75)",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+    padding: "10px",
+    borderRadius: "14px",
+    boxShadow: "0 10px 20px rgba(0,0,0,0.25)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    width: "100%",
+    marginTop: "8px",
+  },
+
   infoMenuItem: {
     width: "100%",
     textAlign: "left",
@@ -1653,21 +1669,21 @@ const styles = {
 
   filterStack: {
     position: "absolute",
-    top: "clamp(180px, 24vh, 240px)",
+    top: "clamp(140px, 16vh, 160px)",
     left: "clamp(15px, 2vw, 25px)",
     display: "flex",
     flexDirection: "column",
-    gap: 12,
+    gap: 14,
     zIndex: 20,
     backgroundColor: "#ffcc00",
-    padding: "clamp(8px, 1vw, 10px)",
-    borderRadius: "12px",
-    boxShadow: "0 8px 16px rgba(0,0,0,0.3)",
-    minWidth: "clamp(180px, 18vw, 260px)",
-    maxWidth: "clamp(220px, 20vw, 300px)",
-    maxHeight: "none",
-    overflowY: "visible",
-    fontSize: "clamp(9px, 1vw, 11px)",
+    padding: "clamp(14px, 2vw, 18px)",
+    borderRadius: "20px",
+    boxShadow: "0 12px 24px rgba(0,0,0,0.35)",
+    minWidth: "280px",
+    maxWidth: "320px",
+    maxHeight: "85vh",
+    overflowY: "auto",
+    fontSize: "clamp(10px, 1vw, 12px)",
     touchAction: "manipulation",
   },
 
@@ -1676,6 +1692,34 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "flex-start",
     gap: "10px",
+  },
+
+  panelIconButton: {
+    width: "48px",
+    height: "48px",
+    borderRadius: "14px",
+    border: "none",
+    background: "#000",
+    color: "#ffd700",
+    cursor: "pointer",
+    display: "grid",
+    placeItems: "center",
+    fontSize: "1.2rem",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.25)",
+  },
+
+  panelIconButtonMobile: {
+    width: "44px",
+    height: "44px",
+    borderRadius: "14px",
+    border: "none",
+    background: "#000",
+    color: "#ffd700",
+    cursor: "pointer",
+    display: "grid",
+    placeItems: "center",
+    fontSize: "1.2rem",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.25)",
   },
 
   filterPanelHeaderMobile: {
