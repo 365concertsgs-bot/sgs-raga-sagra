@@ -1389,7 +1389,7 @@ const styles = {
 
   filterPanel: {
     position: "fixed",
-    top: "calc(clamp(80px, 10vh, 100px) + 240px)",
+    top: "calc(clamp(80px, 10vh, 100px) + 280px)",
     left: "clamp(15px, 3vw, 25px)",
     width: "clamp(260px, 22vw, 340px)",
     maxHeight: "calc(100vh - 180px)",
