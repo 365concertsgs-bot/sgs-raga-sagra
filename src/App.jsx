@@ -82,6 +82,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     return null;
   };
 
+  const getNumberField = (row, keys) => {
+    const value = getField(row, keys);
+    if (!hasValue(value)) return null;
+    const num = Number(String(value).trim());
+    return Number.isFinite(num) ? num : null;
+  };
+
   const normalizeKey = (value) => {
     if (!hasValue(value)) return null;
     return String(value).trim().toLowerCase().replace(/\s+/g, " ");
@@ -358,27 +365,31 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         const yearValue = dateValue && !isNaN(dateValue.getTime()) ? dateValue.getFullYear() : null;
 
         return {
-          no: row.No != null ? Number(row.No) : null,
-          eventNumber: row.No != null ? Number(row.No) : null,
+          no: getNumberField(row, ["No", "no", "Event Number", "event_number", "eventno", "event_no", "ID", "id", "event_id", "eventid"]),
+          eventNumber: getNumberField(row, ["No", "no", "Event Number", "event_number", "eventno", "event_no", "ID", "id", "event_id", "eventid"]),
           eventName: getField(row, [
             "Raga Sagara Name (Event)",
             "raga_sagara_name_event",
             "event_name",
             "eventname",
+            "Event Name",
+            "event name",
+            "Event",
+            "event",
           ]) || null,
-          continent: row.Continent,
+          continent: getField(row, ["Continent", "continent"]),
           lat: (() => {
-            const val = parseFloat(row.Latitude);
+            const val = parseFloat(getField(row, ["Latitude", "latitude", "Lat", "lat"]));
             return !isNaN(val) ? val : null;
           })(),
           lng: (() => {
-            const val = parseFloat(row.Longitude);
+            const val = parseFloat(getField(row, ["Longitude", "longitude", "Long", "lng", "lon"]));
             return !isNaN(val) ? val : null;
           })(),
-          date: row.Date,
+          date: getField(row, ["Date", "date", "Event Date", "event_date"]),
           year: yearValue,
-          location: row.City || row.Country,
-          place: row.Venue,
+          location: getField(row, ["City", "city", "Country", "country", "Location", "location"]),
+          place: getField(row, ["Venue", "venue", "Place", "place"]),
           description: getField(row, ["Description", "description", "details", "event_description"]),
           images: getEventImageUrls(row, mediaDataOrEmpty),
           audioUrl: getField(row, [
@@ -387,6 +398,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             "audio",
             "audio_url",
             "media_url",
+            "Audio",
+            "audioLink",
           ]) || "",
           raga: getField(row, [
             "Healing Ragas",
@@ -396,8 +409,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             "raga",
             "main_raga_name",
           ]) || null,
-          city: row.City,
-          country: row.Country,
+          city: getField(row, ["City", "city"]),
+          country: getField(row, ["Country", "country"]),
         };
       });
 
