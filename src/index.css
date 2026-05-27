@@ -3,11 +3,11 @@
 }
 
 :root {
-  font-family: 'Philosopher', 'Inter', system-ui, sans-serif;
-  line-height: 1.5;
+  font-family: 'Roboto', Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
   color-scheme: dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: rgba(255, 255, 255, 0.95);
   background-color: #000;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,7 +15,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   /* Responsive base font size */
-  font-size: clamp(10px, 2vw, 16px);
+  font-size: clamp(14px, 2.2vw, 18px);
 }
 
 html, body {
@@ -66,7 +66,7 @@ button:focus-visible {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
-  font-family: 'Philosopher', serif;
+  font-family: 'Roboto', Arial, sans-serif;
 }
 
 /* Remove default input styling */

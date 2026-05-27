@@ -938,6 +938,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         }
 
         html {
+          font-size: clamp(14px, 2.5vw, 18px);
           width: 100%;
           min-height: 100%;
           margin: 0;
@@ -949,7 +950,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         }
 
         body {
-          font-family: 'Philosopher', serif;
+          font-family: 'Roboto', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
           width: 100%;
@@ -982,7 +983,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           color: #ffd700;
           font-size: 14px;
           text-decoration: none;
-          font-family: 'Philosopher', serif;
+          font-family: 'Roboto', Arial, sans-serif;
           font-weight: bold;
           padding: 8px 12px;
           border: 1px solid #ffd700;
@@ -1133,7 +1134,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         pointColor={() => "#ffcc00"}
         pointResolution={4}
         pointLabel={(point) =>
-          `<div style="background: rgba(0,0,0,0.95); padding: 12px 16px; border-radius: 10px; color: #ffd700; font-size: 14px; font-family: Philosopher, serif; white-space: normal; max-width: 240px; word-wrap: break-word; overflow-wrap: anywhere; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);">
+          `<div style="background: rgba(0,0,0,0.95); padding: 12px 16px; border-radius: 10px; color: #ffd700; font-size: 14px; font-family: Roboto, Arial, sans-serif; white-space: normal; max-width: 240px; word-wrap: break-word; overflow-wrap: anywhere; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);">
             <div style="font-weight: bold; margin-bottom: 4px;">${point.eventName}</div>
             <div style="font-size: 12px; color: #fff; margin-bottom: 2px;">📍 ${point.place || point.location || 'Venue'}</div>
             <div style="font-size: 12px; color: #fff;">📌 ${point.city || 'City'}</div>
@@ -1264,7 +1265,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               boxSizing: "border-box",
               touchAction: "manipulation",
               cursor: "pointer",
-              fontFamily: "'Philosopher', serif",
+              fontFamily: "'Roboto', Arial, sans-serif",
               fontWeight: "500",
             }}
           >
@@ -1636,9 +1637,9 @@ const styles = {
 
   title: {
     color: "#00ff00",
-    fontSize: "clamp(14px, 2.5vw, 20px)",
-    fontFamily: "'Philosopher', serif",
-    fontWeight: "bold",
+    fontSize: "clamp(18px, 3vw, 26px)",
+    fontFamily: "'Roboto', Arial, sans-serif",
+    fontWeight: "800",
     whiteSpace: "nowrap",
     textShadow: "0 0 10px rgba(255, 215, 0, 0.3)",
   },
@@ -1694,21 +1695,22 @@ const styles = {
   menuButton: {
     position: "fixed",
     top: "clamp(15px, 3vh, 25px)",
-    left: "clamp(15px, 3vw, 25px)",
+    right: "clamp(15px, 3vw, 25px)",
+    left: "auto",
     zIndex: 21,
     background: "rgba(0, 0, 0, 0.7)",
     border: "1px solid rgba(255, 215, 0, 0.3)",
     color: "#ffd700",
-    borderRadius: "12px",
-    width: "52px",
-    height: "52px",
+    borderRadius: "16px",
+    width: "56px",
+    height: "56px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
-    fontSize: "1.8rem",
+    fontSize: "1.9rem",
     fontWeight: "bold",
-    boxShadow: "0 0 20px rgba(0,0,0,0.4)",
+    boxShadow: "0 0 24px rgba(0,0,0,0.45)",
     transition: "all 0.2s ease",
   },
 
@@ -1738,17 +1740,17 @@ const styles = {
 
   filterPanel: {
     position: "fixed",
-    top: "calc(clamp(80px, 10vh, 100px) + 280px)",
+    top: "clamp(120px, 12vh, 130px)",
     left: "clamp(15px, 3vw, 25px)",
-    width: "clamp(260px, 22vw, 340px)",
-    maxHeight: "calc(100vh - 180px)",
+    width: "clamp(290px, 26vw, 380px)",
+    maxHeight: "calc(100vh - 150px)",
     overflowY: "auto",
-    background: "rgba(0, 0, 0, 0.92)",
-    border: "1px solid rgba(255, 215, 0, 0.2)",
-    borderRadius: "16px",
-    padding: "16px 14px",
+    background: "rgba(0, 0, 0, 0.94)",
+    border: "1px solid rgba(255, 215, 0, 0.25)",
+    borderRadius: "20px",
+    padding: "18px 16px",
     zIndex: 36,
-    boxShadow: "0 8px 40px rgba(0, 0, 0, 0.6)",
+    boxShadow: "0 12px 50px rgba(0, 0, 0, 0.55)",
     WebkitOverflowScrolling: "touch",
   },
 
@@ -1764,17 +1766,19 @@ const styles = {
 
   menuSectionLabel: {
     color: "#ffd700",
-    fontSize: "12px",
+    fontSize: "14px",
     fontWeight: "700",
-    letterSpacing: "0.1em",
+    letterSpacing: "0.12em",
     textTransform: "uppercase",
-    marginBottom: "4px",
+    marginBottom: "6px",
+    fontFamily: "'Roboto', Arial, sans-serif",
   },
 
   menuHelpText: {
-    color: "rgba(255, 255, 255, 0.6)",
-    fontSize: "11px",
-    lineHeight: 1.4,
+    color: "rgba(255, 255, 255, 0.75)",
+    fontSize: "13px",
+    lineHeight: 1.5,
+    fontFamily: "'Roboto', Arial, sans-serif",
   },
 
   panelIconButton: {
@@ -1839,14 +1843,14 @@ const styles = {
   infoMenuItem: {
     width: "100%",
     textAlign: "left",
-    padding: "10px 12px",
+    padding: "12px 14px",
     border: "none",
-    background: "rgba(255,255,255,0.05)",
+    background: "rgba(255,255,255,0.08)",
     color: "#fff",
-    borderRadius: "10px",
+    borderRadius: "12px",
     cursor: "pointer",
-    fontFamily: "'Philosopher', serif",
-    fontSize: "clamp(10px, 1vw, 12px)",
+    fontFamily: "'Roboto', Arial, sans-serif",
+    fontSize: "clamp(13px, 1.1vw, 15px)",
     transition: "background 0.2s ease",
   },
 
@@ -1907,15 +1911,15 @@ const styles = {
 
   infoDropdown: {
     width: "100%",
-    borderRadius: "8px",
+    borderRadius: "10px",
     border: "1px solid rgba(0, 0, 0, 0.2)",
     background: "#fff",
     color: "#000",
-    padding: "10px 12px",
-    fontSize: "clamp(10px, 1vw, 12px)",
+    padding: "12px 14px",
+    fontSize: "clamp(13px, 1vw, 15px)",
     outline: "none",
     cursor: "pointer",
-    fontFamily: "'Philosopher', serif",
+    fontFamily: "'Roboto', Arial, sans-serif",
     fontWeight: 500,
   },
 
@@ -1958,7 +1962,7 @@ const styles = {
     color: "#ffd700",
     cursor: "pointer",
     fontWeight: "bold",
-    fontFamily: "'Philosopher', serif",
+    fontFamily: "'Roboto', Arial, sans-serif",
   },
 
   quickLinksList: {
@@ -2081,9 +2085,9 @@ const styles = {
 
   label: {
     color: "#000",
-    fontSize: "clamp(8px, 0.9vw, 10px)",
-    fontFamily: "'Philosopher', serif",
-    fontWeight: "bold",
+    fontSize: "clamp(12px, 1.1vw, 14px)",
+    fontFamily: "'Roboto', Arial, sans-serif",
+    fontWeight: "700",
     textTransform: "uppercase",
   },
 
@@ -2098,8 +2102,8 @@ const styles = {
 
   mediaLinksLabel: {
     color: "#000",
-    fontSize: "clamp(8px, 0.9vw, 10px)",
-    fontFamily: "'Philosopher', serif",
+    fontSize: "clamp(11px, 1vw, 13px)",
+    fontFamily: "'Roboto', Arial, sans-serif",
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: "0.5px",
@@ -2121,7 +2125,7 @@ const styles = {
     textDecoration: "none",
     borderRadius: "4px",
     fontSize: "clamp(8px, 0.9vw, 10px)",
-    fontFamily: "'Philosopher', serif",
+    fontFamily: "'Roboto', Arial, sans-serif",
     fontWeight: "500",
     cursor: "pointer",
     border: "1px solid #ffd700",
@@ -2152,9 +2156,9 @@ const styles = {
   },
 
   textInput: {
-    padding: "clamp(6px, 0.9vw, 9px) clamp(8px, 1.2vw, 10px)",
-    fontSize: "clamp(9px, 1vw, 11px)",
-    borderRadius: "6px",
+    padding: "clamp(10px, 1.1vw, 14px) clamp(12px, 1.5vw, 16px)",
+    fontSize: "clamp(14px, 1.1vw, 16px)",
+    borderRadius: "10px",
     border: "1px solid #ccc",
     background: "#fff",
     color: "#000",
@@ -2175,11 +2179,11 @@ const styles = {
   },
 
   numberInput: {
-    width: "clamp(60px, 12vw, 90px)",
-    minWidth: "60px",
-    padding: "clamp(4px, 0.7vw, 6px) clamp(6px, 1vw, 8px)",
-    fontSize: "clamp(9px, 1vw, 10px)",
-    borderRadius: "6px",
+    width: "clamp(75px, 14vw, 100px)",
+    minWidth: "75px",
+    padding: "clamp(8px, 1vw, 12px) clamp(10px, 1.2vw, 14px)",
+    fontSize: "clamp(14px, 1.1vw, 16px)",
+    borderRadius: "10px",
     border: "1px solid #ccc",
     background: "#fff",
     color: "#000",
@@ -2188,15 +2192,15 @@ const styles = {
   },
 
   clearButton: {
-    padding: "clamp(6px, 1vw, 10px) clamp(8px, 1.5vw, 12px)",
-    fontSize: "clamp(9px, 1vw, 11px)",
-    borderRadius: "6px",
+    padding: "clamp(10px, 1.2vw, 14px) clamp(12px, 1.8vw, 16px)",
+    fontSize: "clamp(14px, 1.1vw, 16px)",
+    borderRadius: "12px",
     border: "none",
     background: "#ffd700",
     color: "#000",
     cursor: "pointer",
     fontWeight: "bold",
-    fontFamily: "'Philosopher', serif",
+    fontFamily: "'Roboto', Arial, sans-serif",
     touchAction: "manipulation",
   },
 
@@ -2371,11 +2375,11 @@ const styles = {
 
   continentButton: {
     padding: "clamp(6px, 1vw, 10px) clamp(8px, 1.5vw, 12px)",
-    fontSize: "clamp(11px, 1.2vw, 13px)",
-    borderRadius: "6px",
+    fontSize: "clamp(13px, 1.2vw, 15px)",
+    borderRadius: "8px",
     border: "1px solid #ffd700",
     cursor: "pointer",
-    fontFamily: "'Philosopher', serif",
+    fontFamily: "'Roboto', Arial, sans-serif",
     fontWeight: "bold",
     transition: "all 0.3s ease",
     touchAction: "manipulation",
@@ -2439,7 +2443,7 @@ const styles = {
     color: "#ffd700",
     fontSize: "12px",
     textDecoration: "none",
-    fontFamily: "'Philosopher', serif",
+    fontFamily: "'Roboto', Arial, sans-serif",
     fontWeight: "bold",
     padding: "6px 10px",
     border: "1px solid #ffd700",
