@@ -969,7 +969,12 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         </div>
       )}
 
-      <div style={styles.filterPanel}>
+      <div style={{
+          ...styles.filterPanel,
+          top: showMenu
+            ? "calc(clamp(80px, 10vh, 100px) + 420px)"
+            : "calc(clamp(80px, 10vh, 100px) + 240px)",
+        }}>
         <div style={styles.filterPanelHeader}>
           <div>
             <div style={styles.menuSectionLabel}>Filters</div>
