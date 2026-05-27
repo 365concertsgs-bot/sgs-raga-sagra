@@ -1163,14 +1163,125 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
-            The SGS Raga Ragini Atlas is an interactive globe that presents Music for Healing & Meditation events led by His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji. Users can filter events by name, location, continent, or event number and explore photographs, artist details, ragas performed, and audio/video clips that recreate the experience.
+            Jaya Guru Datta
           </p>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
-            This archive brings together available Raga Sagara resources from 1987 to the present, honoring the 28th Anniversary of the Nada Mantapam and the 365th Raga Sagara event held at Indraprastha in 2026. It is offered with humility and devotion to Pujya Datta Swamiji to preserve every precious gem of Raga Sagara for future generations.
+            The SGS Raga Ragini Atlas is an interactive globe that showcases Music for Healing & Meditation events conducted by His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji across Bharat and around the world.
           </p>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
-            We are deeply grateful to Sri Datta Swamiji, Sri Balaswamiji, and the extended Datta Peetham team for their guidance, grace, support, and technical assistance. For feedback or contributions, contact 365concertsgs@gmail.com.
+            Users can explore events by filtering them based on event name, location, continent, or event number. Each event entry includes photographs, details of accompanying artists, ragas performed, and audio/video clips that help recreate the experience. We have made every effort to bring together the available resources of Raga Sagaras from 1987 to the present in one comprehensive archive, while continuing the search for more.
           </p>
+          <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+            As we celebrate the 28th Anniversary of the Nada Mantapam and commemorate the landmark 365th Raga Sagara event held in the capital of Bharat — Indraprastha — in 2026, this project is offered with humility and devotion to Pujya Datta Swamiji. Our intention is to preserve and present every precious gem of Raga Sagara for future generations.
+          </p>
+          <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+            We remain deeply grateful to Sri Datta Swamiji and Sri Balaswamiji for their constant guidance, grace, and support. We also extend our sincere thanks to the extended Datta Peetham team for their assistance with the technical aspects of hosting this website.
+          </p>
+          <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+            For feedback, suggestions, or contributions, please feel free to contact us at <a href="mailto:365concertsgs@gmail.com" style={{ color: "#ffd700" }}>365concertsgs@gmail.com</a>. We warmly welcome ideas that can help make these musical treasures more accessible to devotees and the wider public.
+          </p>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+              Sri Datta Swamiji – The Journey of Nada Chikitsa
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              “Listen with your heart, not your intellect. Music is the path to salvation.” — Sri Datta Swamiji
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji (the founder pontiff of Avadhoota Datta Peetham, Mysore) descends from the illustrious lineage of Sri Govinda Deekshitar and Sri Venkatamakhin, the architect of the 72 Melakarta rāga system in Carnatic music. Rooted in this classical authenticity, His vision was nurtured by His mother and Guru, Sri Jayalakshmi Mata, who instilled in Him the spirit of devotional music which blossomed into Nada Chikitsa—the healing science of sound.
+            </p>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+              The Cosmic Blueprint of Raga
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Did you know the 72 Melakarta ragas correspond to the 72 nerve centres in the human body? The Raga Ragini Vidya of the Vedas reveals how ragas influence nerve centres, chakras, and emotions. The seven notes (saptaswaras)—Sa, Ri, Ga, Ma, Pa, Da, Ni—symbolise the evolutionary journey of the jeevatama:
+            </p>
+            <ul style={{ margin: "8px 0 0 18px", padding: 0, color: "#fff", fontSize: "14px", lineHeight: 1.6 }}>
+              <li>Sa – Life begins in the waters</li>
+              <li>Ri – Crawling beings emerge on land</li>
+              <li>Ga – Birds soar in the skies</li>
+              <li>Ma – Humanity takes form</li>
+              <li>Da – Dharma uplifts and guides</li>
+              <li>Ni – Devotion to the formless blossoms</li>
+              <li>Sa – All merge into Sachchidananda—Truth, Knowledge, Bliss</li>
+            </ul>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Thus, music becomes not mere art, but medicine for the soul.
+            </p>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+              Music as Medicine – Nada Chikitsa
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Sri Datta Swamiji’s Raga Sagaras weave together music, the panchabhutas (five elements), and sacred mudras. His compositions stimulate 72,000 astral nerves (nadis), restoring balance and health. Rooted in the principle of Nada Brahma—sound as the origin of creation—His music heals by aligning human consciousness with cosmic vibrations and emerges from the Raga Ragini Vidya of the Vedas.
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Unlike conventional music, Sri Datta Swamiji integrates ragas with astronomy, astrology, gemology, chakras, zodiac signs, colors, flora, and fauna. This holistic synthesis makes his music a unique spiritual science.
+            </p>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+              Music as Medicine – Nada Chikitsa
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Sri Datta Swamiji’s music has touched lives across the world:</p>
+            <ul style={{ margin: "8px 0 0 18px", padding: 0, color: "#fff", fontSize: "14px", lineHeight: 1.6 }}>
+              <li>Tamil Nadu Police experiments showed reduced stress and improved social consciousness.</li>
+              <li>Orphan children and destitute women found self-esteem and creativity through group singing.</li>
+              <li>fMRI studies (University of Arkansas, USA) revealed lowered stress responses in listeners.</li>
+              <li>The Government of Zurich, Switzerland introduced Sri Datta Ji’s music in public telephone booths as a means to ease stress and anxiety among callers.</li>
+            </ul>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              From villages in India to prestigious venues like the Sydney Opera House, Royal Albert Hall, and Lincoln Center, his Raga Sagaras have become a global phenomenon.
+            </p>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+              Honours and Recognition
+            </p>
+            <ol style={{ margin: "8px 0 0 18px", padding: 0, color: "#fff", fontSize: "14px", lineHeight: 1.6 }}>
+              <li>2026 – Honorary Doctorate, Wellness University, Florida (Nada Yoga Sarvabhauma)</li>
+              <li>2023 – Honorary Doctorate, Karnataka State Music University, Bengaluru</li>
+              <li>2016 – Honorary Doctorate, World Classical Tamil University, London</li>
+              <li>2015 – Guinness World Record: Largest Music Therapy Lesson (Sydney Opera House, Australia)</li>
+              <li>2013 – Honorary Doctorate, Vijayanagara Sri Krishnadevaraya University, Bellary</li>
+            </ol>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+              Musical Collaborations
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Great musical stalwarts have shared their awe at Sri Datta Swamiji’s compositions, performing alongside him and also offering sangeeta seva at the magnificent Nada Mantapam in the presence of the Sapta Swara temple at Avadhoota Datta Peetham, Mysore.
+            </p>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+              The Journey of Raga Sagara
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              The saga began in 1987 at the Grand Krasnapolsky Ballroom in the Netherlands, inspired by a devotee’s gift of a synthesiser in Vijayawada. Since then, the journey has spanned continents, culminating in the 365th Raga Sagara at Bharat Mandapam, New Delhi, on 19th April 2026.
+            </p>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+              Conclusion
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Sri Datta Swamiji’s music is not entertainment—it is Sangeeta Sadhana, a spiritual practice. It heals, uplifts, and unites. As we celebrate this journey, we salute the Nada Brahman, His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji, for guiding humanity toward peace and evolution through the eternal power of sound.
+            </p>
+          </div>
+          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Further insights: For more information, please visit the “Quick Links” and “Trivia” sections on the website.
+            </p>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+              Sri Guru Datta
+            </p>
+          </div>
         </div>
       </InfoModal>
 
