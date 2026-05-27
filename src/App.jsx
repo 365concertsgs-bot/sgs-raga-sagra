@@ -102,6 +102,44 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       .filter((item) => hasValue(item));
   };
 
+  // Resolve an individual media URL that may be a storage path or short path.
+  const resolveMediaUrl = async (rawUrl) => {
+    if (!hasValue(rawUrl)) return null;
+    const url = String(rawUrl).trim();
+
+    // Already a full URL
+    if (/^https?:\/\//i.test(url)) return url;
+
+    // If it looks like a Supabase storage absolute path, prefix with supabaseUrl
+    if (url.startsWith('/storage/v1/object')) {
+      return `${supabaseUrl}${url}`;
+    }
+
+    // Try common bucket names and use getPublicUrl
+    const candidateBuckets = ['events', 'media', 'public', 'images'];
+    const path = url.replace(/^\//, '');
+
+    for (const bucket of candidateBuckets) {
+      try {
+        const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+        const publicUrl = data?.publicURL;
+        if (publicUrl) {
+          try {
+            const resp = await fetch(publicUrl, { method: 'HEAD' });
+            if (resp && resp.ok) return publicUrl;
+          } catch (e) {
+            // ignore fetch errors and continue trying other buckets
+          }
+        }
+      } catch (e) {
+        // ignore and try next bucket
+      }
+    }
+
+    // Fallback: return raw as-is so callers can decide
+    return url;
+  };
+
   const getEventImageUrls = (row, mediaRows) => {
     const eventId = row.No != null ? String(row.No).trim() : getField(row, ["No", "no", "Event Number", "event_number", "eventno", "event_no"]);
     const eventName = getField(row, [
@@ -117,7 +155,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
     const images = mediaRows
       .map((mediaRow) => {
-        const url = getField(mediaRow, [
+        // Prefer a pre-resolved URL placed on the row (see fetchEvents mapping below)
+        const resolved = getField(mediaRow, ["__resolvedUrl"]) || getField(mediaRow, [
           "URL",
           "url",
           "Image",
@@ -131,7 +170,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           "Link",
           "link",
         ]);
-        if (!hasValue(url)) return null;
+        if (!hasValue(resolved)) return null;
 
         const mediaEventKey = getField(mediaRow, [
           "Event",
@@ -157,19 +196,19 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           normalizedEventId &&
           normalizedMediaKey === normalizedEventId
         ) {
-          return url;
+          return resolved;
         }
         if (
           normalizedEventName &&
           normalizedMediaKey === normalizedEventName
         ) {
-          return url;
+          return resolved;
         }
         if (
           normalizedEventId &&
           normalizedMediaKey?.endsWith(normalizedEventId)
         ) {
-          return url;
+          return resolved;
         }
 
         return null;
@@ -352,6 +391,31 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       const mediaDataOrEmpty = mediaData || [];
       console.log(`Loaded ${mediaDataOrEmpty?.length || 0} media records`);
 
+      // Pre-resolve media URLs (handles Supabase storage paths and short paths)
+      const mediaDataResolved = await Promise.all(
+        mediaDataOrEmpty.map(async (mr) => {
+          const rawUrl = getField(mr, [
+            "URL",
+            "url",
+            "Image",
+            "image",
+            "image_url",
+            "imageUrl",
+            "media_url",
+            "MediaURL",
+            "mediaUrl",
+            "Link",
+            "link",
+          ]);
+          try {
+            const resolved = await resolveMediaUrl(rawUrl);
+            return { ...mr, __resolvedUrl: resolved };
+          } catch (e) {
+            return { ...mr, __resolvedUrl: rawUrl };
+          }
+        })
+      );
+
       const mapped = eventsData.map((row) => {
         // Parse date - handle various formats
         let dateValue = null;
@@ -391,7 +455,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           location: getField(row, ["City", "city", "Country", "country", "Location", "location"]),
           place: getField(row, ["Venue", "venue", "Place", "place"]),
           description: getField(row, ["Description", "description", "details", "event_description"]),
-          images: getEventImageUrls(row, mediaDataOrEmpty),
+          images: getEventImageUrls(row, mediaDataResolved),
           audioUrl: getField(row, [
             "Audio/Video Link",
             "link_for_audio_or_video",
