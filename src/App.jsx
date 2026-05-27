@@ -91,7 +91,20 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
   const normalizeKey = (value) => {
     if (!hasValue(value)) return null;
-    return String(value).trim().toLowerCase().replace(/\s+/g, " ");
+    return String(value)
+      .trim()
+      .toLowerCase()
+      .replace(/[\u2018\u2019\u201C\u201D]/g, "'")
+      .replace(/[^a-z0-9]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  };
+
+  const getNumericTokens = (value) => {
+    if (!hasValue(value)) return [];
+    return String(value)
+      .match(/\d+/g)
+      ?.map((token) => token.replace(/^0+/, "") || "0") || [];
   };
 
   const parseImageList = (value) => {
@@ -100,6 +113,49 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       .split(/[,;|]+/)
       .map((item) => String(item).trim())
       .filter((item) => hasValue(item));
+  };
+
+  const mediaMatchesEvent = (mediaValue, eventValues) => {
+    const normalizedMedia = normalizeKey(mediaValue);
+    if (!normalizedMedia) return false;
+
+    const normalizedEvents = eventValues
+      .map((value) => normalizeKey(value))
+      .filter(hasValue);
+
+    if (normalizedEvents.some((eventValue) => eventValue === normalizedMedia)) {
+      return true;
+    }
+
+    const mediaNumbers = getNumericTokens(normalizedMedia);
+    const eventNumbers = eventValues
+      .flatMap((value) => getNumericTokens(value))
+      .filter(hasValue);
+
+    if (mediaNumbers.some((num) => eventNumbers.includes(num))) {
+      return true;
+    }
+
+    if (
+      normalizedEvents.some(
+        (eventValue) =>
+          eventValue &&
+          eventValue.length > 5 &&
+          normalizedMedia.includes(eventValue)
+      )
+    ) {
+      return true;
+    }
+
+    if (
+      eventNumbers.some(
+        (num) => new RegExp(`\\b${num}\\b`).test(normalizedMedia)
+      )
+    ) {
+      return true;
+    }
+
+    return false;
   };
 
   // Resolve an individual media URL that may be a storage path or short path.
@@ -141,7 +197,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   };
 
   const getEventImageUrls = (row, mediaRows) => {
-    const eventId = row.No != null ? String(row.No).trim() : getField(row, ["No", "no", "Event Number", "event_number", "eventno", "event_no"]);
+    const eventId = row.No != null ? String(row.No).trim() : getField(row, ["No", "no", "Event Number", "event_number", "eventno", "event_no", "ID", "id", "event_id", "eventid"]);
     const eventName = getField(row, [
       "Raga Sagara Name (Event)",
       "raga_sagara_name_event",
@@ -149,13 +205,21 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       "eventname",
       "Event Name",
       "event name",
+      "Event",
+      "event",
+      "Title",
+      "title",
     ]);
-    const normalizedEventId = normalizeKey(eventId);
-    const normalizedEventName = normalizeKey(eventName);
+    const eventKeys = [eventId, eventName];
 
-    const images = mediaRows
+    const sortedMediaRows = [...mediaRows].sort((a, b) => {
+      const aId = getNumberField(a, ["id", "ID", "Id"]) || 0;
+      const bId = getNumberField(b, ["id", "ID", "Id"]) || 0;
+      return aId - bId;
+    });
+
+    const images = sortedMediaRows
       .map((mediaRow) => {
-        // Prefer a pre-resolved URL placed on the row (see fetchEvents mapping below)
         const resolved = getField(mediaRow, ["__resolvedUrl"]) || getField(mediaRow, [
           "URL",
           "url",
@@ -176,6 +240,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           "Event",
           "event",
           "Event No",
+          "EventNo",
           "EventNumber",
           "event_number",
           "eventno",
@@ -188,26 +253,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           "event_name",
           "eventname",
           "event name",
+          "Title",
+          "title",
         ]);
 
-        const normalizedMediaKey = normalizeKey(mediaEventKey);
-
-        if (
-          normalizedEventId &&
-          normalizedMediaKey === normalizedEventId
-        ) {
-          return resolved;
-        }
-        if (
-          normalizedEventName &&
-          normalizedMediaKey === normalizedEventName
-        ) {
-          return resolved;
-        }
-        if (
-          normalizedEventId &&
-          normalizedMediaKey?.endsWith(normalizedEventId)
-        ) {
+        if (mediaMatchesEvent(mediaEventKey, eventKeys)) {
           return resolved;
         }
 
