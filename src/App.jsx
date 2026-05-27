@@ -1157,7 +1157,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
-            This app showcases the global impact and reach of the Music for Healing & Meditation sessions. Navigate the globe to explore events across continents, and learn more through the modals and quick links.
+            The SGS Raga Ragini Atlas is an interactive globe that presents Music for Healing & Meditation events led by His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji. Users can filter events by name, location, continent, or event number and explore photographs, artist details, ragas performed, and audio/video clips that recreate the experience.
+          </p>
+          <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+            This archive brings together available Raga Sagara resources from 1987 to the present, honoring the 28th Anniversary of the Nada Mantapam and the 365th Raga Sagara event held at Indraprastha in 2026. It is offered with humility and devotion to Pujya Datta Swamiji to preserve every precious gem of Raga Sagara for future generations.
+          </p>
+          <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
+            We are deeply grateful to Sri Datta Swamiji, Sri Balaswamiji, and the extended Datta Peetham team for their guidance, grace, support, and technical assistance. For feedback or contributions, contact 365concertsgs@gmail.com.
           </p>
         </div>
       </InfoModal>
