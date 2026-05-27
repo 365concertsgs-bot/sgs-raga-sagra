@@ -42,6 +42,15 @@ a:hover {
   color: #ffed4e;
 }
 
+/* Ensure quick links maintain visibility on hover */
+a[style*="flex"] {
+  color: #ffd700 !important;
+}
+
+a[style*="flex"]:hover {
+  color: #ffd700 !important;
+}
+
 button {
   border-radius: clamp(3px, 0.8vw, 6px);
   border: 1px solid transparent;

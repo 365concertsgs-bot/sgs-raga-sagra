@@ -1414,7 +1414,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             For feedback, suggestions, or contributions, please feel free to contact us at <a href="mailto:365concertsgs@gmail.com" style={{ color: "#ffd700" }}>365concertsgs@gmail.com</a>. We warmly welcome ideas that can help make these musical treasures more accessible to devotees and the wider public.
           </p>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
               Sri Datta Swamiji – The Journey of Nada Chikitsa
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
@@ -1425,7 +1425,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             </p>
           </div>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
               The Cosmic Blueprint of Raga
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
@@ -1472,7 +1472,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             </p>
           </div>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
               Honours and Recognition
             </p>
             <ol style={{ margin: "8px 0 0 18px", padding: 0, color: "#fff", fontSize: "14px", lineHeight: 1.6 }}>
@@ -1484,7 +1484,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             </ol>
           </div>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
               Musical Collaborations
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
@@ -1492,7 +1492,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             </p>
           </div>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
               The Journey of Raga Sagara
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
@@ -1500,7 +1500,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             </p>
           </div>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
               Conclusion
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
@@ -1725,7 +1725,8 @@ const styles = {
   filterStack: {
     position: "fixed",
     top: "clamp(80px, 10vh, 100px)",
-    left: "clamp(15px, 3vw, 25px)",
+    right: "clamp(15px, 3vw, 25px)",
+    left: "auto",
     maxWidth: "clamp(260px, 20vw, 340px)",
     maxHeight: "calc(100vh - 200px)",
     overflowY: "auto",
@@ -1984,6 +1985,7 @@ const styles = {
     fontWeight: "700",
     border: "1px solid rgba(255,215,0,0.35)",
     boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+    transition: "all 0.3s ease",
   },
 
   quickLinkIcon: {
@@ -2360,17 +2362,22 @@ const styles = {
   },
 
   continentFilter: {
-    position: "absolute",
-    bottom: 50,
-    left: "50%",
-    transform: "translateX(-50%)",
+    position: "fixed",
+    left: "clamp(15px, 3vw, 25px)",
+    top: "50%",
+    transform: "translateY(-50%)",
     display: "flex",
-    gap: 8,
+    flexDirection: "column",
+    gap: 10,
     zIndex: 19,
     flexWrap: "wrap",
     justifyContent: "center",
-    maxWidth: "800px",
-    padding: "10px 0",
+    maxWidth: "clamp(120px, 15vw, 160px)",
+    padding: "12px 8px",
+    background: "rgba(0, 0, 0, 0.85)",
+    border: "1px solid rgba(255, 215, 0, 0.25)",
+    borderRadius: "14px",
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
   },
 
   continentButton: {
