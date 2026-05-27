@@ -52,7 +52,7 @@ const styles = {
   },
   eventDetails: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
     gap: "8px",
     marginBottom: "8px",
     flexGrow: 1,
@@ -63,6 +63,8 @@ const styles = {
     borderRadius: "6px",
     border: "1px solid rgba(255, 215, 0, 0.2)",
     fontSize: "12px",
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
   },
   imageGallery: {
     marginBottom: "8px",
@@ -75,7 +77,7 @@ const styles = {
     width: "100%",
     maxWidth: "600px",
     height: "auto",
-    maxHeight: "350px",
+    maxHeight: "55vh",
     objectFit: "contain",
     borderRadius: "8px",
     border: "2px solid rgba(255, 215, 0, 0.3)",

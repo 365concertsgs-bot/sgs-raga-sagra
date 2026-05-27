@@ -901,9 +901,10 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         pointColor={() => "#ffcc00"}
         pointResolution={4}
         pointLabel={(point) =>
-          `<div style="background: rgba(0,0,0,0.95); padding: 12px 16px; border-radius: 10px; color: #ffd700; font-size: 14px; font-family: Philosopher, serif; white-space: nowrap; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);">
+          `<div style="background: rgba(0,0,0,0.95); padding: 12px 16px; border-radius: 10px; color: #ffd700; font-size: 14px; font-family: Philosopher, serif; white-space: normal; max-width: 240px; word-wrap: break-word; overflow-wrap: anywhere; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);">
             <div style="font-weight: bold; margin-bottom: 4px;">${point.eventName}</div>
-            <div style="font-size: 12px; color: #fff;">📍 ${point.place || point.location || 'Venue'} [${point.city || 'City'}]</div>
+            <div style="font-size: 12px; color: #fff; margin-bottom: 2px;">📍 ${point.place || point.location || 'Venue'}</div>
+            <div style="font-size: 12px; color: #fff;">📌 ${point.city || 'City'}</div>
           </div>`
         }
         onPointClick={(point) => {
