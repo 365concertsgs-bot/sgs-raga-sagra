@@ -82,6 +82,111 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     return null;
   };
 
+  const normalizeKey = (value) => {
+    if (!hasValue(value)) return null;
+    return String(value).trim().toLowerCase().replace(/\s+/g, " ");
+  };
+
+  const parseImageList = (value) => {
+    if (!hasValue(value)) return [];
+    return String(value)
+      .split(/[,;|]+/)
+      .map((item) => String(item).trim())
+      .filter((item) => hasValue(item));
+  };
+
+  const getEventImageUrls = (row, mediaRows) => {
+    const eventId = row.No != null ? String(row.No).trim() : getField(row, ["No", "no", "Event Number", "event_number", "eventno", "event_no"]);
+    const eventName = getField(row, [
+      "Raga Sagara Name (Event)",
+      "raga_sagara_name_event",
+      "event_name",
+      "eventname",
+      "Event Name",
+      "event name",
+    ]);
+    const normalizedEventId = normalizeKey(eventId);
+    const normalizedEventName = normalizeKey(eventName);
+
+    const images = mediaRows
+      .map((mediaRow) => {
+        const url = getField(mediaRow, [
+          "URL",
+          "url",
+          "Image",
+          "image",
+          "image_url",
+          "imageUrl",
+          "media_url",
+          "MediaURL",
+          "mediaUrl",
+          "mediaUrl",
+          "Link",
+          "link",
+        ]);
+        if (!hasValue(url)) return null;
+
+        const mediaEventKey = getField(mediaRow, [
+          "Event",
+          "event",
+          "Event No",
+          "EventNumber",
+          "event_number",
+          "eventno",
+          "No",
+          "no",
+          "Event ID",
+          "EventID",
+          "eventid",
+          "Event Name",
+          "event_name",
+          "eventname",
+          "event name",
+        ]);
+
+        const normalizedMediaKey = normalizeKey(mediaEventKey);
+
+        if (
+          normalizedEventId &&
+          normalizedMediaKey === normalizedEventId
+        ) {
+          return url;
+        }
+        if (
+          normalizedEventName &&
+          normalizedMediaKey === normalizedEventName
+        ) {
+          return url;
+        }
+        if (
+          normalizedEventId &&
+          normalizedMediaKey?.endsWith(normalizedEventId)
+        ) {
+          return url;
+        }
+
+        return null;
+      })
+      .filter(hasValue);
+
+    if (images.length > 0) {
+      return images;
+    }
+
+    const fallbackImages = getField(row, [
+      "Image",
+      "image",
+      "Images",
+      "images",
+      "image_url",
+      "imageUrl",
+      "media_url",
+      "mediaUrl",
+      "MediaURL",
+    ]);
+    return parseImageList(fallbackImages);
+  };
+
   // Mock data fallback
   const getMockData = () => {
     return [
@@ -275,7 +380,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           location: row.City || row.Country,
           place: row.Venue,
           description: getField(row, ["Description", "description", "details", "event_description"]),
-          images: mediaDataOrEmpty.filter((m) => m.Event === row.No).map((m) => m.URL),
+          images: getEventImageUrls(row, mediaDataOrEmpty),
           audioUrl: getField(row, [
             "Audio/Video Link",
             "link_for_audio_or_video",
