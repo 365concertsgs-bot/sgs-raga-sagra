@@ -373,9 +373,17 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     const tryTableNames = async (tableNames, tableType) => {
       for (const tableName of tableNames) {
         try {
-          const { data, error } = await supabase.from(tableName).select("*");
+          // For media tables, fetch ALL records without the default 1000-row limit
+          let query = supabase.from(tableName).select("*");
+          const isMediaTable = tableType === "media";
+          if (isMediaTable) {
+            // Remove the default 1000-row limit by using a very high range
+            query = query.range(0, 1000000);
+          }
+          
+          const { data, error } = await query;
           if (!error && data) {
-            console.log(`Found ${tableType} table: ${tableName}`);
+            console.log(`Found ${tableType} table: ${tableName} (${data.length} records)`);
             return { data, tableName };
           }
 
