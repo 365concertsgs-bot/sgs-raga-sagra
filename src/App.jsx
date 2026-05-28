@@ -990,7 +990,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         a[href]:hover {
           color: #000 !important;
         }
-        
+
+        .quick-link-item,
+        .quick-link-item:hover,
+        .quick-link-item:focus {
+          color: #ffd700 !important;
+        }
+
         .footer-link {
           color: #ffd700;
           font-size: 14px;
@@ -1558,19 +1564,19 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         onClose={() => setActiveInfoModal(null)}
       >
         <div style={styles.quickLinksList}>
-          <a href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+          <a className="quick-link-item" href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}>🕉️</span>
             Datta Peetam Official
           </a>
-          <a href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+          <a className="quick-link-item" href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}>🎶</span>
             YogaSangeeta
           </a>
-          <a href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+          <a className="quick-link-item" href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}>🎥</span>
             Raga Ragini Vidya - Documentary
           </a>
-          <a href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+          <a className="quick-link-item" href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}>🌐</span>
             SGS Raga Sagara
           </a>
