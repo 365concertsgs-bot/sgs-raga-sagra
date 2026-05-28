@@ -68,6 +68,21 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   const [isUserActive, setIsUserActive] = useState(false);
   const [appError, setAppError] = useState(supabaseError || null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = windowWidth <= 768;
+  const isSmallMobile = windowWidth <= 480;
 
   const hasValue = (value) =>
     value != null &&
@@ -916,6 +931,21 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     );
   }
 
+  const appliedFilterPanelStyle = isMobile
+    ? { ...styles.filterPanel, ...styles.filterPanelMobile }
+    : styles.filterPanel;
+
+  const appliedFilterStackStyle = isMobile
+    ? { ...styles.filterStack, ...styles.filterStackMobile }
+    : styles.filterStack;
+
+  const appliedMenuButtonStyle = isMobile
+    ? { ...styles.menuButton, ...styles.mobileMenuButton }
+    : styles.menuButton;
+
+  const appliedMenuBackdropStyle = isMobile
+    ? { ...styles.menuBackdrop, ...styles.mobileMenuOverlay }
+    : styles.menuBackdrop;
 
   return (
     <div style={styles.container}>
@@ -1175,7 +1205,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       {/* ☰ TOP LEFT MENU */}
       <button
         type="button"
-        style={styles.menuButton}
+        style={appliedMenuButtonStyle}
         aria-expanded={showMenu}
         aria-label={showMenu ? "Close menu" : "Open menu"}
         onClick={(e) => {
@@ -1186,11 +1216,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         {showMenu ? "✕" : "☰"}
       </button>
 
-      {showMenu && <div style={styles.menuBackdrop} onClick={() => setShowMenu(false)} />}
+      {showMenu && <div style={appliedMenuBackdropStyle} onClick={() => setShowMenu(false)} />}
 
       {showMenu && (
         <div 
-          style={styles.filterStack}
+          style={appliedFilterStackStyle}
           data-filter-stack="desktop"
           onClick={(e) => e.stopPropagation()}
         >
@@ -1221,7 +1251,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         </div>
       )}
 
-      <div style={styles.filterPanel}>
+      <div style={appliedFilterPanelStyle}>
         <div style={styles.filterPanelHeader}>
           <div>
             <div style={styles.menuSectionLabel}>Filters</div>
@@ -2029,6 +2059,24 @@ const styles = {
     fontWeight: "600",
   },
 
+  filterPanelMobile: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+    maxHeight: "75vh",
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
+    background: "rgba(0, 0, 0, 0.96)",
+    border: "1px solid rgba(255, 215, 0, 0.25)",
+    borderTopLeftRadius: "18px",
+    borderTopRightRadius: "18px",
+    padding: "18px 16px 24px",
+    zIndex: 40,
+    boxShadow: "0 -12px 30px rgba(0,0,0,0.55)",
+  },
+
   filterStackMobile: {
     position: "fixed",
     bottom: 0,
@@ -2041,11 +2089,11 @@ const styles = {
     flexDirection: "column",
     gap: 12,
     zIndex: 1000,
-    backgroundColor: "#ffcc00",
+    backgroundColor: "rgba(0, 0, 0, 0.95)",
     padding: "clamp(15px, 4vw, 20px)",
-    borderTopLeftRadius: "16px",
-    borderTopRightRadius: "16px",
-    boxShadow: "0 -8px 16px rgba(0,0,0,0.3)",
+    borderTopLeftRadius: "18px",
+    borderTopRightRadius: "18px",
+    boxShadow: "0 -8px 18px rgba(0,0,0,0.3)",
     fontSize: "clamp(11px, 1.5vw, 14px)",
     touchAction: "manipulation",
   },
