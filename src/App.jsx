@@ -1432,7 +1432,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             Jaya Guru Datta
           </p>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
-            The SGS Raga Ragini Atlas is an interactive globe that showcases Music for Healing & Meditation events conducted by His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji across Bharat and around the world.
+            The SGS Raga Ragini Atlas is an interactive globe that showcases Music for Healing & Meditation events conducted by <span style={{ color: "#ffd700", fontWeight: 600 }}>His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji</span> across Bharat and around the world.
           </p>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
             Users can explore events by filtering them based on event name, location, continent, or event number. Each event entry includes photographs, details of accompanying artists, ragas performed, and audio/video clips that help recreate the experience. We have made every effort to bring together the available resources of Raga Sagaras from 1987 to the present in one comprehensive archive, while continuing the search for more.
