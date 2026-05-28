@@ -71,7 +71,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "8px",
+    gap: "12px",
   },
   mainImage: {
     width: "100%",
@@ -85,6 +85,7 @@ const styles = {
     pointerEvents: "none",
     cursor: "default",
     userSelect: "none",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
   imageControls: {
     display: "flex",
@@ -92,19 +93,51 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
+    flexWrap: "wrap",
+  },
+  navButton: {
+    background: "rgba(255, 215, 0, 0.2)",
+    color: "#ffd700",
+    border: "1px solid #ffd700",
+    borderRadius: "4px",
+    padding: "6px 12px",
+    cursor: "pointer",
+    fontSize: "14px",
+    transition: "all 0.2s ease",
+    fontWeight: "bold",
   },
   imageCounter: {
     color: "#ffd700",
     fontSize: "14px",
-    minWidth: "100px",
+    minWidth: "120px",
     textAlign: "center",
+  },
+  imageLoadingError: {
+    color: "#ff6b6b",
+    fontSize: "12px",
+    textAlign: "center",
+    padding: "10px",
+    background: "rgba(255, 107, 107, 0.1)",
+    borderRadius: "4px",
   },
 };
 
 export default memo(function EventModal({ event, onClose, carouselRef, currentSlideIndex, setCurrentSlideIndex }) {
   const [imageIndex, setImageIndex] = useState(0);
+  const [imageLoadError, setImageLoadError] = useState(false);
 
   if (!event) return null;
+
+  // Log when event changes (for debugging)
+  useEffect(() => {
+    setImageIndex(0);
+    setImageLoadError(false);
+    if (event.images && event.images.length > 0) {
+      console.log(`Event "${event.eventName}" has ${event.images.length} image(s):`, event.images);
+    } else {
+      console.warn(`Event "${event.eventName}" has no images`);
+    }
+  }, [event]);
 
   // Auto-rotate images every 4 seconds
   useEffect(() => {
@@ -116,6 +149,39 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
 
     return () => clearInterval(interval);
   }, [event.images]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!event.images || event.images.length === 0) return;
+
+      if (e.key === "ArrowLeft") {
+        setImageIndex((prev) => (prev === 0 ? event.images.length - 1 : prev - 1));
+      } else if (e.key === "ArrowRight") {
+        setImageIndex((prev) => (prev === event.images.length - 1 ? 0 : prev + 1));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [event.images]);
+
+  const goToPreviousImage = () => {
+    if (!event.images || event.images.length === 0) return;
+    setImageIndex((prev) => (prev === 0 ? event.images.length - 1 : prev - 1));
+    setImageLoadError(false);
+  };
+
+  const goToNextImage = () => {
+    if (!event.images || event.images.length === 0) return;
+    setImageIndex((prev) => (prev === event.images.length - 1 ? 0 : prev + 1));
+    setImageLoadError(false);
+  };
+
+  const handleImageError = () => {
+    console.error(`Failed to load image: ${event.images[imageIndex]}`);
+    setImageLoadError(true);
+  };
 
   return (
     <motion.div
@@ -179,15 +245,76 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
         {/* Image Gallery - Auto-Rotating Single Image */}
         {event.images && event.images.length > 0 && (
           <div style={styles.imageGallery}>
-            <img
-              src={event.images[imageIndex]}
-              alt={`${event.eventName} ${imageIndex + 1}`}
-              style={styles.mainImage}
-              onError={(e) => { e.target.src = ""; }}
-            />
-            <div style={styles.imageCounter}>
-              Image {imageIndex + 1} / {event.images.length}
+            {imageLoadError ? (
+              <div style={styles.imageLoadingError}>
+                ⚠️ Failed to load image. Image URL might be invalid.
+              </div>
+            ) : (
+              <img
+                key={`${event.eventNumber}-${imageIndex}`}
+                src={event.images[imageIndex]}
+                alt={`${event.eventName} ${imageIndex + 1}`}
+                style={styles.mainImage}
+                onError={handleImageError}
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+            
+            {/* Image Navigation Controls */}
+            <div style={styles.imageControls}>
+              <button
+                onClick={goToPreviousImage}
+                style={{...styles.navButton}}
+                title="Previous image (or press ← arrow)"
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(255, 215, 0, 0.3)";
+                  e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "rgba(255, 215, 0, 0.2)";
+                  e.target.style.boxShadow = "none";
+                }}
+              >
+                ← Previous
+              </button>
+              
+              <div style={styles.imageCounter}>
+                Image {imageIndex + 1} / {event.images.length}
+              </div>
+              
+              <button
+                onClick={goToNextImage}
+                style={{...styles.navButton}}
+                title="Next image (or press → arrow)"
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(255, 215, 0, 0.3)";
+                  e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "rgba(255, 215, 0, 0.2)";
+                  e.target.style.boxShadow = "none";
+                }}
+              >
+                Next →
+              </button>
             </div>
+          </div>
+        )}
+
+        {/* No Images Message */}
+        {(!event.images || event.images.length === 0) && (
+          <div style={{
+            padding: "15px",
+            background: "rgba(255, 215, 0, 0.1)",
+            borderRadius: "8px",
+            border: "1px dashed rgba(255, 215, 0, 0.3)",
+            color: "#ffd700",
+            textAlign: "center",
+            marginBottom: "8px",
+            fontSize: "12px",
+          }}>
+            📷 No images available for this event
           </div>
         )}
 

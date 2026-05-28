@@ -115,6 +115,36 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       .trim();
   };
 
+  // Convert URLs in text to clickable links
+  const renderTextWithLinks = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = String(text).split(urlRegex);
+
+    return parts.map((part, index) => {
+      if (urlRegex.test(part)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              color: "#ffd700",
+              textDecoration: "underline",
+              cursor: "pointer",
+              transition: "color 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.target.style.color = "#ffed4e")}
+            onMouseLeave={(e) => (e.target.style.color = "#ffd700")}
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   const getNumericTokens = (value) => {
     if (!hasValue(value)) return [];
     return String(value)
@@ -281,10 +311,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       })
       .filter(hasValue);
 
+    // Log image results for debugging
     if (images.length > 0) {
+      console.log(`✓ Event #${eventId} "${eventName}": Found ${images.length} image(s)`);
       return images;
     }
 
+    // Try fallback: check if event has images embedded directly
     const fallbackImages = getField(row, [
       "Image",
       "image",
@@ -296,7 +329,17 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       "mediaUrl",
       "MediaURL",
     ]);
-    return parseImageList(fallbackImages);
+    
+    if (fallbackImages) {
+      const parsedFallback = parseImageList(fallbackImages);
+      if (parsedFallback.length > 0) {
+        console.log(`✓ Event #${eventId} "${eventName}": Found ${parsedFallback.length} fallback image(s)`);
+        return parsedFallback;
+      }
+    }
+
+    console.warn(`⚠ Event #${eventId} "${eventName}": No images found`);
+    return [];
   };
 
   // Mock data fallback
@@ -463,11 +506,17 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         await tryTableNames(mediaTableCandidates, "media");
 
       const mediaDataOrEmpty = mediaData || [];
-      console.log(`Loaded ${mediaDataOrEmpty?.length || 0} media records`);
+      console.log(`Loaded ${mediaDataOrEmpty?.length || 0} media records from database`);
+      
+      if (mediaDataOrEmpty.length > 0) {
+        // Log sample media record to see structure
+        const sampleMedia = mediaDataOrEmpty[0];
+        console.log("Sample media record structure:", Object.keys(sampleMedia).slice(0, 10));
+      }
 
       // Pre-resolve media URLs (handles Supabase storage paths and short paths)
       const mediaDataResolved = await Promise.all(
-        mediaDataOrEmpty.map(async (mr) => {
+        mediaDataOrEmpty.map(async (mr, idx) => {
           const rawUrl = getField(mr, [
             "URL",
             "url",
@@ -483,8 +532,15 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           ]);
           try {
             const resolved = await resolveMediaUrl(rawUrl);
+            if (resolved && rawUrl) {
+              console.log(`Media ${idx + 1}: Resolved URL`, {
+                raw: rawUrl?.substring(0, 50) + (rawUrl?.length > 50 ? '...' : ''),
+                resolved: resolved?.substring(0, 50) + (resolved?.length > 50 ? '...' : ''),
+              });
+            }
             return { ...mr, __resolvedUrl: resolved };
           } catch (e) {
+            console.error(`Failed to resolve media ${idx + 1}:`, e.message);
             return { ...mr, __resolvedUrl: rawUrl };
           }
         })
@@ -1566,7 +1622,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
                 Insight
               </div>
               <p style={{ fontSize: "14px", color: "#f7f2e7", lineHeight: 1.7, margin: 0, whiteSpace: "pre-line" }}>
-                {item.insight}
+                {renderTextWithLinks(item.insight)}
               </p>
             </div>
           ))}
