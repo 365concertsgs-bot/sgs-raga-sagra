@@ -1221,12 +1221,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         </div>
       )}
 
-      <div style={{
-          ...styles.filterPanel,
-          top: showMenu
-            ? "calc(clamp(80px, 10vh, 100px) + 420px)"
-            : "calc(clamp(80px, 10vh, 100px) + 240px)",
-        }}>
+      <div style={styles.filterPanel}>
         <div style={styles.filterPanelHeader}>
           <div>
             <div style={styles.menuSectionLabel}>Filters</div>
@@ -1759,10 +1754,11 @@ const styles = {
 
   filterPanel: {
     position: "fixed",
-    top: "clamp(120px, 12vh, 130px)",
+    top: "clamp(80px, 10vh, 100px)",
+    bottom: "20px",
     left: "clamp(15px, 3vw, 25px)",
-    width: "clamp(290px, 26vw, 380px)",
-    maxHeight: "calc(100vh - 150px)",
+    width: "clamp(240px, 18vw, 300px)",
+    maxHeight: "calc(100vh - 120px)",
     overflowY: "auto",
     background: "rgba(0, 0, 0, 0.94)",
     border: "1px solid rgba(255, 215, 0, 0.25)",
