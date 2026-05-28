@@ -1,8 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false }) {
   const [error, setError] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(autoPlay);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (!audioRef.current) return;
+    if (autoPlay) {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch(() => {
+        setIsPlaying(false);
+      });
+    }
+  }, [autoPlay]);
+
+  const togglePlayback = () => {
+    if (!audioRef.current) return;
+    if (audioRef.current.paused) {
+      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+    } else {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
 
   const isValidUrl = (url) => {
     try {
@@ -174,12 +197,33 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
   const audioType = getAudioType(audioUrl);
   return (
     <div style={{ width: "100%", maxWidth: "100%", margin: "0", padding: "0", display: "flex", justifyContent: "center", flexDirection: "column", gap: "8px" }}>
+      <button
+        type="button"
+        onClick={togglePlayback}
+        style={{
+          width: "fit-content",
+          alignSelf: "flex-start",
+          background: "#ffd700",
+          color: "#000",
+          border: "none",
+          borderRadius: "999px",
+          padding: "10px 16px",
+          fontWeight: "700",
+          cursor: "pointer",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+        }}
+      >
+        {isPlaying ? "Pause" : "Play"}
+      </button>
       <audio
+        ref={audioRef}
         controls
         playsInline
         muted={muted}
         autoPlay={autoPlay}
         onError={() => setError('Unable to play this audio file.')}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
         style={{ width: "100%", height: "auto", borderRadius: "0", boxSizing: "border-box", margin: "0", padding: "0" }}
       >
         <source src={audioUrl} type={audioType} />
