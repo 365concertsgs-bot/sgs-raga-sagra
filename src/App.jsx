@@ -180,12 +180,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         const { data } = supabase.storage.from(bucket).getPublicUrl(path);
         const publicUrl = data?.publicURL;
         if (publicUrl) {
-          try {
-            const resp = await fetch(publicUrl, { method: 'HEAD' });
-            if (resp && resp.ok) return publicUrl;
-          } catch (e) {
-            // ignore fetch errors and continue trying other buckets
-          }
+          return publicUrl;
         }
       } catch (e) {
         // ignore and try next bucket
@@ -257,7 +252,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           "title",
         ]);
 
-        if (mediaMatchesEvent(mediaEventKey, eventKeys)) {
+        const mediaMatchCandidates = [
+          mediaEventKey,
+          resolved,
+          getField(mediaRow, ["URL", "url", "Image", "image", "image_url", "imageUrl", "media_url", "mediaUrl", "MediaURL", "Link", "link"]),
+        ];
+
+        if (mediaMatchCandidates.some((candidate) => mediaMatchesEvent(candidate, eventKeys))) {
           return resolved;
         }
 
