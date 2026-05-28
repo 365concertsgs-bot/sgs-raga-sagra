@@ -987,7 +987,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           overflow-x: hidden;
         }
         
-        a[href]:hover {
+        a[href]:hover:not(.quick-link-item):not(.footer-link) {
           color: #000 !important;
         }
 
