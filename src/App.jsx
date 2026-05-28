@@ -1267,18 +1267,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
             style={{
-              padding: "clamp(6px, 0.9vw, 9px) clamp(8px, 1.2vw, 10px)",
-              fontSize: "clamp(9px, 1vw, 11px)",
-              borderRadius: "6px",
-              border: "1px solid #ccc",
-              background: "#fff",
+              ...styles.selectInput,
               color: selectedYear ? "#000" : "#999",
-              outline: "none",
-              width: "100%",
-              boxSizing: "border-box",
-              touchAction: "manipulation",
-              cursor: "pointer",
-              fontFamily: "'Roboto', Arial, sans-serif",
               fontWeight: "500",
             }}
           >
@@ -2160,14 +2150,16 @@ const styles = {
   },
 
   selectInput: {
-    padding: "clamp(4px, 0.7vw, 8px) clamp(6px, 1vw, 10px)",
-    fontSize: "clamp(9px, 1vw, 11px)",
-    borderRadius: "6px",
+    padding: "clamp(10px, 1.1vw, 14px) clamp(12px, 1.5vw, 16px)",
+    fontSize: "clamp(14px, 1.1vw, 16px)",
+    borderRadius: "10px",
     border: "1px solid #ccc",
     background: "#fff",
     color: "#000",
     outline: "none",
     cursor: "pointer",
+    width: "100%",
+    boxSizing: "border-box",
     touchAction: "manipulation",
   },
 
