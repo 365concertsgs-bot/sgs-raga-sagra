@@ -18,8 +18,8 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
     if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('youtube-nocookie.com')) return 'youtube';
     if (url.includes('spotify.com')) return 'spotify';
     if (url.includes('soundcloud.com')) return 'soundcloud';
-    if (url.match(/\.(mp3|wav|ogg|m4a|aac)(\?|$)/i)) return 'audio';
-    if (url.match(/\.(mp4|webm|ogg|mov|m4v)(\?|$)/i)) return 'video';
+    if (url.match(/\.(mp3|wav|ogg|m4a|aac)(?=$|[?#])/i)) return 'audio';
+    if (url.match(/\.(mp4|webm|ogg|mov|m4v)(?=$|[?#])/i)) return 'video';
     return 'unknown';
   };
 
@@ -54,6 +54,26 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
   const getVimeoVideoId = (url) => {
     const match = url.match(/(?:vimeo\.com\/(?:video\/)?|vimeopro\.com\/.+\/video\/)(\d+)/);
     return match ? match[1] : null;
+  };
+
+  const getAudioType = (url) => {
+    const match = url.match(/\.(mp3|wav|ogg|m4a|aac)(?=$|[?#])/i);
+    if (!match) return undefined;
+    const ext = match[1].toLowerCase();
+    switch (ext) {
+      case 'mp3':
+        return 'audio/mpeg';
+      case 'wav':
+        return 'audio/wav';
+      case 'ogg':
+        return 'audio/ogg';
+      case 'm4a':
+        return 'audio/mp4';
+      case 'aac':
+        return 'audio/aac';
+      default:
+        return undefined;
+    }
   };
 
   if (!audioUrl || audioUrl.trim() === "") {
@@ -151,5 +171,21 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
     );
   }
 
-  return <p style={{ color: '#ff6b6b' }}>Unsupported media format</p>;
+  const audioType = getAudioType(audioUrl);
+  return (
+    <div style={{ width: "100%", maxWidth: "100%", margin: "0", padding: "0", display: "flex", justifyContent: "center", flexDirection: "column", gap: "8px" }}>
+      <audio
+        controls
+        playsInline
+        muted={muted}
+        autoPlay={autoPlay}
+        onError={() => setError('Unable to play this audio file.')}
+        style={{ width: "100%", height: "auto", borderRadius: "0", boxSizing: "border-box", margin: "0", padding: "0" }}
+      >
+        <source src={audioUrl} type={audioType} />
+        Your browser does not support this audio format.
+      </audio>
+      {error && <p style={{ color: '#ff6b6b', margin: 0 }}>{error}</p>}
+    </div>
+  );
 }
