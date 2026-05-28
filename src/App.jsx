@@ -949,7 +949,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         html {
           font-size: clamp(14px, 2.5vw, 18px);
           width: 100%;
-          min-height: 100%;
+          height: 100%;
+          min-height: 100vh;
           margin: 0;
           padding: 0;
           position: relative;
@@ -963,7 +964,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
           width: 100%;
-          min-height: 100%;
+          height: 100%;
+          min-height: 100vh;
           margin: 0;
           padding: 0;
           position: relative;
@@ -979,7 +981,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
         #root, #app {
           width: 100%;
-          min-height: 100%;
+          height: 100%;
+          min-height: 100vh;
           max-width: 100%;
           overflow-x: hidden;
         }
@@ -1609,7 +1612,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 const styles = {
   container: {
     width: "100%",
-    minHeight: "100%",
+    minHeight: "100vh",
     height: "100%",
     position: "relative",
     overflow: "hidden",
