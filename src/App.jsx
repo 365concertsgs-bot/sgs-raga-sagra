@@ -306,17 +306,17 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         ]);
 
         if (hasValue(mediaEventIdField)) {
-          // If media references a numeric event id/number, match numerically
+          // If media references a numeric event id/number, match numerically only
           const numericMediaId = Number(String(mediaEventIdField).replace(/[^0-9]/g, ""));
           const numericEventId = Number(String(eventId).replace(/[^0-9]/g, ""));
           if (Number.isFinite(numericMediaId) && Number.isFinite(numericEventId) && numericMediaId === numericEventId) {
             return resolved;
           }
 
-          // Otherwise, compare normalized strings (exact or contains)
+          // If the media event field is textual, only accept exact normalized equality
           const normalizedMediaEvent = normalizeKey(mediaEventIdField);
           const normalizedEventName = normalizeKey(eventName);
-          if (normalizedMediaEvent && normalizedEventName && (normalizedMediaEvent === normalizedEventName || normalizedMediaEvent.includes(normalizedEventName) || normalizedEventName.includes(normalizedMediaEvent))) {
+          if (normalizedMediaEvent && normalizedEventName && normalizedMediaEvent === normalizedEventName) {
             return resolved;
           }
         }
@@ -326,8 +326,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         if (hasValue(mediaEventNameField) && eventName) {
           const normalizedMediaName = normalizeKey(mediaEventNameField);
           const normalizedEventName = normalizeKey(eventName);
-          if (normalizedMediaName && normalizedEventName && (normalizedMediaName === normalizedEventName || normalizedMediaName.includes(normalizedEventName) || normalizedEventName.includes(normalizedMediaName))) {
-            return resolved;
+          if (normalizedMediaName && normalizedEventName && normalizedMediaName === normalizedEventName) {
           }
         }
 
