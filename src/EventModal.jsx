@@ -355,16 +355,12 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
                 )}
               </Suspense>
 
-              {/* Superscript footnote indicator next to media when placeholder exists */}
-              {event.placeholder && (
-                <span style={{ position: "absolute", top: "8px", right: "12px", background: "rgba(0,0,0,0.6)", color: "#ffd700", padding: "4px 6px", borderRadius: "12px", fontSize: "12px", fontWeight: "bold" }}>1</span>
-              )}
+              {/* Superscript footnote indicator removed: keep no numeric marker */}
             </div>
 
-            {/* Footnote text shown below the media */}
+            {/* Placeholder notice shown below the media (numeric marker removed) */}
             {event.placeholder && (
               <div style={{ marginTop: "8px", padding: "8px 12px", background: "rgba(255, 215, 0, 0.06)", borderLeft: "4px solid rgba(255, 215, 0, 0.3)", color: "#fff", fontSize: "12px", borderRadius: "4px" }}>
-                <strong style={{ color: "#ffd700", marginRight: "6px" }}>1.</strong>
                 <span>{String(event.placeholder)}</span>
               </div>
             )}
