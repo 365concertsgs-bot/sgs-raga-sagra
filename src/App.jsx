@@ -1635,7 +1635,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         <div style={styles.quickLinksList}>
           <a className="quick-link-item" href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}>🕉️</span>
-            Datta Peetam Official
+            Datta Peetham Official
           </a>
           <a className="quick-link-item" href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}>🎶</span>
