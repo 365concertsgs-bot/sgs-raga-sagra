@@ -134,8 +134,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               cursor: "pointer",
               transition: "color 0.2s ease",
             }}
-            onMouseEnter={(e) => (e.target.style.color = "#ffed4e")}
-            onMouseLeave={(e) => (e.target.style.color = "#ffd700")}
           >
             {part}
           </a>
@@ -1500,7 +1498,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             We remain deeply grateful to Sri Datta Swamiji and Sri Balaswamiji for their constant guidance, grace, and support. We also extend our sincere thanks to the extended Datta Peetham team for their assistance with the technical aspects of hosting this website.
           </p>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
-            For feedback, suggestions, or contributions, please feel free to contact us at <a href="mailto:365concertsgs@gmail.com" style={{ color: "#ffd700" }}>365concertsgs@gmail.com</a>. We warmly welcome ideas that can help make these musical treasures more accessible to devotees and the wider public.
+            For feedback, suggestions, or contributions, please feel free to contact us at <a href="mailto:365concertsgs@gmail.com" style={{ color: "#ffd700" }} onMouseEnter={(e) => (e.target.style.color = "#ffd700")} onMouseLeave={(e) => (e.target.style.color = "#ffd700")}>365concertsgs@gmail.com</a>. We warmly welcome ideas that can help make these musical treasures more accessible to devotees and the wider public.
           </p>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
