@@ -71,6 +71,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1024
   );
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const [showMobileReleaseNotice, setShowMobileReleaseNotice] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,6 +81,18 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+
+    const userAgent = (navigator.userAgent || navigator.vendor || window.opera || "").toLowerCase();
+    const mobileDevice = /android|ipad|iphone|ipod|mobile|tablet|crios|fxios|opera mini|iemobile/.test(userAgent);
+
+    setIsMobileDevice(mobileDevice);
+    if (mobileDevice) {
+      setShowMobileReleaseNotice(true);
+    }
   }, []);
 
   const isMobile = windowWidth <= 768;
@@ -1020,6 +1034,19 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
   return (
     <div style={styles.container}>
+      <InfoModal
+        title="Mobile App Coming Soon"
+        isOpen={showMobileReleaseNotice && isMobileDevice}
+        onClose={() => setShowMobileReleaseNotice(false)}
+      >
+        <p style={{ margin: 0, fontSize: "18px", lineHeight: 1.5, color: "#fff" }}>
+          Apple and andriod realese comming soon.
+        </p>
+        <p style={{ margin: "16px 0 0", fontSize: "14px", lineHeight: 1.5, color: "#f6f1d5" }}>
+          This site remains functional on laptops and desktops.
+        </p>
+      </InfoModal>
+
       <style>{`
         @keyframes healingPulse {
           0% {
