@@ -354,16 +354,31 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
           </div>
         )}
 
-        {/* Audio/Video Player */}
+        {/* Audio/Video Player with optional footnote */}
         {event.audioUrl && (
           <div style={{ marginBottom: "0", marginTop: "8px", padding: "0", background: "transparent", borderRadius: "0", border: "none", overflow: "hidden", marginLeft: "-20px", marginRight: "-20px", width: "calc(100% + 40px)" }}>
-            <Suspense fallback={<p>Loading media...</p>}>
-              {isYouTubeLink(event.audioUrl) ? (
-                <YouTubePlayer videoUrl={event.audioUrl} title={event.eventName || "Event video"} />
-              ) : (
-                <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
+            <div style={{ position: "relative" }}>
+              <Suspense fallback={<p>Loading media...</p>}>
+                {isYouTubeLink(event.audioUrl) ? (
+                  <YouTubePlayer videoUrl={event.audioUrl} title={event.eventName || "Event video"} />
+                ) : (
+                  <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
+                )}
+              </Suspense>
+
+              {/* Superscript footnote indicator next to media when placeholder exists */}
+              {event.placeholder && (
+                <span style={{ position: "absolute", top: "8px", right: "12px", background: "rgba(0,0,0,0.6)", color: "#ffd700", padding: "4px 6px", borderRadius: "12px", fontSize: "12px", fontWeight: "bold" }}>1</span>
               )}
-            </Suspense>
+            </div>
+
+            {/* Footnote text shown below the media */}
+            {event.placeholder && (
+              <div style={{ marginTop: "8px", padding: "8px 12px", background: "rgba(255, 215, 0, 0.06)", borderLeft: "4px solid rgba(255, 215, 0, 0.3)", color: "#fff", fontSize: "12px", borderRadius: "4px" }}>
+                <strong style={{ color: "#ffd700", marginRight: "6px" }}>1.</strong>
+                <span>{String(event.placeholder)}</span>
+              </div>
+            )}
           </div>
         )}
       </div>
