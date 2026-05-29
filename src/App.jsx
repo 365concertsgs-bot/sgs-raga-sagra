@@ -1576,7 +1576,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
-              Music as Medicine – Nada Chikitsa
+              Impact of Sri Datta ji’s Music
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
               Sri Datta Swamiji’s Raga Sagaras weave together music, the panchabhutas (five elements), and sacred mudras. His compositions stimulate 72,000 astral nerves (nadis), restoring balance and health. Rooted in the principle of Nada Brahma—sound as the origin of creation—His music heals by aligning human consciousness with cosmic vibrations and emerges from the Raga Ragini Vidya of the Vedas.
@@ -1587,7 +1587,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
           <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
-              Music as Medicine – Nada Chikitsa
+              Impact of Sri Datta ji’s Music
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
               Sri Datta Swamiji’s music has touched lives across the world:</p>
