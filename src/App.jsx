@@ -1040,7 +1040,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         onClose={() => setShowMobileReleaseNotice(false)}
       >
         <p style={{ margin: 0, fontSize: "18px", lineHeight: 1.5, color: "#fff" }}>
-          Apple and andriod realese comming soon.
+          Apple and Android release coming soon.
         </p>
         <p style={{ margin: "16px 0 0", fontSize: "14px", lineHeight: 1.5, color: "#f6f1d5" }}>
           This site remains functional on laptops and desktops.
