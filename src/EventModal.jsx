@@ -125,6 +125,8 @@ const styles = {
 export default memo(function EventModal({ event, onClose, carouselRef, currentSlideIndex, setCurrentSlideIndex }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [imageLoadError, setImageLoadError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(true);
+  const imageIndexRef = useRef(0);
 
   if (!event) return null;
 
@@ -143,11 +145,36 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
   useEffect(() => {
     if (!event.images || event.images.length === 0) return;
 
+    let mounted = true;
     const interval = setInterval(() => {
-      setImageIndex((prev) => (prev === event.images.length - 1 ? 0 : prev + 1));
+      const current = imageIndexRef.current;
+      const next = current === event.images.length - 1 ? 0 : current + 1;
+      const nextUrl = event.images[next];
+      // Preload next image to avoid blinking
+      const img = new Image();
+      img.onload = () => {
+        if (!mounted) return;
+        setImageLoadError(false);
+        imageIndexRef.current = next;
+        setImageLoaded(false);
+        // small timeout to allow opacity transition out/in
+        setTimeout(() => {
+          setImageIndex(next);
+        }, 10);
+      };
+      img.onerror = () => {
+        if (!mounted) return;
+        console.warn(`Preload failed for image: ${nextUrl}`);
+        imageIndexRef.current = next;
+        setImageIndex(next);
+      };
+      img.src = nextUrl;
     }, 4000);
 
-    return () => clearInterval(interval);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, [event.images]);
 
   // Handle keyboard navigation
@@ -166,17 +193,10 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [event.images]);
 
-  const goToPreviousImage = () => {
-    if (!event.images || event.images.length === 0) return;
-    setImageIndex((prev) => (prev === 0 ? event.images.length - 1 : prev - 1));
-    setImageLoadError(false);
-  };
 
-  const goToNextImage = () => {
-    if (!event.images || event.images.length === 0) return;
-    setImageIndex((prev) => (prev === event.images.length - 1 ? 0 : prev + 1));
-    setImageLoadError(false);
-  };
+  useEffect(() => {
+    imageIndexRef.current = imageIndex;
+  }, [imageIndex]);
 
   const handleImageError = () => {
     console.error(`Failed to load image: ${event.images[imageIndex]}`);
@@ -254,8 +274,9 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
                 key={`${event.eventNumber}-${imageIndex}`}
                 src={event.images[imageIndex]}
                 alt={`${event.eventName} ${imageIndex + 1}`}
-                style={styles.mainImage}
+                style={{...styles.mainImage, transition: 'opacity 600ms ease-in-out', opacity: imageLoaded ? 1 : 0}}
                 onError={handleImageError}
+                onLoad={() => setImageLoaded(true)}
                 loading="lazy"
                 decoding="async"
               />
@@ -263,41 +284,9 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
             
             {/* Image Navigation Controls */}
             <div style={styles.imageControls}>
-              <button
-                onClick={goToPreviousImage}
-                style={{...styles.navButton}}
-                title="Previous image (or press ← arrow)"
-                onMouseEnter={(e) => {
-                  e.target.style.background = "rgba(255, 215, 0, 0.3)";
-                  e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "rgba(255, 215, 0, 0.2)";
-                  e.target.style.boxShadow = "none";
-                }}
-              >
-                ← Previous
-              </button>
-              
               <div style={styles.imageCounter}>
                 Image {imageIndex + 1} / {event.images.length}
               </div>
-              
-              <button
-                onClick={goToNextImage}
-                style={{...styles.navButton}}
-                title="Next image (or press → arrow)"
-                onMouseEnter={(e) => {
-                  e.target.style.background = "rgba(255, 215, 0, 0.3)";
-                  e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = "rgba(255, 215, 0, 0.2)";
-                  e.target.style.boxShadow = "none";
-                }}
-              >
-                Next →
-              </button>
             </div>
           </div>
         )}

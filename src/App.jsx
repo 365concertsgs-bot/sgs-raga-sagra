@@ -256,6 +256,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       return aId - bId;
     });
 
+    // Prefer explicit association: match only when media row explicitly references this event by ID/number or name.
     const images = sortedMediaRows
       .map((mediaRow) => {
         const resolved = getField(mediaRow, ["__resolvedUrl"]) || getField(mediaRow, [
@@ -268,13 +269,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           "media_url",
           "MediaURL",
           "mediaUrl",
-          "mediaUrl",
           "Link",
           "link",
         ]);
         if (!hasValue(resolved)) return null;
 
-        const mediaEventKey = getField(mediaRow, [
+        // Check fields that explicitly reference an event
+        const mediaEventIdField = getField(mediaRow, [
           "Event",
           "event",
           "Event No",
@@ -287,24 +288,36 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           "Event ID",
           "EventID",
           "eventid",
-          "Event Name",
-          "event_name",
-          "eventname",
-          "event name",
-          "Title",
-          "title",
+          "event_id",
         ]);
 
-        const mediaMatchCandidates = [
-          mediaEventKey,
-          resolved,
-          getField(mediaRow, ["URL", "url", "Image", "image", "image_url", "imageUrl", "media_url", "mediaUrl", "MediaURL", "Link", "link"]),
-        ];
+        if (hasValue(mediaEventIdField)) {
+          // If media references a numeric event id/number, match numerically
+          const numericMediaId = Number(String(mediaEventIdField).replace(/[^0-9]/g, ""));
+          const numericEventId = Number(String(eventId).replace(/[^0-9]/g, ""));
+          if (Number.isFinite(numericMediaId) && Number.isFinite(numericEventId) && numericMediaId === numericEventId) {
+            return resolved;
+          }
 
-        if (mediaMatchCandidates.some((candidate) => mediaMatchesEvent(candidate, eventKeys))) {
-          return resolved;
+          // Otherwise, compare normalized strings (exact or contains)
+          const normalizedMediaEvent = normalizeKey(mediaEventIdField);
+          const normalizedEventName = normalizeKey(eventName);
+          if (normalizedMediaEvent && normalizedEventName && (normalizedMediaEvent === normalizedEventName || normalizedMediaEvent.includes(normalizedEventName) || normalizedEventName.includes(normalizedMediaEvent))) {
+            return resolved;
+          }
         }
 
+        // Also check explicit event name / title fields in media row
+        const mediaEventNameField = getField(mediaRow, ["Event Name", "event_name", "eventname", "event name", "Title", "title"]);
+        if (hasValue(mediaEventNameField) && eventName) {
+          const normalizedMediaName = normalizeKey(mediaEventNameField);
+          const normalizedEventName = normalizeKey(eventName);
+          if (normalizedMediaName && normalizedEventName && (normalizedMediaName === normalizedEventName || normalizedMediaName.includes(normalizedEventName) || normalizedEventName.includes(normalizedMediaName))) {
+            return resolved;
+          }
+        }
+
+        // No clear explicit match found -> skip to avoid false positives
         return null;
       })
       .filter(hasValue);
