@@ -33,13 +33,13 @@ body {
 }
 
 a {
-  color: #ffd700;
+  color: #ffd700 !important;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #ffed4e;
+  color: #ffd700 !important;
 }
 
 /* Ensure quick links maintain visibility on hover */
