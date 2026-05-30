@@ -1700,9 +1700,17 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         isOpen={activeInfoModal === "app-demo"}
         onClose={() => setActiveInfoModal(null)}
       >
-        <div style={{ textAlign: "center", padding: "20px" }}>
-          <div style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "14px" }}>
-            A demo video will be available here soon, showcasing how to navigate and use this interactive globe application.
+        <div style={{ textAlign: "center", padding: "12px" }}>
+          <video
+            src="https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/Demo%202.mp4"
+            controls
+            autoPlay
+            muted
+            playsInline
+            style={{ width: "100%", maxHeight: "60vh", borderRadius: "10px", background: "#000" }}
+          />
+          <div style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "13px", marginTop: "8px" }}>
+            If the video doesn't start automatically, click play or unmute.
           </div>
         </div>
       </InfoModal>
