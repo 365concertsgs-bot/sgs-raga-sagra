@@ -65,6 +65,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [activeInfoModal, setActiveInfoModal] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [isAppDemoExpanded, setIsAppDemoExpanded] = useState(false);
+  const [appDemoVideoUrl, setAppDemoVideoUrl] = useState("");
+  const [appDemoVideoTitle, setAppDemoVideoTitle] = useState("");
   const [isUserActive, setIsUserActive] = useState(false);
   const [appError, setAppError] = useState(supabaseError || null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -783,6 +786,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setShowEventNameSuggestions(false);
     setSelectedEvent(null);
     setActiveInfoModal(null);
+    setIsAppDemoExpanded(false);
     setShowMenu(false);
   }, []);
 
@@ -791,11 +795,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setShowMenu(false);
   }, []);
 
-  const openDemoLink = useCallback((url) => {
-    if (typeof window !== "undefined" && url) {
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
+  const handlePlayAppDemo = useCallback((url, title) => {
+    if (!url) return;
+    setAppDemoVideoUrl(url);
+    setAppDemoVideoTitle(title);
+    setActiveInfoModal("app-demo");
     setShowMenu(false);
+    setIsAppDemoExpanded(false);
   }, []);
 
   const teluguDemoUrl =
@@ -1319,13 +1325,14 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         aria-label={showMenu ? "Close menu" : "Open menu"}
         onClick={(e) => {
           e.stopPropagation();
+          setIsAppDemoExpanded(false);
           setShowMenu((current) => !current);
         }}
       >
         {showMenu ? "✕" : "☰"}
       </button>
 
-      {showMenu && <div style={appliedMenuBackdropStyle} onClick={() => setShowMenu(false)} />}
+      {showMenu && <div style={appliedMenuBackdropStyle} onClick={() => { setShowMenu(false); setIsAppDemoExpanded(false); }} />}
 
       {showMenu && (
         <div 
@@ -1341,7 +1348,10 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
             <button
               type="button"
-              onClick={() => setShowMenu(false)}
+              onClick={() => {
+                setShowMenu(false);
+                setIsAppDemoExpanded(false);
+              }}
               style={styles.panelIconButton}
               aria-label="Close menu"
               title="Close menu"
@@ -1355,17 +1365,23 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("about")}>About</button>
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("trivia")}>Trivia</button>
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("quick-links")}>Quick Links</button>
-        </div>
-        <div style={styles.infoMenuInline}>
-          <div style={{ color: "#ffd700", fontWeight: 700, fontSize: "clamp(13px, 1.1vw, 15px)" }}>
-            App Demo
-          </div>
-          <button style={styles.infoMenuItem} onClick={() => openDemoLink(teluguDemoUrl)}>
-            Telugu demo
+          <button
+            style={styles.infoMenuItem}
+            onClick={() => setIsAppDemoExpanded((prev) => !prev)}
+            aria-expanded={isAppDemoExpanded}
+          >
+            App Demo {isAppDemoExpanded ? "▲" : "▼"}
           </button>
-          <button style={styles.infoMenuItem} onClick={() => openDemoLink(kannadaDemoUrl)}>
-            Kannada demo
-          </button>
+          {isAppDemoExpanded && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px", paddingLeft: "10px" }}>
+              <button style={styles.infoMenuItem} onClick={() => handlePlayAppDemo(teluguDemoUrl, "Telugu Demo")}>
+                Telugu demo
+              </button>
+              <button style={styles.infoMenuItem} onClick={() => handlePlayAppDemo(kannadaDemoUrl, "Kannada Demo")}>
+                Kannada demo
+              </button>
+            </div>
+          )}
         </div>
         </div>
       )}
@@ -1720,27 +1736,40 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       <InfoModal
         title="App Demo"
         isOpen={activeInfoModal === "app-demo"}
-        onClose={() => setActiveInfoModal(null)}
+        onClose={() => {
+          setActiveInfoModal(null);
+          setAppDemoVideoUrl("");
+          setAppDemoVideoTitle("");
+        }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", padding: "12px" }}>
-          <a
-            href={teluguDemoUrl}
-            target="_blank"
-            rel="noreferrer"
-            style={styles.quickLinkItem}
-          >
-            <span style={styles.quickLinkIcon}>🇮🇳</span>
-            Telugu - Use this link to play the video for Telugu app demo
-          </a>
-          <a
-            href={kannadaDemoUrl}
-            target="_blank"
-            rel="noreferrer"
-            style={styles.quickLinkItem}
-          >
-            <span style={styles.quickLinkIcon}>🇮🇳</span>
-            Kannada - Use this link to play the video for Kannada app demo
-          </a>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "12px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <button style={styles.infoMenuItem} onClick={() => handlePlayAppDemo(teluguDemoUrl, "Telugu Demo")}>
+              Telugu demo
+            </button>
+            <button style={styles.infoMenuItem} onClick={() => handlePlayAppDemo(kannadaDemoUrl, "Kannada Demo")}>
+              Kannada demo
+            </button>
+          </div>
+          {appDemoVideoUrl ? (
+            <div style={{ textAlign: "center" }}>
+              <video
+                key={appDemoVideoUrl}
+                src={appDemoVideoUrl}
+                controls
+                autoPlay
+                playsInline
+                style={{ width: "100%", maxHeight: "60vh", borderRadius: "10px", background: "#000" }}
+              />
+              <div style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "13px", marginTop: "8px" }}>
+                Playing {appDemoVideoTitle}
+              </div>
+            </div>
+          ) : (
+            <div style={{ color: "#f7f2e7", fontSize: "14px" }}>
+              Tap a demo option above to play inside the app.
+            </div>
+          )}
         </div>
       </InfoModal>
 
