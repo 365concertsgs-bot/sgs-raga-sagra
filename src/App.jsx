@@ -791,6 +791,18 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setShowMenu(false);
   }, []);
 
+  const openDemoLink = useCallback((url) => {
+    if (typeof window !== "undefined" && url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+    setShowMenu(false);
+  }, []);
+
+  const teluguDemoUrl =
+    "https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/SGS%20Raga%20Ragini%20Atlas%20Website%20-%20Telugu%20Demo.mp4";
+  const kannadaDemoUrl =
+    "https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/SGS%20Raga%20Ragini%20Atlas%20Website%20-%20Kannada%20Demo.mp4";
+
   const countryLabels = [
     { lat: 20.5937, lng: 78.9629, text: "India" },
     { lat: 37.0902, lng: -95.7129, text: "USA" },
@@ -1343,7 +1355,17 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("about")}>About</button>
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("trivia")}>Trivia</button>
           <button style={styles.infoMenuItem} onClick={() => openInfoModal("quick-links")}>Quick Links</button>
-          <button style={styles.infoMenuItem} onClick={() => openInfoModal("app-demo")}>App Demo</button>
+        </div>
+        <div style={styles.infoMenuInline}>
+          <div style={{ color: "#ffd700", fontWeight: 700, fontSize: "clamp(13px, 1.1vw, 15px)" }}>
+            App Demo
+          </div>
+          <button style={styles.infoMenuItem} onClick={() => openDemoLink(teluguDemoUrl)}>
+            Telugu demo
+          </button>
+          <button style={styles.infoMenuItem} onClick={() => openDemoLink(kannadaDemoUrl)}>
+            Kannada demo
+          </button>
         </div>
         </div>
       )}
@@ -1702,7 +1724,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "12px", padding: "12px" }}>
           <a
-            href="https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/SGS%20Raga%20Ragini%20Atlas%20Website%20-%20Telugu%20Demo.mp4"
+            href={teluguDemoUrl}
             target="_blank"
             rel="noreferrer"
             style={styles.quickLinkItem}
@@ -1711,7 +1733,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             Telugu - Use this link to play the video for Telugu app demo
           </a>
           <a
-            href="https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/SGS%20Raga%20Ragini%20Atlas%20Website%20-%20Kannada%20Demo.mp4"
+            href={kannadaDemoUrl}
             target="_blank"
             rel="noreferrer"
             style={styles.quickLinkItem}
