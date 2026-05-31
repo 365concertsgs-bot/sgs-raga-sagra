@@ -1700,18 +1700,25 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         isOpen={activeInfoModal === "app-demo"}
         onClose={() => setActiveInfoModal(null)}
       >
-        <div style={{ textAlign: "center", padding: "12px" }}>
-          <video
-            src="https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/Demo%202.mp4"
-            controls
-            autoPlay
-            muted
-            playsInline
-            style={{ width: "100%", maxHeight: "60vh", borderRadius: "10px", background: "#000" }}
-          />
-          <div style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "13px", marginTop: "8px" }}>
-            If the video doesn't start automatically, click play or unmute.
-          </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", padding: "12px" }}>
+          <a
+            href="https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/SGS%20Raga%20Ragini%20Atlas%20Website%20-%20Telugu%20Demo.mp4"
+            target="_blank"
+            rel="noreferrer"
+            style={styles.quickLinkItem}
+          >
+            <span style={styles.quickLinkIcon}>🇮🇳</span>
+            Telugu - Use this link to play the video for Telugu app demo
+          </a>
+          <a
+            href="https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/SGS%20Raga%20Ragini%20Atlas%20Website%20-%20Kannada%20Demo.mp4"
+            target="_blank"
+            rel="noreferrer"
+            style={styles.quickLinkItem}
+          >
+            <span style={styles.quickLinkIcon}>🇮🇳</span>
+            Kannada - Use this link to play the video for Kannada app demo
+          </a>
         </div>
       </InfoModal>
 
