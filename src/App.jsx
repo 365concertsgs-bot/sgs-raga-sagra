@@ -145,6 +145,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             href={part}
             target="_blank"
             rel="noreferrer"
+            className="gold-link"
             style={{
               color: "#ffd700",
               textDecoration: "underline",
@@ -152,7 +153,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               transition: "color 0.2s ease",
             }}
           >
-            {part}
+            {part.includes("ragaraginistore.com") ? "Raga Ragini store" : part}
           </a>
         );
       }
@@ -1132,13 +1133,22 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           overflow-x: hidden;
         }
         
-        a[href]:hover:not(.quick-link-item):not(.footer-link) {
+        a[href]:hover:not(.quick-link-item):not(.footer-link):not(.gold-link) {
           color: #000 !important;
         }
 
         .quick-link-item,
         .quick-link-item:hover,
-        .quick-link-item:focus {
+        .quick-link-item:focus,
+        .gold-link,
+        .gold-link:hover,
+        .gold-link:focus {
+          color: #ffd700 !important;
+        }
+
+        .gold-link,
+        .gold-link:hover,
+        .gold-link:focus {
           color: #ffd700 !important;
         }
 
@@ -1721,6 +1731,10 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <a className="quick-link-item" href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}>🎶</span>
             YogaSangeeta
+          </a>
+          <a className="quick-link-item" href="https://ragaraginistore.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+            <span style={styles.quickLinkIcon}>🛒</span>
+            Raga Ragini Store
           </a>
           <a className="quick-link-item" href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}>🎥</span>
