@@ -1409,7 +1409,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             aria-label="Clear filters"
             title="Clear filters"
           >
-            🧹
+            Clear Filters
           </button>
         </div>
 
