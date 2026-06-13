@@ -169,7 +169,7 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
         setImageIndex(next);
       };
       img.src = nextUrl;
-    }, 4000);
+    }, 6000);
 
     return () => {
       mounted = false;
@@ -274,7 +274,7 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
                 key={`${event.eventNumber}-${imageIndex}`}
                 src={event.images[imageIndex]}
                 alt={`${event.eventName} ${imageIndex + 1}`}
-                style={{...styles.mainImage, transition: 'opacity 600ms ease-in-out', opacity: imageLoaded ? 1 : 0}}
+                style={{...styles.mainImage, transition: 'opacity 1000ms ease-in-out', opacity: imageLoaded ? 1 : 0}}
                 onError={handleImageError}
                 onLoad={() => setImageLoaded(true)}
                 loading="lazy"
