@@ -1832,7 +1832,7 @@ const styles = {
 
 
   title: {
-    color: "#00ff00",
+    color: "#ffd700",
     fontSize: "clamp(18px, 3vw, 26px)",
     fontFamily: "'Roboto', Arial, sans-serif",
     fontWeight: "800",
