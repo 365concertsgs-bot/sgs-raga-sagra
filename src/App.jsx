@@ -737,16 +737,15 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     const targetLng = Number(event.lng);
     const safeLat = Number.isFinite(targetLat) ? targetLat : 0;
     const safeLng = Number.isFinite(targetLng) ? targetLng : 0;
-    const currentLat = currentView?.lat ?? 0;
-    const currentLng = currentView?.lng ?? 0;
 
-    const latOffset = Math.abs(currentLat - safeLat) < 0.5 ? 7 : 0;
-    const lngOffset = Math.abs(currentLng - safeLng) < 0.5 ? 7 : 0;
+    const latOffset = safeLat >= 0 ? 8 : -8;
+    const lngOffset = safeLng >= 0 ? 8 : -8;
+    const wrappedLng = ((safeLng + lngOffset + 540) % 360) - 180;
 
     return {
       lat: Math.max(-80, Math.min(80, safeLat + latOffset)),
-      lng: safeLng + lngOffset,
-      altitude: 1.15,
+      lng: wrappedLng,
+      altitude: 1.1,
     };
   }, []);
 
@@ -791,11 +790,14 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       if (continentEvent) {
         const center = getContinentCenter(continent);
         const currentView = globeRef.current.pointOfView();
+        const latOffset = center.lat >= 0 ? 8 : -8;
+        const lngOffset = center.lng >= 0 ? 8 : -8;
+        const wrappedLng = ((center.lng + lngOffset + 540) % 360) - 180;
         globeRef.current.pointOfView(
           {
-            lat: Math.max(-80, Math.min(80, center.lat + (Math.abs(currentView?.lat - center.lat) < 0.5 ? 7 : 0))),
-            lng: center.lng + (Math.abs(currentView?.lng - center.lng) < 0.5 ? 7 : 0),
-            altitude: 1.15,
+            lat: Math.max(-80, Math.min(80, center.lat + latOffset)),
+            lng: wrappedLng,
+            altitude: 1.1,
           },
           1500
         );
