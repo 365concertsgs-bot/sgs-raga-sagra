@@ -76,6 +76,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   );
   const [isMobileDevice, setIsMobileDevice] = useState(false);
   const [showMobileReleaseNotice, setShowMobileReleaseNotice] = useState(false);
+  const [globeViewAltitude, setGlobeViewAltitude] = useState(1.7);
 
   useEffect(() => {
     const handleResize = () => {
@@ -729,14 +730,36 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     }
   };
 
+  const buildFocusTarget = useCallback((event, currentView = null) => {
+    if (!event) return null;
+
+    const targetLat = Number(event.lat);
+    const targetLng = Number(event.lng);
+    const safeLat = Number.isFinite(targetLat) ? targetLat : 0;
+    const safeLng = Number.isFinite(targetLng) ? targetLng : 0;
+    const currentLat = currentView?.lat ?? 0;
+    const currentLng = currentView?.lng ?? 0;
+
+    const latOffset = Math.abs(currentLat - safeLat) < 0.5 ? 7 : 0;
+    const lngOffset = Math.abs(currentLng - safeLng) < 0.5 ? 7 : 0;
+
+    return {
+      lat: Math.max(-80, Math.min(80, safeLat + latOffset)),
+      lng: safeLng + lngOffset,
+      altitude: 1.15,
+    };
+  }, []);
+
   // Focus globe when filters change
-  const focusEventOnGlobe = (event) => {
+  const focusEventOnGlobe = useCallback((event) => {
     if (!globeRef.current || !event) return;
-    globeRef.current.pointOfView(
-      { lat: event.lat, lng: event.lng, altitude: 2 },
-      1500
-    );
-  };
+
+    const currentView = globeRef.current.pointOfView();
+    const target = buildFocusTarget(event, currentView);
+    if (!target) return;
+
+    globeRef.current.pointOfView(target, 1500);
+  }, [buildFocusTarget]);
 
   // Handle year change and focus globe
   const handleYearChange = (year) => {
@@ -767,8 +790,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       const continentEvent = events.find((e) => e.continent === continent);
       if (continentEvent) {
         const center = getContinentCenter(continent);
+        const currentView = globeRef.current.pointOfView();
         globeRef.current.pointOfView(
-          { lat: center.lat, lng: center.lng, altitude: 2 },
+          {
+            lat: Math.max(-80, Math.min(80, center.lat + (Math.abs(currentView?.lat - center.lat) < 0.5 ? 7 : 0))),
+            lng: center.lng + (Math.abs(currentView?.lng - center.lng) < 0.5 ? 7 : 0),
+            altitude: 1.15,
+          },
           1500
         );
       }
@@ -811,17 +839,37 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     "https://qmlocvfoojtzvssnufro.supabase.co/storage/v1/object/public/Videos/SGS%20Raga%20Ragini%20Atlas%20Website%20-%20Kannada%20Demo.mp4";
 
   const countryLabels = [
-    { lat: 20.5937, lng: 78.9629, text: "India" },
-    { lat: 37.0902, lng: -95.7129, text: "USA" },
-    { lat: 55.3781, lng: -3.4360, text: "UK" },
-    { lat: 48.8566, lng: 2.3522, text: "France" },
-    { lat: 40.7128, lng: -74.006, text: "USA" },
-    { lat: -25.2744, lng: 133.7751, text: "Australia" },
-    { lat: -14.2350, lng: -51.9253, text: "Brazil" },
-    { lat: 35.8617, lng: 104.1954, text: "China" },
-    { lat: 55.7558, lng: 37.6173, text: "Russia" },
-    { lat: -30.5595, lng: 22.9375, text: "South Africa" },
+    { lat: 20.5937, lng: 78.9629, text: "India", type: "country" },
+    { lat: 37.0902, lng: -95.7129, text: "USA", type: "country" },
+    { lat: 55.3781, lng: -3.4360, text: "UK", type: "country" },
+    { lat: 48.8566, lng: 2.3522, text: "France", type: "country" },
+    { lat: 40.7128, lng: -74.006, text: "USA", type: "country" },
+    { lat: -25.2744, lng: 133.7751, text: "Australia", type: "country" },
+    { lat: -14.2350, lng: -51.9253, text: "Brazil", type: "country" },
+    { lat: 35.8617, lng: 104.1954, text: "China", type: "country" },
+    { lat: 55.7558, lng: 37.6173, text: "Russia", type: "country" },
+    { lat: -30.5595, lng: 22.9375, text: "South Africa", type: "country" },
   ];
+
+  const cityLabels = [
+    { lat: 28.6139, lng: 77.2090, text: "Delhi", type: "city" },
+    { lat: 19.0760, lng: 72.8777, text: "Mumbai", type: "city" },
+    { lat: 13.0827, lng: 80.2707, text: "Chennai", type: "city" },
+    { lat: 12.9716, lng: 77.5946, text: "Bengaluru", type: "city" },
+    { lat: 11.1271, lng: 78.6569, text: "Tamil Nadu", type: "city" },
+    { lat: 15.3173, lng: 75.7139, text: "Karnataka", type: "city" },
+    { lat: 40.7128, lng: -74.0060, text: "New York", type: "city" },
+    { lat: 51.5074, lng: -0.1278, text: "London", type: "city" },
+    { lat: 48.8566, lng: 2.3522, text: "Paris", type: "city" },
+    { lat: 35.6762, lng: 139.6503, text: "Tokyo", type: "city" },
+    { lat: -33.8688, lng: 151.2093, text: "Sydney", type: "city" },
+    { lat: 36.7783, lng: -119.4179, text: "California", type: "city" },
+  ];
+
+  const visibleGlobeLabels = useMemo(
+    () => (globeViewAltitude <= 1.35 ? [...countryLabels, ...cityLabels] : countryLabels),
+    [globeViewAltitude]
+  );
 
 
   /* 🌍 AUTO ROTATE */
@@ -834,9 +882,10 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
 
       const pov = globeRef.current.pointOfView();
+      setGlobeViewAltitude(pov.altitude);
       globeRef.current.pointOfView({
         lat: pov.lat,
-        lng: pov.lng + 0.05,
+        lng: pov.lng + 0.025,
         altitude: pov.altitude,
       });
 
@@ -1298,6 +1347,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           opacity: activeInfoModal || selectedEvent ? 0.6 : 1,
         }}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+        rendererConfig={{ antialias: true, alpha: true, precision: "highp" }}
         backgroundColor="rgba(0,0,0,0)"
         pointsData={filteredEvents}
         pointLat="lat"
@@ -1317,12 +1367,12 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           setSelectedEvent(point);
           focusEventOnGlobe(point);
         }}
-        labelsData={countryLabels}
+        labelsData={visibleGlobeLabels}
         labelLat="lat"
         labelLng="lng"
         labelText="text"
-        labelSize={0.9}
-        labelColor={() => "rgba(255,255,255,0.85)"}
+        labelSize={(label) => (label.type === "city" ? 0.45 : 0.9)}
+        labelColor={(label) => (label.type === "city" ? "rgba(214, 236, 255, 0.9)" : "rgba(255,255,255,0.85)")}
         labelResolution={2}
         labelAltitude={0.02}
       />
