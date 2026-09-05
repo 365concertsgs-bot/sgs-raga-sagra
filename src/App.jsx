@@ -102,9 +102,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   const [showMobileReleaseNotice, setShowMobileReleaseNotice] = useState(false);
   const [globeViewAltitude, setGlobeViewAltitude] = useState(1.7);
 
-  // View switcher (Globe / List / Timeline) + raga filter + favorites
+  // View switcher (Globe / List / Timeline) + favorites (star toggle on
+  // individual events; there is no "favorites only" filter anymore)
   const [activeView, setActiveView] = useState("globe");
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
 
   // Deep-link support: capture ?event=<number> once at first mount, before
@@ -715,21 +715,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         ) {
           return false;
         }
-        if (favoritesOnly && !isFavorite(event.eventNumber)) {
-          return false;
-        }
         return true;
       }),
-    [
-      events,
-      selectedYear,
-      selectedEventNumber,
-      selectedContinent,
-      searchCountry,
-      searchEventName,
-      favoritesOnly,
-      isFavorite,
-    ]
+    [events, selectedYear, selectedEventNumber, selectedContinent, searchCountry, searchEventName]
   );
 
   const relatedEvents = useMemo(() => {
@@ -914,7 +902,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setSearchCountry("");
     setSearchEventName("");
     setSelectedContinent("");
-    setFavoritesOnly(false);
     setFilteredCountries([]);
     setShowCountrySuggestions(false);
     setFilteredEventNames([]);
@@ -1664,25 +1651,15 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
         <div style={styles.filterRow}>
           <label style={styles.label}>Event Number</label>
-          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-            <input
-              type="range"
-              min="1"
-              max="365"
-              value={selectedEventNumber}
-              onChange={(e) => handleEventNumberChange(e.target.value)}
-              style={styles.slider}
-            />
-            <input
-              type="number"
-              min="1"
-              max="365"
-              value={selectedEventNumber}
-              onChange={(e) => handleEventNumberChange(e.target.value)}
-              placeholder="Type #"
-              style={styles.numberInput}
-            />
-          </div>
+          <input
+            type="number"
+            min="1"
+            max="365"
+            value={selectedEventNumber}
+            onChange={(e) => handleEventNumberChange(e.target.value)}
+            placeholder="Type #"
+            style={styles.textInput}
+          />
         </div>
 
         <div style={styles.filterRow}>
@@ -1819,17 +1796,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
         </div>
 
-        <div style={styles.filterRow}>
-          <label style={styles.favoritesToggleRow}>
-            <input
-              type="checkbox"
-              checked={favoritesOnly}
-              onChange={(e) => setFavoritesOnly(e.target.checked)}
-              style={styles.favoritesCheckbox}
-            />
-            Favorites only
-          </label>
-        </div>
       </div>
 
 

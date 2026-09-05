@@ -489,7 +489,7 @@ function EventMeta({ event }) {
     event.place || event.location ? { icon: PinIcon, label: event.place || event.location } : null,
     event.city ? { icon: CityIcon, label: event.city } : null,
     dateLabel ? { icon: CalendarIcon, label: dateLabel } : null,
-    event.eventNumber ? { icon: HashIcon, label: `Event ${event.eventNumber} of 365` } : null,
+    event.eventNumber ? { icon: HashIcon, label: `Event ${event.eventNumber}` } : null,
   ].filter(Boolean);
 
   if (items.length === 0) return null;

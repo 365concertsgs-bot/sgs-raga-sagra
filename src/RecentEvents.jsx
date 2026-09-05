@@ -8,6 +8,10 @@ import { SparkleIcon, MusicIcon, ChevronRightIcon } from "./icons";
  * number — the archive is numbered in the order events were catalogued, so
  * the highest numbers are the newest additions to the atlas (not necessarily
  * the most recent concert dates).
+ *
+ * Deliberately compact: a slim vertical rail down the right edge rather than
+ * a wide banner, so it reads as a quiet invitation rather than competing
+ * with the globe for attention.
  */
 export default function RecentEvents({ events, onSelectEvent }) {
   if (!events || events.length === 0) return null;
@@ -16,21 +20,17 @@ export default function RecentEvents({ events, onSelectEvent }) {
     <div style={styles.wrap} data-recent-events>
       <style>{`
         @keyframes recentGlow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(242, 193, 78, 0.4), ${shadow.panelSoft}; }
-          50% { box-shadow: 0 0 0 7px rgba(242, 193, 78, 0), ${shadow.panelSoft}; }
-        }
-        @keyframes recentBadgePulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.12); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(242, 193, 78, 0.35), ${shadow.panelSoft}; }
+          50% { box-shadow: 0 0 0 5px rgba(242, 193, 78, 0), ${shadow.panelSoft}; }
         }
       `}</style>
 
       <div style={styles.heading}>
-        <SparkleIcon size={14} />
-        <span>Newly Added to the Atlas</span>
+        <SparkleIcon size={12} />
+        <span>New</span>
       </div>
 
-      <div style={styles.row}>
+      <div style={styles.column}>
         {events.map((event, idx) => (
           <button
             key={event.eventNumber ?? event.no ?? event.eventName}
@@ -39,21 +39,17 @@ export default function RecentEvents({ events, onSelectEvent }) {
             onClick={() => onSelectEvent(event)}
             title={event.eventName || "Untitled Event"}
           >
-            <span style={styles.newBadge}>NEW</span>
             <div style={styles.thumbWrap}>
               {event.images && event.images[0] ? (
                 <img src={event.images[0]} alt="" style={styles.thumb} loading="lazy" />
               ) : (
                 <div style={styles.thumbFallback}>
-                  <MusicIcon size={20} />
+                  <MusicIcon size={13} />
                 </div>
               )}
-              <div style={styles.thumbGradient} />
-              <div style={styles.cardTitle}>{event.eventName || "Untitled Event"}</div>
             </div>
-            <div style={styles.cta}>
-              Explore <ChevronRightIcon size={11} />
-            </div>
+            <div style={styles.cardTitle}>{event.eventName || "Untitled Event"}</div>
+            <ChevronRightIcon size={12} style={styles.chevron} />
           </button>
         ))}
       </div>
@@ -64,74 +60,58 @@ export default function RecentEvents({ events, onSelectEvent }) {
 const styles = {
   wrap: {
     position: "absolute",
-    bottom: "clamp(14px, 3vh, 26px)",
-    left: 0,
-    right: 0,
-    margin: "0 auto",
-    width: "min(94vw, 940px)",
+    top: "clamp(150px, 22vh, 200px)",
+    right: "clamp(15px, 3vw, 25px)",
     zIndex: zIndex.chrome,
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "flex-end",
     gap: "6px",
-    // Empty space around the row lets globe drag/zoom pass through; the
-    // row itself re-enables pointer events for its clickable cards.
-    pointerEvents: "none",
+    width: "clamp(150px, 15vw, 190px)",
+    maxHeight: "calc(100vh - 260px)",
   },
   heading: {
     display: "flex",
     alignItems: "center",
-    gap: "6px",
+    gap: "4px",
     color: color.marigoldBright,
     fontFamily: font.body,
-    fontSize: "11px",
+    fontSize: "10px",
     fontWeight: 700,
-    letterSpacing: "0.14em",
+    letterSpacing: "0.16em",
     textTransform: "uppercase",
-    textShadow: "0 2px 12px rgba(0,0,0,0.75)",
+    textShadow: "0 2px 10px rgba(0,0,0,0.75)",
+    paddingRight: "2px",
   },
-  row: {
+  column: {
     display: "flex",
-    gap: "10px",
-    overflowX: "auto",
-    maxWidth: "100%",
-    padding: "4px 2px 8px",
-    pointerEvents: "auto",
+    flexDirection: "column",
+    gap: "6px",
+    width: "100%",
+    overflowY: "auto",
   },
   card: {
     position: "relative",
-    flex: "0 0 auto",
-    width: "130px",
     display: "flex",
-    flexDirection: "column",
+    alignItems: "center",
+    gap: "8px",
+    width: "100%",
     textAlign: "left",
-    background: "rgba(11, 9, 22, 0.85)",
+    background: "rgba(11, 9, 22, 0.82)",
     border: `1px solid ${color.surfaceBorder}`,
-    borderRadius: radius.md,
+    borderRadius: radius.sm,
     overflow: "hidden",
     cursor: "pointer",
     backdropFilter: "blur(6px)",
-    animation: "recentGlow 2.8s ease-in-out infinite",
-    padding: 0,
-  },
-  newBadge: {
-    position: "absolute",
-    top: "6px",
-    left: "6px",
-    zIndex: 2,
-    background: `linear-gradient(135deg, ${color.gold}, ${color.marigold})`,
-    color: "#1a1206",
-    fontSize: "8px",
-    fontWeight: 800,
-    letterSpacing: "0.08em",
-    padding: "2px 6px",
-    borderRadius: radius.pill,
-    animation: "recentBadgePulse 1.8s ease-in-out infinite",
+    animation: "recentGlow 3s ease-in-out infinite",
+    padding: "5px",
   },
   thumbWrap: {
-    position: "relative",
-    width: "100%",
-    aspectRatio: "4 / 3",
+    flexShrink: 0,
+    width: "30px",
+    height: "30px",
+    borderRadius: "6px",
+    overflow: "hidden",
     background: "rgba(0,0,0,0.5)",
   },
   thumb: {
@@ -148,36 +128,20 @@ const styles = {
     justifyContent: "center",
     color: color.goldDim,
   },
-  thumbGradient: {
-    position: "absolute",
-    inset: 0,
-    background: "linear-gradient(180deg, rgba(5,6,12,0) 42%, rgba(5,6,12,0.94) 100%)",
-  },
   cardTitle: {
-    position: "absolute",
-    left: "8px",
-    right: "8px",
-    bottom: "6px",
+    flex: 1,
+    minWidth: 0,
     color: color.textPrimary,
-    fontFamily: font.display,
-    fontSize: "11px",
+    fontFamily: font.body,
+    fontSize: "10.5px",
     lineHeight: 1.25,
     overflow: "hidden",
-    display: "-webkit-box",
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: "vertical",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   },
-  cta: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "4px",
-    padding: "6px 4px",
-    fontSize: "9.5px",
-    fontWeight: 700,
-    letterSpacing: "0.05em",
-    textTransform: "uppercase",
+  chevron: {
+    flexShrink: 0,
     color: color.gold,
-    background: "rgba(242, 193, 78, 0.1)",
+    opacity: 0.8,
   },
 };
