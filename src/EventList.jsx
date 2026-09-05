@@ -14,7 +14,7 @@ const SORT_OPTIONS = [
  * EventModal used from the globe (via onSelectEvent), so there is exactly
  * one place that owns "what an event looks like in detail".
  */
-export default function EventList({ events, onSelectEvent, isFavorite, toggleFavorite }) {
+export default function EventList({ events, onSelectEvent, isFavorite, toggleFavorite, leftInset }) {
   const [sortKey, setSortKey] = useState("date");
 
   const sorted = useMemo(() => {
@@ -30,7 +30,7 @@ export default function EventList({ events, onSelectEvent, isFavorite, toggleFav
   }, [events, sortKey]);
 
   return (
-    <div style={styles.wrap}>
+    <div style={{ ...styles.wrap, ...(leftInset ? { paddingLeft: leftInset } : null) }}>
       <div style={styles.header}>
         <div style={styles.count}>
           {events.length} event{events.length === 1 ? "" : "s"}

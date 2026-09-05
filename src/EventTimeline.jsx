@@ -7,7 +7,7 @@ import { CalendarIcon, PinIcon, HashIcon, StarIcon, MusicIcon } from "./icons";
  * a vertical line — a different lens on the same underlying Supabase rows,
  * not a separate data source.
  */
-export default function EventTimeline({ events, onSelectEvent, isFavorite, toggleFavorite }) {
+export default function EventTimeline({ events, onSelectEvent, isFavorite, toggleFavorite, leftInset }) {
   const groups = useMemo(() => {
     const byYear = new Map();
     events.forEach((event) => {
@@ -29,7 +29,7 @@ export default function EventTimeline({ events, onSelectEvent, isFavorite, toggl
   }, [events]);
 
   return (
-    <div style={styles.wrap}>
+    <div style={{ ...styles.wrap, ...(leftInset ? { paddingLeft: leftInset } : null) }}>
       <div style={styles.header}>
         <div style={styles.count}>
           {events.length} event{events.length === 1 ? "" : "s"} across {groups.length} year

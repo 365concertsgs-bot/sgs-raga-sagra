@@ -802,7 +802,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     return {
       lat: Math.max(-80, Math.min(80, safeLat + latOffset)),
       lng: wrappedLng,
-      altitude: 1.1,
+      altitude: 1.6,
     };
   }, []);
 
@@ -887,7 +887,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           {
             lat: Math.max(-80, Math.min(80, center.lat + latOffset)),
             lng: wrappedLng,
-            altitude: 1.1,
+            altitude: 1.6,
           },
           1500
         );
@@ -1461,7 +1461,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <div style={styles.title} data-title>
             SGS Raga Ragini Atlas
           </div>
-          <div style={styles.tagline}>Tap into Nada. Let the flow of healing begin.</div>
+          <div style={styles.tagline}>Jaya Guru Datta! Shree Guru Datta!</div>
         </div>
 
         {rightLogoUrl && (
@@ -1546,6 +1546,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             onSelectEvent={handlePointClick}
             isFavorite={isFavorite}
             toggleFavorite={toggleFavorite}
+            leftInset={isMobile ? undefined : "clamp(300px, 26vw, 380px)"}
           />
         </Suspense>
       )}
@@ -1557,6 +1558,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             onSelectEvent={handlePointClick}
             isFavorite={isFavorite}
             toggleFavorite={toggleFavorite}
+            leftInset={isMobile ? undefined : "clamp(300px, 26vw, 380px)"}
           />
         </Suspense>
       )}
