@@ -37,6 +37,7 @@ export default function EventTimeline({ events, onSelectEvent, isFavorite, toggl
         </div>
       </div>
 
+      <div style={styles.scrollBox}>
       <div style={styles.timeline}>
         <div style={styles.spine} />
 
@@ -123,6 +124,7 @@ export default function EventTimeline({ events, onSelectEvent, isFavorite, toggl
 
         {groups.length === 0 && <div style={styles.empty}>No events match the current filters.</div>}
       </div>
+      </div>
     </div>
   );
 }
@@ -135,10 +137,12 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     paddingTop: "clamp(150px, 22vh, 210px)",
-    paddingBottom: "24px",
+    paddingBottom: "20px",
     paddingLeft: "clamp(16px, 4vw, 48px)",
     paddingRight: "clamp(16px, 4vw, 48px)",
-    overflowY: "auto",
+    // The header stays put; only scrollBox below scrolls — so the fixed
+    // hero title above this view never gets scrolled cards showing through.
+    overflow: "hidden",
     background: color.bgRadial,
   },
   header: {
@@ -146,19 +150,32 @@ const styles = {
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
-    marginBottom: "18px",
+    marginBottom: "14px",
+    flexShrink: 0,
   },
   count: {
     color: color.textMuted,
     fontFamily: font.body,
     fontSize: "13px",
   },
-  timeline: {
-    position: "relative",
+  scrollBox: {
+    flex: "1 1 auto",
+    minHeight: 0,
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
     maxWidth: "780px",
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
+    padding: "16px 18px",
+    background: "rgba(5, 6, 12, 0.3)",
+    border: `1px solid ${color.surfaceBorderSoft}`,
+    borderRadius: radius.lg,
+    boxShadow: shadow.panelSoft,
+  },
+  timeline: {
+    position: "relative",
+    width: "100%",
     paddingLeft: "26px",
   },
   spine: {

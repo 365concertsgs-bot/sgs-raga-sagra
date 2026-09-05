@@ -53,6 +53,7 @@ export default function EventList({ events, onSelectEvent, isFavorite, toggleFav
         </div>
       </div>
 
+      <div style={styles.scrollBox}>
       <div style={styles.grid}>
         {sorted.map((event) => (
           <button
@@ -133,6 +134,7 @@ export default function EventList({ events, onSelectEvent, isFavorite, toggleFav
           <div style={styles.empty}>No events match the current filters.</div>
         )}
       </div>
+      </div>
     </div>
   );
 }
@@ -145,10 +147,12 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     paddingTop: "clamp(150px, 22vh, 210px)",
-    paddingBottom: "24px",
+    paddingBottom: "20px",
     paddingLeft: "clamp(16px, 4vw, 48px)",
     paddingRight: "clamp(16px, 4vw, 48px)",
-    overflowY: "auto",
+    // The header stays put; only scrollBox below scrolls — so the fixed
+    // hero title above this view never gets scrolled cards showing through.
+    overflow: "hidden",
     background: color.bgRadial,
   },
   header: {
@@ -157,11 +161,27 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-between",
     gap: "12px",
-    marginBottom: "18px",
+    marginBottom: "14px",
+    flexShrink: 0,
     maxWidth: "1100px",
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
+  },
+  scrollBox: {
+    flex: "1 1 auto",
+    minHeight: 0,
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
+    maxWidth: "1100px",
+    width: "100%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    padding: "16px",
+    background: "rgba(5, 6, 12, 0.3)",
+    border: `1px solid ${color.surfaceBorderSoft}`,
+    borderRadius: radius.lg,
+    boxShadow: shadow.panelSoft,
   },
   count: {
     color: color.textMuted,
@@ -198,10 +218,7 @@ const styles = {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
     gap: "16px",
-    maxWidth: "1100px",
     width: "100%",
-    marginLeft: "auto",
-    marginRight: "auto",
   },
   card: {
     display: "flex",

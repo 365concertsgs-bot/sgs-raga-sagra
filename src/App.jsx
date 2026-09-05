@@ -32,6 +32,7 @@ const EventModal = lazy(() => import("./EventModal"));
 // no reason to pay for their bundle cost until a user opens one.
 const EventList = lazy(() => import("./EventList"));
 const EventTimeline = lazy(() => import("./EventTimeline"));
+const RecentEvents = lazy(() => import("./RecentEvents"));
 
 /* 🌍 CONTINENT LIST */
 const continents = [
@@ -740,6 +741,18 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       )
       .slice(0, 4);
   }, [events, selectedEvent]);
+
+  // "Recently added" — the data has no created-at timestamp, so the event
+  // number (the archive's own cataloguing order) is the only honest signal
+  // for which entries are newest to the atlas.
+  const recentEvents = useMemo(
+    () =>
+      [...events]
+        .filter((event) => event.eventNumber != null)
+        .sort((a, b) => b.eventNumber - a.eventNumber)
+        .slice(0, 5),
+    [events]
+  );
 
   const years = useMemo(
     () =>
@@ -1780,6 +1793,33 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         </div>
 
         <div style={styles.filterRow}>
+          <label style={styles.label}>Continent</label>
+          <div style={styles.continentChipRow}>
+            {continents.map((continent) => (
+              <button
+                key={continent}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleContinentSelect(continent === selectedContinent ? "" : continent);
+                }}
+                style={{
+                  ...styles.continentChip,
+                  background:
+                    selectedContinent === continent
+                      ? "linear-gradient(135deg, #ff9a3d, #ffb35c)"
+                      : "rgba(11, 9, 22, 0.5)",
+                  borderColor: selectedContinent === continent ? "#ffb35c" : "rgba(242, 193, 78, 0.3)",
+                  color: selectedContinent === continent ? "#1a1206" : "#f2c14e",
+                }}
+              >
+                {continent}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={styles.filterRow}>
           <label style={styles.favoritesToggleRow}>
             <input
               type="checkbox"
@@ -1793,30 +1833,13 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       </div>
 
 
-      {/* 🌍 CONTINENT FILTER - BOTTOM */}
-      <div style={styles.continentFilter} data-continent-filter>
-        {continents.map((continent) => (
-          <button
-            key={continent}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleContinentSelect(continent === selectedContinent ? "" : continent);
-            }}
-            style={{
-              ...styles.continentButton,
-              background: selectedContinent === continent
-                ? "linear-gradient(135deg, #ff9a3d, #ffb35c)"
-                : "rgba(11, 9, 22, 0.65)",
-              borderColor: selectedContinent === continent ? "#ffb35c" : "rgba(242, 193, 78, 0.35)",
-              color: selectedContinent === continent ? "#1a1206" : "#f2c14e",
-              boxShadow: selectedContinent === continent ? "0 4px 16px rgba(255, 154, 61, 0.35)" : "none",
-            }}
-            data-continent-button
-          >
-            {continent}
-          </button>
-        ))}
-      </div>
+      {/* ✨ RECENTLY ADDED — Globe view only; List/Timeline already show
+          everything, so the spotlight belongs on the landing view. */}
+      {activeView === "globe" && (
+        <Suspense fallback={null}>
+          <RecentEvents events={recentEvents} onSelectEvent={handlePointClick} />
+        </Suspense>
+      )}
 
       {/*  MODAL */}
       <InfoModal
@@ -2650,6 +2673,24 @@ const styles = {
     fontWeight: "700",
     letterSpacing: "0.04em",
     textTransform: "uppercase",
+  },
+
+  continentChipRow: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "6px",
+    marginTop: "2px",
+  },
+
+  continentChip: {
+    padding: "5px 11px",
+    fontSize: "11px",
+    borderRadius: "999px",
+    border: "1px solid rgba(242, 193, 78, 0.3)",
+    cursor: "pointer",
+    fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
+    fontWeight: "600",
+    transition: "all 0.2s ease",
   },
 
   favoritesToggleRow: {
