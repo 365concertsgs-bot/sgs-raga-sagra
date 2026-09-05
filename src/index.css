@@ -3,12 +3,12 @@
 }
 
 :root {
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
   line-height: 1.6;
   font-weight: 400;
   color-scheme: dark;
-  color: rgba(255, 255, 255, 0.95);
-  background-color: #000;
+  color: #f7f2e7;
+  background-color: #05060c;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -29,26 +29,26 @@ html, body {
 
 body {
   display: block;
-  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  background: radial-gradient(ellipse at 50% 100%, #1c1633 0%, #0d0a1c 45%, #05060c 100%);
 }
 
 a {
-  color: #ffd700 !important;
+  color: #f2c14e !important;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #ffd700 !important;
+  color: #ffd76a !important;
 }
 
 /* Ensure quick links maintain visibility on hover */
 a[style*="flex"] {
-  color: #ffd700 !important;
+  color: #f2c14e !important;
 }
 
 a[style*="flex"]:hover {
-  color: #ffd700 !important;
+  color: #ffd76a !important;
 }
 
 button {
@@ -69,13 +69,13 @@ button:hover {
 }
 
 button:focus-visible {
-  outline: 2px solid #ffd700;
+  outline: 2px solid #f2c14e;
   outline-offset: 2px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Marcellus', 'Cormorant Garamond', Georgia, serif;
 }
 
 /* Remove default input styling */
@@ -145,17 +145,17 @@ select {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 215, 0, 0.1);
+  background: rgba(242, 193, 78, 0.1);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ffd700;
+  background: #f2c14e;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffed4e;
+  background: #ffd76a;
 }
 
 /* Default styles for mobile menu button and overlay */

@@ -1,6 +1,21 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase, supabaseError, supabaseUrl, supabaseKeySet } from "./supabaseClient";
+import { color as themeColor, font as themeFont } from "./theme";
+import {
+  MenuIcon,
+  CloseIcon,
+  RefreshIcon,
+  WarningIcon,
+  OmIcon,
+  VideoIcon,
+  GlobeIcon,
+  StoreIcon,
+  PlayCircleIcon,
+  ExternalLinkIcon,
+  SparkleIcon,
+  OmDivider,
+} from "./icons";
 
 // Lazy load the Globe to reduce initial bundle size
 const Globe = lazy(() => import("react-globe.gl"));
@@ -148,7 +163,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             rel="noreferrer"
             className="gold-link"
             style={{
-              color: "#ffd700",
+              color: "#f2c14e",
               textDecoration: "underline",
               cursor: "pointer",
               transition: "color 0.2s ease",
@@ -983,12 +998,14 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         }}
       >
         <div style={{ maxWidth: "600px" }}>
-          <h1>⚠️ Unable to load the app</h1>
+          <h1 style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "center", fontFamily: themeFont.display }}>
+            <WarningIcon size={26} /> Unable to load the app
+          </h1>
           <p style={{ fontSize: "16px", marginBottom: "20px" }}>{appError}</p>
           
           <div style={{
             background: "#111",
-            color: "#ffd700",
+            color: "#f2c14e",
             padding: "15px",
             borderRadius: "12px",
             marginBottom: "20px",
@@ -1050,17 +1067,20 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               fetchEvents();
             }}
             style={{
-              background: "#ffd700",
-              color: "#000",
+              background: `linear-gradient(135deg, ${themeColor.gold}, ${themeColor.marigold})`,
+              color: "#1a1206",
               border: "none",
               padding: "10px 20px",
-              borderRadius: "6px",
+              borderRadius: "999px",
               cursor: "pointer",
               fontSize: "16px",
               fontWeight: "bold",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
             }}
           >
-            🔄 Retry
+            <RefreshIcon size={16} /> Retry
           </button>
         </div>
       </div>
@@ -1074,13 +1094,18 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           width: "100vw",
           height: "100vh",
           display: "flex",
+          flexDirection: "column",
+          gap: "16px",
           alignItems: "center",
           justifyContent: "center",
-          background: "#000",
-          color: "#fff",
+          background: "radial-gradient(ellipse at 50% 100%, #1c1633 0%, #0d0a1c 45%, #05060c 100%)",
+          color: "#f7f2e7",
         }}
       >
-        Loading events…
+        <OmIcon size={34} style={{ color: "#f2c14e", animation: "healingPulse 2.4s ease-in-out infinite" }} />
+        <div style={{ fontFamily: themeFont.display, fontSize: "18px", color: "#f2c14e", letterSpacing: "0.04em" }}>
+          Gathering the Raga Sagaras…
+        </div>
       </div>
     );
   }
@@ -1194,32 +1219,32 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         .gold-link,
         .gold-link:hover,
         .gold-link:focus {
-          color: #ffd700 !important;
+          color: #f2c14e !important;
         }
 
         .gold-link,
         .gold-link:hover,
         .gold-link:focus {
-          color: #ffd700 !important;
+          color: #f2c14e !important;
         }
 
         .footer-link {
-          color: #ffd700;
+          color: #f2c14e;
           font-size: 14px;
           text-decoration: none;
           font-family: 'Roboto', Arial, sans-serif;
           font-weight: bold;
           padding: 8px 12px;
-          border: 1px solid #ffd700;
+          border: 1px solid #f2c14e;
           border-radius: 6px;
           transition: all 0.3s ease;
           cursor: pointer;
         }
         
         .footer-link:hover {
-          background-color: #ffd700;
+          background-color: #f2c14e;
           color: #000;
-          box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+          box-shadow: 0 0 10px rgba(242, 193, 78, 0.8);
         }
 
         /* Responsive design for tablets and mobile */
@@ -1310,7 +1335,12 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
 
       {/* ✨ TITLE + LOGOS */}
-      <div style={styles.titleRow}>
+      <motion.div
+        style={styles.titleRow}
+        initial={{ opacity: 0, y: -14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         {leftLogoUrl && (
           <img
             src={leftLogoUrl}
@@ -1321,8 +1351,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           />
         )}
 
-        <div style={styles.title} data-title>
-          SGS Raga Ragini Atlas
+        <div style={styles.titleGroup}>
+          <div style={styles.title} data-title>
+            SGS Raga Ragini Atlas
+          </div>
+          <div style={styles.tagline}>Tap into Nada. Let the flow of healing begin.</div>
         </div>
 
         {rightLogoUrl && (
@@ -1334,7 +1367,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             onError={(e) => { e.target.style.display = "none"; }}
           />
         )}
-      </div>
+      </motion.div>
 
 
       {/* 🌍 GLOBE */}
@@ -1354,15 +1387,15 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         pointsData={filteredEvents}
         pointLat="lat"
         pointLng="lng"
-        pointAltitude={0.02}
-        pointRadius={0.5}
-        pointColor={() => "#ffcc00"}
-        pointResolution={4}
+        pointAltitude={0.022}
+        pointRadius={0.42}
+        pointColor={() => themeColor.marigold}
+        pointResolution={8}
         pointLabel={(point) =>
-          `<div style="background: rgba(0,0,0,0.95); padding: 12px 16px; border-radius: 10px; color: #ffd700; font-size: 14px; font-family: Roboto, Arial, sans-serif; white-space: normal; max-width: 240px; word-wrap: break-word; overflow-wrap: anywhere; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);">
-            <div style="font-weight: bold; margin-bottom: 4px;">${point.eventName}</div>
-            <div style="font-size: 12px; color: #fff; margin-bottom: 2px;">📍 ${point.place || point.location || 'Venue'}</div>
-            <div style="font-size: 12px; color: #fff;">📌 ${point.city || 'City'}</div>
+          `<div style="background: rgba(8,6,17,0.96); padding: 12px 16px; border-radius: 12px; color: #f2c14e; font-size: 14px; font-family: 'Marcellus', Georgia, serif; white-space: normal; max-width: 240px; word-wrap: break-word; overflow-wrap: anywhere; border: 1px solid rgba(242,193,78,0.45); box-shadow: 0 0 20px rgba(242, 193, 78, 0.35);">
+            <div style="font-weight: 500; margin-bottom: 6px; font-size: 15px;">${point.eventName}</div>
+            <div style="font-size: 12px; color: #f7f2e7; font-family: 'Inter', Arial, sans-serif; margin-bottom: 2px;">${point.place || point.location || 'Venue'}</div>
+            <div style="font-size: 12px; color: rgba(247,242,231,0.75); font-family: 'Inter', Arial, sans-serif;">${point.city || 'City'}</div>
           </div>`
         }
         onPointClick={(point) => {
@@ -1391,7 +1424,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           setShowMenu((current) => !current);
         }}
       >
-        {showMenu ? "✕" : "☰"}
+        {showMenu ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
       </button>
 
       {showMenu && <div style={appliedMenuBackdropStyle} onClick={() => { setShowMenu(false); setIsAppDemoExpanded(false); }} />}
@@ -1418,7 +1451,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               aria-label="Close menu"
               title="Close menu"
             >
-              ✕
+              <CloseIcon size={15} />
             </button>
           </div>
         </div>
@@ -1436,11 +1469,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </button>
           {isAppDemoExpanded && (
             <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px", paddingLeft: "10px" }}>
-              <button style={styles.infoMenuItem} onClick={() => handlePlayAppDemo(teluguDemoUrl, "Telugu Demo")}>
-                Telugu demo
+              <button style={{ ...styles.infoMenuItem, display: "flex", alignItems: "center", gap: "8px" }} onClick={() => handlePlayAppDemo(teluguDemoUrl, "Telugu Demo")}>
+                <PlayCircleIcon size={16} /> Telugu demo
               </button>
-              <button style={styles.infoMenuItem} onClick={() => handlePlayAppDemo(kannadaDemoUrl, "Kannada Demo")}>
-                Kannada demo
+              <button style={{ ...styles.infoMenuItem, display: "flex", alignItems: "center", gap: "8px" }} onClick={() => handlePlayAppDemo(kannadaDemoUrl, "Kannada Demo")}>
+                <PlayCircleIcon size={16} /> Kannada demo
               </button>
             </div>
           )}
@@ -1608,8 +1641,12 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             }}
             style={{
               ...styles.continentButton,
-              backgroundColor: selectedContinent === continent ? "#ffd700" : "rgba(0,0,0,0.6)",
-              color: selectedContinent === continent ? "#000" : "#ffd700",
+              background: selectedContinent === continent
+                ? "linear-gradient(135deg, #ff9a3d, #ffb35c)"
+                : "rgba(11, 9, 22, 0.65)",
+              borderColor: selectedContinent === continent ? "#ffb35c" : "rgba(242, 193, 78, 0.35)",
+              color: selectedContinent === continent ? "#1a1206" : "#f2c14e",
+              boxShadow: selectedContinent === continent ? "0 4px 16px rgba(255, 154, 61, 0.35)" : "none",
             }}
             data-continent-button
           >
@@ -1629,7 +1666,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             Jaya Guru Datta
           </p>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
-            The SGS Raga Ragini Atlas is an interactive globe that showcases Music for Healing & Meditation events conducted by <span style={{ color: "#ffd700", fontWeight: 600 }}>His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji</span> across Bharat and around the world.
+            The SGS Raga Ragini Atlas is an interactive globe that showcases Music for Healing & Meditation events conducted by <span style={{ color: "#f2c14e", fontWeight: 600 }}>His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji</span> across Bharat and around the world.
           </p>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
             Users can explore events by filtering them based on event name, location, continent, or event number. Each event entry includes photographs, details of accompanying artists, ragas performed, and audio/video clips that help recreate the experience. We have made every effort to bring together the available resources of Raga Sagaras from 1987 to the present in one comprehensive archive, while continuing the search for more.
@@ -1641,10 +1678,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             We remain deeply grateful to Sri Datta Swamiji and Sri Balaswamiji for their constant guidance, grace, and support. We also extend our sincere thanks to the extended Datta Peetham team for their assistance with the technical aspects of hosting this website.
           </p>
           <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
-            For feedback, suggestions, or contributions, please feel free to contact us at <a href="mailto:365concertsgs@gmail.com" style={{ color: "#ffd700" }} onMouseEnter={(e) => (e.target.style.color = "#ffd700")} onMouseLeave={(e) => (e.target.style.color = "#ffd700")}>365concertsgs@gmail.com</a>. We warmly welcome ideas that can help make these musical treasures more accessible to devotees and the wider public.
+            For feedback, suggestions, or contributions, please feel free to contact us at <a href="mailto:365concertsgs@gmail.com" style={{ color: "#f2c14e" }} onMouseEnter={(e) => (e.target.style.color = "#f2c14e")} onMouseLeave={(e) => (e.target.style.color = "#f2c14e")}>365concertsgs@gmail.com</a>. We warmly welcome ideas that can help make these musical treasures more accessible to devotees and the wider public.
           </p>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
+            <p style={{ fontSize: "17px", lineHeight: 1.5, margin: 0, fontWeight: 500, fontFamily: themeFont.display, color: "#f2c14e" }}>
               Sri Datta Swamiji – The Journey of Nada Chikitsa
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
@@ -1654,8 +1692,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji (the founder pontiff of Avadhoota Datta Peetham, Mysore) descends from the illustrious lineage of Sri Govinda Deekshitar and Sri Venkatamakhin, the architect of the 72 Melakarta rāga system in Carnatic music. Rooted in this classical authenticity, His vision was nurtured by His mother and Guru, Sri Jayalakshmi Mata, who instilled in Him the spirit of devotional music which blossomed into Nada Chikitsa—the healing science of sound.
             </p>
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
+            <p style={{ fontSize: "17px", lineHeight: 1.5, margin: 0, fontWeight: 500, fontFamily: themeFont.display, color: "#f2c14e" }}>
               The Cosmic Blueprint of Raga
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
@@ -1674,7 +1713,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               Thus, music becomes not mere art, but medicine for the soul.
             </p>
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
               Impact of Sri Datta ji’s Music
             </p>
@@ -1685,7 +1725,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               Unlike conventional music, Sri Datta Swamiji integrates ragas with astronomy, astrology, gemology, chakras, zodiac signs, colors, flora, and fauna. This holistic synthesis makes his music a unique spiritual science.
             </p>
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
               Impact of Sri Datta ji’s Music
             </p>
@@ -1701,8 +1742,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               From villages in India to prestigious venues like the Sydney Opera House, Royal Albert Hall, and Lincoln Center, his Raga Sagaras have become a global phenomenon.
             </p>
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
+            <p style={{ fontSize: "17px", lineHeight: 1.5, margin: 0, fontWeight: 500, fontFamily: themeFont.display, color: "#f2c14e" }}>
               Honours and Recognition
             </p>
             <ol style={{ margin: "8px 0 0 18px", padding: 0, color: "#fff", fontSize: "14px", lineHeight: 1.6 }}>
@@ -1713,31 +1755,35 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               <li>2013 – Honorary Doctorate, Vijayanagara Sri Krishnadevaraya University, Bellary</li>
             </ol>
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
+            <p style={{ fontSize: "17px", lineHeight: 1.5, margin: 0, fontWeight: 500, fontFamily: themeFont.display, color: "#f2c14e" }}>
               Musical Collaborations
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
               Great musical stalwarts have shared their awe at Sri Datta Swamiji’s compositions, performing alongside him and also offering sangeeta seva at the magnificent Nada Mantapam in the presence of the Sapta Swara temple at Avadhoota Datta Peetham, Mysore.
             </p>
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
+            <p style={{ fontSize: "17px", lineHeight: 1.5, margin: 0, fontWeight: 500, fontFamily: themeFont.display, color: "#f2c14e" }}>
               The Journey of Raga Sagara
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
               The saga began in 1987 at the Grand Krasnapolsky Ballroom in the Netherlands, inspired by a devotee’s gift of a synthesiser in Vijayawada. Since then, the journey has spanned continents, culminating in the 365th Raga Sagara at Bharat Mandapam, New Delhi, on 19th April 2026.
             </p>
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700, color: "#ffd700" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
+            <p style={{ fontSize: "17px", lineHeight: 1.5, margin: 0, fontWeight: 500, fontFamily: themeFont.display, color: "#f2c14e" }}>
               Conclusion
             </p>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
               Sri Datta Swamiji’s music is not entertainment—it is Sangeeta Sadhana, a spiritual practice. It heals, uplifts, and unites. As we celebrate this journey, we salute the Nada Brahman, His Holiness Dr. Sri Ganapathy Sachchidananda Swamiji, for guiding humanity toward peace and evolution through the eternal power of sound.
             </p>
           </div>
-          <div style={{ borderTop: "1px solid rgba(255,215,0,0.2)", paddingTop: "10px" }}>
+          <div style={{ paddingTop: "4px" }}>
+            <OmDivider size={15} />
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
               Further insights: For more information, please visit the “Quick Links” and “Trivia” sections on the website.
             </p>
@@ -1756,10 +1802,10 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
           {triviaItems.map((item, idx) => (
             <div key={idx} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <h4 style={{ fontSize: "16px", fontWeight: "700", color: "#ffd700", margin: 0, lineHeight: 1.3 }}>
+              <h4 style={{ fontSize: "16px", fontWeight: "700", color: "#f2c14e", margin: 0, lineHeight: 1.3 }}>
                 {item.question}
               </h4>
-              <div style={{ fontSize: "11px", color: "rgba(255, 215, 0, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "600" }}>
+              <div style={{ fontSize: "11px", color: "rgba(242, 193, 78, 0.8)", textTransform: "uppercase", letterSpacing: "0.1em", fontWeight: "600" }}>
                 Insight
               </div>
               <p style={{ fontSize: "14px", color: "#f7f2e7", lineHeight: 1.7, margin: 0, whiteSpace: "pre-line" }}>
@@ -1777,24 +1823,29 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       >
         <div style={styles.quickLinksList}>
           <a className="quick-link-item" href="https://www.dattapeetham.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-            <span style={styles.quickLinkIcon}>🕉️</span>
+            <span style={styles.quickLinkIcon}><OmIcon size={17} /></span>
             Datta Peetham Official
+            <ExternalLinkIcon size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
           </a>
           <a className="quick-link-item" href="https://www.yogasangeeta.org/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-            <span style={styles.quickLinkIcon}>🎶</span>
+            <span style={styles.quickLinkIcon}><SparkleIcon size={16} /></span>
             YogaSangeeta
+            <ExternalLinkIcon size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
           </a>
           <a className="quick-link-item" href="https://ragaraginistore.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-            <span style={styles.quickLinkIcon}>🛒</span>
+            <span style={styles.quickLinkIcon}><StoreIcon size={16} /></span>
             Raga Ragini Store
+            <ExternalLinkIcon size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
           </a>
           <a className="quick-link-item" href="https://youtu.be/gwraGV4o4VY?si=hqO-Gc9U7r8fMmjY" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-            <span style={styles.quickLinkIcon}>🎥</span>
+            <span style={styles.quickLinkIcon}><VideoIcon size={16} /></span>
             Raga Ragini Vidya - Documentary
+            <ExternalLinkIcon size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
           </a>
           <a className="quick-link-item" href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
-            <span style={styles.quickLinkIcon}>🌐</span>
+            <span style={styles.quickLinkIcon}><GlobeIcon size={16} /></span>
             SGS Raga Sagara
+            <ExternalLinkIcon size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
           </a>
         </div>
       </InfoModal>
@@ -1810,11 +1861,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "12px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <button style={styles.infoMenuItem} onClick={() => handlePlayAppDemo(teluguDemoUrl, "Telugu Demo")}>
-              Telugu demo
+            <button style={{ ...styles.infoMenuItem, display: "flex", alignItems: "center", gap: "8px" }} onClick={() => handlePlayAppDemo(teluguDemoUrl, "Telugu Demo")}>
+              <PlayCircleIcon size={16} /> Telugu demo
             </button>
-            <button style={styles.infoMenuItem} onClick={() => handlePlayAppDemo(kannadaDemoUrl, "Kannada Demo")}>
-              Kannada demo
+            <button style={{ ...styles.infoMenuItem, display: "flex", alignItems: "center", gap: "8px" }} onClick={() => handlePlayAppDemo(kannadaDemoUrl, "Kannada Demo")}>
+              <PlayCircleIcon size={16} /> Kannada demo
             </button>
           </div>
           {appDemoVideoUrl ? (
@@ -1868,7 +1919,7 @@ const styles = {
     overflow: "hidden",
     maxWidth: "100%",
     background:
-      "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)",
+      "radial-gradient(ellipse at 50% 100%, #1c1633 0%, #0d0a1c 45%, #05060c 100%)",
   },
 
 
@@ -1880,7 +1931,7 @@ const styles = {
     width: "auto",
     zIndex: 18,
     background: "transparent",
-    filter: "drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
+    filter: "drop-shadow(0 0 15px rgba(242, 193, 78, 0.4))",
     objectFit: "contain",
   },
 
@@ -1892,18 +1943,36 @@ const styles = {
     width: "auto",
     zIndex: 18,
     background: "transparent",
-    filter: "drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
+    filter: "drop-shadow(0 0 15px rgba(242, 193, 78, 0.4))",
     objectFit: "contain",
   },
 
 
   title: {
-    color: "#ffd700",
-    fontSize: "clamp(18px, 3vw, 26px)",
-    fontFamily: "'Roboto', Arial, sans-serif",
-    fontWeight: "800",
+    color: "#f2c14e",
+    fontSize: "clamp(19px, 3.2vw, 30px)",
+    fontFamily: "'Marcellus', 'Cormorant Garamond', Georgia, serif",
+    fontWeight: "500",
+    letterSpacing: "0.01em",
     whiteSpace: "nowrap",
-    textShadow: "0 0 10px rgba(255, 215, 0, 0.3)",
+    textShadow: "0 0 18px rgba(242, 193, 78, 0.35)",
+  },
+
+  titleGroup: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "4px",
+  },
+
+  tagline: {
+    color: "rgba(247, 242, 231, 0.78)",
+    fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
+    fontSize: "clamp(10px, 1.1vw, 13px)",
+    letterSpacing: "0.06em",
+    fontStyle: "italic",
+    textAlign: "center",
+    maxWidth: "90vw",
   },
 
   titleRow: {
@@ -1926,7 +1995,7 @@ const styles = {
     width: "auto",
     maxWidth: "clamp(70px, 8vw, 120px)",
     objectFit: "contain",
-    filter: "drop-shadow(0 0 15px rgba(255, 215, 0, 0.4))",
+    filter: "drop-shadow(0 0 15px rgba(242, 193, 78, 0.4))",
   },
 
   infoButton: {
@@ -1936,7 +2005,7 @@ const styles = {
     zIndex: 21,
     background: "rgba(0, 0, 0, 0.55)",
     border: "1px solid rgba(255, 255, 255, 0.32)",
-    color: "#ffd700",
+    color: "#f2c14e",
     borderRadius: "14px",
     width: "52px",
     height: "52px",
@@ -1961,8 +2030,8 @@ const styles = {
     left: "auto",
     zIndex: 21,
     background: "rgba(0, 0, 0, 0.7)",
-    border: "1px solid rgba(255, 215, 0, 0.3)",
-    color: "#ffd700",
+    border: "1px solid rgba(242, 193, 78, 0.3)",
+    color: "#f2c14e",
     borderRadius: "16px",
     width: "56px",
     height: "56px",
@@ -1992,8 +2061,8 @@ const styles = {
     maxWidth: "clamp(260px, 20vw, 340px)",
     maxHeight: "calc(100vh - 200px)",
     overflowY: "auto",
-    background: "rgba(0, 0, 0, 0.92)",
-    border: "1px solid rgba(255, 215, 0, 0.2)",
+    background: "rgba(11, 9, 22, 0.92)",
+    border: "1px solid rgba(242, 193, 78, 0.2)",
     borderRadius: "16px",
     padding: "16px 12px",
     zIndex: 36,
@@ -2009,8 +2078,8 @@ const styles = {
     width: "clamp(240px, 18vw, 300px)",
     maxHeight: "calc(100vh - 120px)",
     overflowY: "auto",
-    background: "rgba(0, 0, 0, 0.94)",
-    border: "1px solid rgba(255, 215, 0, 0.25)",
+    background: "rgba(11, 9, 22, 0.94)",
+    border: "1px solid rgba(242, 193, 78, 0.25)",
     borderRadius: "20px",
     padding: "18px 16px",
     zIndex: 36,
@@ -2025,11 +2094,11 @@ const styles = {
     gap: "12px",
     marginBottom: "12px",
     paddingBottom: "12px",
-    borderBottom: "1px solid rgba(255, 215, 0, 0.15)",
+    borderBottom: "1px solid rgba(242, 193, 78, 0.15)",
   },
 
   menuSectionLabel: {
-    color: "#ffd700",
+    color: "#f2c14e",
     fontSize: "14px",
     fontWeight: "700",
     letterSpacing: "0.12em",
@@ -2047,8 +2116,8 @@ const styles = {
 
   panelIconButton: {
     border: "none",
-    background: "rgba(255, 215, 0, 0.1)",
-    color: "#ffd700",
+    background: "rgba(242, 193, 78, 0.1)",
+    color: "#f2c14e",
     borderRadius: "10px",
     padding: "8px 10px",
     cursor: "pointer",
@@ -2061,8 +2130,8 @@ const styles = {
 
   clearIconButton: {
     border: "none",
-    background: "rgba(255, 215, 0, 0.1)",
-    color: "#ffd700",
+    background: "rgba(242, 193, 78, 0.1)",
+    color: "#f2c14e",
     borderRadius: "10px",
     padding: "8px 10px",
     cursor: "pointer",
@@ -2078,7 +2147,7 @@ const styles = {
     top: "clamp(70px, 6vh, 80px)",
     right: "clamp(15px, 3vw, 25px)",
     zIndex: 22,
-    background: "rgba(0, 0, 0, 0.96)",
+    background: "rgba(8, 6, 17, 0.96)",
     border: "1px solid rgba(255, 255, 255, 0.18)",
     padding: "10px",
     borderRadius: "16px",
@@ -2108,14 +2177,15 @@ const styles = {
     width: "100%",
     textAlign: "left",
     padding: "12px 14px",
-    border: "none",
-    background: "rgba(255,255,255,0.08)",
-    color: "#fff",
+    border: "1px solid rgba(242, 193, 78, 0.14)",
+    background: "rgba(242, 193, 78, 0.06)",
+    color: "#f7f2e7",
     borderRadius: "12px",
     cursor: "pointer",
-    fontFamily: "'Roboto', Arial, sans-serif",
+    fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
     fontSize: "clamp(13px, 1.1vw, 15px)",
-    transition: "background 0.2s ease",
+    fontWeight: "500",
+    transition: "all 0.2s ease",
   },
 
   filter: {
@@ -2144,7 +2214,7 @@ const styles = {
     borderRadius: "14px",
     border: "none",
     background: "#000",
-    color: "#ffd700",
+    color: "#f2c14e",
     cursor: "pointer",
     display: "grid",
     placeItems: "center",
@@ -2223,7 +2293,7 @@ const styles = {
     borderRadius: "8px",
     border: "none",
     background: "#000",
-    color: "#ffd700",
+    color: "#f2c14e",
     cursor: "pointer",
     fontWeight: "bold",
     fontFamily: "'Roboto', Arial, sans-serif",
@@ -2242,11 +2312,11 @@ const styles = {
     padding: "12px 14px",
     borderRadius: "12px",
     backgroundColor: "#000",
-    color: "#ffd700",
+    color: "#f2c14e",
     textDecoration: "none",
     fontSize: "clamp(11px, 1vw, 13px)",
     fontWeight: "700",
-    border: "1px solid rgba(255,215,0,0.35)",
+    border: "1px solid rgba(242, 193, 78,0.35)",
     boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
     transition: "all 0.3s ease",
   },
@@ -2297,8 +2367,8 @@ const styles = {
     maxHeight: "75vh",
     overflowY: "auto",
     WebkitOverflowScrolling: "touch",
-    background: "rgba(0, 0, 0, 0.96)",
-    border: "1px solid rgba(255, 215, 0, 0.25)",
+    background: "rgba(8, 6, 17, 0.96)",
+    border: "1px solid rgba(242, 193, 78, 0.25)",
     borderTopLeftRadius: "18px",
     borderTopRightRadius: "18px",
     padding: "18px 16px 24px",
@@ -2318,7 +2388,7 @@ const styles = {
     flexDirection: "column",
     gap: 12,
     zIndex: 1000,
-    backgroundColor: "rgba(0, 0, 0, 0.95)",
+    backgroundColor: "rgba(8, 6, 17, 0.95)",
     padding: "clamp(15px, 4vw, 20px)",
     borderTopLeftRadius: "18px",
     borderTopRightRadius: "18px",
@@ -2334,7 +2404,7 @@ const styles = {
     right: "clamp(15px, 3vw, 20px)",
     left: "auto",
     zIndex: 51,
-    background: "#ffcc00",
+    background: "#f2c14e",
     color: "#000",
     border: "none",
     borderRadius: "8px",
@@ -2367,10 +2437,11 @@ const styles = {
   },
 
   label: {
-    color: "#000",
+    color: "#f2c14e",
     fontSize: "clamp(12px, 1.1vw, 14px)",
-    fontFamily: "'Roboto', Arial, sans-serif",
+    fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
     fontWeight: "700",
+    letterSpacing: "0.04em",
     textTransform: "uppercase",
   },
 
@@ -2404,14 +2475,14 @@ const styles = {
     gap: "4px",
     padding: "clamp(3px, 0.7vw, 6px) clamp(4px, 1vw, 8px)",
     backgroundColor: "#000",
-    color: "#ffd700",
+    color: "#f2c14e",
     textDecoration: "none",
     borderRadius: "4px",
     fontSize: "clamp(8px, 0.9vw, 10px)",
     fontFamily: "'Roboto', Arial, sans-serif",
     fontWeight: "500",
     cursor: "pointer",
-    border: "1px solid #ffd700",
+    border: "1px solid #f2c14e",
     transition: "all 0.2s ease",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -2420,7 +2491,7 @@ const styles = {
   },
 
   mediaLinkHover: {
-    backgroundColor: "#ffd700",
+    backgroundColor: "#f2c14e",
     color: "#000",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
     transform: "translateY(-1px)",
@@ -2460,7 +2531,7 @@ const styles = {
     background: "#ddd",
     outline: "none",
     cursor: "pointer",
-    accentColor: "#ffd700",
+    accentColor: "#f2c14e",
   },
 
   numberInput: {
@@ -2481,7 +2552,7 @@ const styles = {
     fontSize: "clamp(14px, 1.1vw, 16px)",
     borderRadius: "12px",
     border: "none",
-    background: "#ffd700",
+    background: "#f2c14e",
     color: "#000",
     cursor: "pointer",
     fontWeight: "bold",
@@ -2518,7 +2589,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    borderBottom: "1px solid rgba(255, 215, 0, 0.1)",
+    borderBottom: "1px solid rgba(242, 193, 78, 0.1)",
     flexShrink: 0,
   },
 
@@ -2562,7 +2633,7 @@ const styles = {
 
 
   sectionTitle: {
-    color: "#ffd700",
+    color: "#f2c14e",
     marginBottom: "10px",
     marginTop: "20px",
     fontSize: "clamp(14px, 2vw, 18px)",
@@ -2659,14 +2730,15 @@ const styles = {
   },
 
   continentButton: {
-    padding: "clamp(6px, 1vw, 10px) clamp(8px, 1.5vw, 12px)",
+    padding: "clamp(6px, 1vw, 10px) clamp(10px, 1.5vw, 14px)",
     fontSize: "clamp(13px, 1.2vw, 15px)",
-    borderRadius: "8px",
-    border: "1px solid #ffd700",
+    borderRadius: "999px",
+    border: "1px solid rgba(242, 193, 78, 0.35)",
     cursor: "pointer",
-    fontFamily: "'Roboto', Arial, sans-serif",
-    fontWeight: "bold",
-    transition: "all 0.3s ease",
+    fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
+    fontWeight: "600",
+    backdropFilter: "blur(6px)",
+    transition: "all 0.25s ease",
     touchAction: "manipulation",
   },
 
@@ -2692,7 +2764,7 @@ const styles = {
     height: "250%",
     right: "-75%",
     bottom: "-75%",
-    background: "conic-gradient(from 260deg at 30% 30%, rgba(255, 215, 0, 0.6) 0deg, rgba(255, 215, 0, 0.4) 30deg, rgba(255, 215, 0, 0.2) 60deg, rgba(255, 215, 0, 0) 120deg, transparent 180deg)",
+    background: "conic-gradient(from 260deg at 30% 30%, rgba(242, 193, 78, 0.6) 0deg, rgba(242, 193, 78, 0.4) 30deg, rgba(242, 193, 78, 0.2) 60deg, rgba(242, 193, 78, 0) 120deg, transparent 180deg)",
     filter: "blur(35px)",
     animation: "healingPulse 5s ease-in-out infinite",
     zIndex: 0,
@@ -2703,7 +2775,7 @@ const styles = {
     width: "100%",
     height: "100%",
     objectFit: "contain",
-    filter: "drop-shadow(0 0 35px rgba(255, 215, 0, 0.4)) brightness(1.1) contrast(1.05) saturate(1.15)",
+    filter: "drop-shadow(0 0 35px rgba(242, 193, 78, 0.4)) brightness(1.1) contrast(1.05) saturate(1.15)",
     zIndex: 2,
     position: "relative",
     maskImage: "radial-gradient(ellipse 100% 80% at 50% 40%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0) 100%)",
@@ -2725,13 +2797,13 @@ const styles = {
   },
 
   footerLink: {
-    color: "#ffd700",
+    color: "#f2c14e",
     fontSize: "12px",
     textDecoration: "none",
     fontFamily: "'Roboto', Arial, sans-serif",
     fontWeight: "bold",
     padding: "6px 10px",
-    border: "1px solid #ffd700",
+    border: "1px solid #f2c14e",
     borderRadius: "4px",
     transition: "all 0.3s ease",
     cursor: "pointer",

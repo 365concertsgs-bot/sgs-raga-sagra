@@ -1,4 +1,5 @@
 import React from "react";
+import { color } from "./theme";
 
 const YOUTUBE_URL_PATTERNS = [
   /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([A-Za-z0-9_-]{11})(?:[?&].*)?$/,
@@ -35,7 +36,7 @@ export default function YouTubePlayer({ videoUrl, title = "YouTube video player"
 
   if (!videoId) {
     return (
-      <div style={{ color: "#ff6b6b", fontSize: "0.95rem", lineHeight: 1.4 }}>
+      <div style={{ color: color.danger, fontSize: "0.95rem", lineHeight: 1.4 }}>
         Invalid YouTube link.
       </div>
     );

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { color } from "./theme";
 
 export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false }) {
   const [error, setError] = useState(null);
@@ -100,18 +101,18 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
   };
 
   if (!audioUrl || audioUrl.trim() === "") {
-    return <p style={{ color: '#ff6b6b' }}>No media available</p>;
+    return <p style={{ color: color.danger }}>No media available</p>;
   }
 
   if (!isValidUrl(audioUrl)) {
-    return <p style={{ color: '#ff6b6b' }}>Invalid media link</p>;
+    return <p style={{ color: color.danger }}>Invalid media link</p>;
   }
 
   const platform = getPlatformType(audioUrl);
 
   if (platform === 'vimeo') {
     const vimeoId = getVimeoVideoId(audioUrl);
-    if (!vimeoId) return <p style={{ color: '#ff6b6b' }}>Invalid Vimeo link</p>;
+    if (!vimeoId) return <p style={{ color: color.danger }}>Invalid Vimeo link</p>;
     return (
       <div style={{ width: "100%", maxWidth: "100%", margin: "0", padding: "0", aspectRatio: "16/9", display: "flex", justifyContent: "center" }}>
         <iframe
@@ -127,7 +128,7 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
 
   if (platform === 'youtube') {
     const youtubeId = getYoutubeVideoId(audioUrl);
-    if (!youtubeId) return <p style={{ color: '#ff6b6b' }}>Invalid YouTube link</p>;
+    if (!youtubeId) return <p style={{ color: color.danger }}>Invalid YouTube link</p>;
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
     return (
       <div style={{ width: "100%", maxWidth: "100%", margin: "0", padding: "0", aspectRatio: "16/9", display: "flex", justifyContent: "center" }}>
@@ -170,7 +171,7 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
           scrolling="no"
           frameBorder="no"
           allow="autoplay"
-          src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ffd700&auto_play=${autoPlay ? 'true' : 'false'}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=true`}
+          src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23f2c14e&auto_play=${autoPlay ? 'true' : 'false'}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&visual=true`}
           style={{ borderRadius: "0", boxSizing: "border-box", margin: "0", padding: "0" }}
         ></iframe>
       </div>
@@ -203,14 +204,15 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
         style={{
           width: "fit-content",
           alignSelf: "flex-start",
-          background: "#ffd700",
-          color: "#000",
+          background: `linear-gradient(135deg, ${color.gold}, ${color.marigold})`,
+          color: "#1a1206",
           border: "none",
           borderRadius: "999px",
-          padding: "10px 16px",
+          padding: "10px 18px",
           fontWeight: "700",
+          fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
           cursor: "pointer",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+          boxShadow: "0 6px 18px rgba(0,0,0,0.35)",
         }}
       >
         {isPlaying ? "Pause" : "Play"}
@@ -229,7 +231,7 @@ export default function AudioPlayer({ audioUrl, autoPlay = false, muted = false 
         <source src={audioUrl} type={audioType} />
         Your browser does not support this audio format.
       </audio>
-      {error && <p style={{ color: '#ff6b6b', margin: 0 }}>{error}</p>}
+      {error && <p style={{ color: color.danger, margin: 0 }}>{error}</p>}
     </div>
   );
 }

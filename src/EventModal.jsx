@@ -1,5 +1,17 @@
-import React, { useEffect, useRef, useState, Suspense, lazy, memo } from "react";
+import React, { useEffect, useRef, useCallback, Suspense, lazy, memo } from "react";
 import { motion } from "framer-motion";
+import { color, font, radius, shadow, zIndex } from "./theme";
+import {
+  CloseIcon,
+  PinIcon,
+  CityIcon,
+  CalendarIcon,
+  HashIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ImageIcon,
+  OmDivider,
+} from "./icons";
 
 // Lazy load media players to split vendor code
 const AudioPlayer = lazy(() => import("./AudioPlayer.jsx"));
@@ -8,365 +20,523 @@ const YouTubePlayer = lazy(() => import("./YouTubePlayer.jsx"));
 const isYouTubeLink = (url) =>
   typeof url === "string" && /(?:youtu\.be|youtube\.com|youtube-nocookie\.com)/i.test(url);
 
+const AUTO_ADVANCE_MS = 6000;
+
 const styles = {
-  modal: {
+  overlay: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0, 0, 0, 0.95)",
-    zIndex: 50,
+    zIndex: zIndex.modal,
+    background:
+      "radial-gradient(ellipse at 50% 20%, rgba(28, 22, 51, 0.92) 0%, rgba(5, 6, 12, 0.97) 60%, rgba(3, 3, 7, 0.99) 100%)",
     overflowY: "auto",
     overflowX: "hidden",
-    padding: "0",
-    display: "flex",
-    justifyContent: "center",
     WebkitOverflowScrolling: "touch",
     scrollBehavior: "smooth",
-  },
-  modalContent: {
-    width: "100%",
-    maxWidth: "1000px",
-    color: "#fff",
-    overflowY: "visible",
-    WebkitOverflowScrolling: "touch",
-    padding: "20px",
-    margin: "0 auto",
-  },
-  modalHeader: {
-    flexShrink: 0,
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: "20px",
-    paddingBottom: "15px",
-    borderBottom: "1px solid rgba(255, 215, 0, 0.3)",
+    justifyContent: "center",
+  },
+  shell: {
+    width: "100%",
+    maxWidth: "980px",
+    margin: "0 auto",
+    color: color.textPrimary,
+    fontFamily: font.body,
+    paddingBottom: "clamp(24px, 5vh, 56px)",
   },
   closeButton: {
-    background: "rgba(255, 215, 0, 0.2)",
-    color: "#ffd700",
-    border: "1px solid #ffd700",
-    borderRadius: "6px",
-    padding: "8px 12px",
+    position: "sticky",
+    top: "16px",
+    marginLeft: "auto",
+    marginRight: "clamp(12px, 3vw, 24px)",
+    zIndex: 5,
+    background: "rgba(5, 6, 12, 0.65)",
+    color: color.gold,
+    border: `1px solid ${color.surfaceBorder}`,
+    borderRadius: radius.pill,
+    width: "42px",
+    height: "42px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     cursor: "pointer",
-    fontSize: "16px",
-    transition: "all 0.2s ease",
+    backdropFilter: "blur(6px)",
+    boxShadow: shadow.panelSoft,
   },
-  eventDetails: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: "8px",
-    marginBottom: "8px",
-    flexGrow: 1,
+  heroWrap: {
+    position: "relative",
+    width: "100%",
+    aspectRatio: "16 / 9",
+    maxHeight: "58vh",
+    overflow: "hidden",
+    background: "#000",
+    borderBottom: `1px solid ${color.surfaceBorderSoft}`,
   },
-  detailItem: {
-    background: "rgba(255, 215, 0, 0.1)",
-    padding: "6px 8px",
-    borderRadius: "6px",
-    border: "1px solid rgba(255, 215, 0, 0.2)",
+  heroTrack: {
+    display: "flex",
+    width: "100%",
+    height: "100%",
+    overflowX: "auto",
+    overflowY: "hidden",
+    scrollSnapType: "x mandatory",
+    WebkitOverflowScrolling: "touch",
+    scrollbarWidth: "none",
+  },
+  heroSlide: {
+    flex: "0 0 100%",
+    width: "100%",
+    height: "100%",
+    scrollSnapAlign: "start",
+    position: "relative",
+    overflow: "hidden",
+    background: "#050508",
+  },
+  heroImg: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+  },
+  heroGradient: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "linear-gradient(180deg, rgba(5,6,12,0.15) 0%, rgba(5,6,12,0.05) 35%, rgba(5,6,12,0.85) 100%)",
+    pointerEvents: "none",
+  },
+  heroCaption: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: "clamp(16px, 4vw, 34px) clamp(18px, 4vw, 40px)",
+    pointerEvents: "none",
+  },
+  eyebrow: {
+    fontFamily: font.body,
     fontSize: "12px",
-    overflowWrap: "anywhere",
-    wordBreak: "break-word",
-  },
-  imageGallery: {
+    letterSpacing: "0.22em",
+    textTransform: "uppercase",
+    color: color.marigold,
+    fontWeight: 700,
     marginBottom: "8px",
+  },
+  eventName: {
+    fontFamily: font.display,
+    fontSize: "clamp(22px, 4vw, 38px)",
+    lineHeight: 1.12,
+    color: color.textPrimary,
+    margin: 0,
+    textShadow: "0 4px 24px rgba(0,0,0,0.6)",
+  },
+  navArrow: {
+    position: "absolute",
+    top: "50%",
+    transform: "translateY(-50%)",
+    width: "40px",
+    height: "40px",
+    borderRadius: radius.pill,
+    background: "rgba(5, 6, 12, 0.55)",
+    border: `1px solid ${color.surfaceBorderSoft}`,
+    color: color.gold,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    backdropFilter: "blur(4px)",
+  },
+  dots: {
+    position: "absolute",
+    bottom: "12px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    display: "flex",
+    gap: "6px",
+  },
+  dot: {
+    width: "7px",
+    height: "7px",
+    borderRadius: "50%",
+    border: "none",
+    cursor: "pointer",
+    transition: "all 0.25s ease",
+  },
+  noImage: {
+    width: "100%",
+    height: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: "12px",
-  },
-  mainImage: {
-    width: "100%",
-    maxWidth: "600px",
-    height: "auto",
-    maxHeight: "55vh",
-    objectFit: "contain",
-    borderRadius: "8px",
-    border: "2px solid rgba(255, 215, 0, 0.3)",
-    display: "block",
-    pointerEvents: "none",
-    cursor: "default",
-    userSelect: "none",
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-  },
-  imageControls: {
-    display: "flex",
-    gap: "15px",
-    alignItems: "center",
     justifyContent: "center",
-    width: "100%",
+    gap: "10px",
+    color: color.goldDim,
+  },
+  body: {
+    padding: "clamp(18px, 4vw, 34px)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "18px",
+  },
+  metaRow: {
+    display: "flex",
     flexWrap: "wrap",
+    gap: "10px 22px",
   },
-  navButton: {
-    background: "rgba(255, 215, 0, 0.2)",
-    color: "#ffd700",
-    border: "1px solid #ffd700",
-    borderRadius: "4px",
-    padding: "6px 12px",
-    cursor: "pointer",
+  metaItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "13.5px",
+    color: color.textMuted,
+  },
+  metaIcon: {
+    color: color.gold,
+    opacity: 0.9,
+  },
+  panel: {
+    background: color.surface,
+    border: `1px solid ${color.surfaceBorderSoft}`,
+    borderRadius: radius.md,
+    padding: "16px 18px",
+    boxShadow: shadow.panelSoft,
+  },
+  panelTitle: {
+    fontFamily: font.display,
+    color: color.gold,
+    fontSize: "16px",
+    letterSpacing: "0.02em",
+    margin: "0 0 10px 0",
+  },
+  descriptionScroll: {
+    maxHeight: "min(38vh, 320px)",
+    overflowY: "auto",
+    WebkitOverflowScrolling: "touch",
+    paddingRight: "6px",
+  },
+  descList: {
+    margin: 0,
+    paddingLeft: "18px",
+    color: color.textPrimary,
     fontSize: "14px",
-    transition: "all 0.2s ease",
-    fontWeight: "bold",
+    lineHeight: 1.75,
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
   },
-  imageCounter: {
-    color: "#ffd700",
-    fontSize: "14px",
-    minWidth: "120px",
-    textAlign: "center",
+  ragasLabel: {
+    fontFamily: font.display,
+    color: color.marigoldBright,
+    fontSize: "15px",
+    display: "block",
+    marginTop: "6px",
+    marginBottom: "4px",
   },
-  imageLoadingError: {
-    color: "#ff6b6b",
-    fontSize: "12px",
-    textAlign: "center",
-    padding: "10px",
-    background: "rgba(255, 107, 107, 0.1)",
-    borderRadius: "4px",
+  mediaFrame: {
+    borderRadius: radius.md,
+    overflow: "hidden",
+    border: `1px solid ${color.surfaceBorderSoft}`,
+    boxShadow: shadow.panel,
+    background: "#000",
+  },
+  footnote: {
+    marginTop: "10px",
+    padding: "10px 14px",
+    background: color.goldFaint,
+    borderLeft: `3px solid ${color.goldDim}`,
+    color: color.textMuted,
+    fontSize: "12.5px",
+    borderRadius: "6px",
   },
 };
 
-export default memo(function EventModal({ event, onClose, carouselRef, currentSlideIndex, setCurrentSlideIndex }) {
-  const [imageIndex, setImageIndex] = useState(0);
-  const [imageLoadError, setImageLoadError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(true);
-  const imageIndexRef = useRef(0);
+function cleanDescriptionLine(line) {
+  return line
+    .trim()
+    .replace(/^[-•*]\s*/, "")
+    .replace(/[^\w\s.,;:\-–—'""()[\]&]/g, "")
+    .replace(/–|—/g, "-")
+    .replace(/['']/g, "'")
+    .replace(/[""]/g, '"')
+    .trim();
+}
 
-  if (!event) return null;
+const EventGallery = memo(function EventGallery({
+  images,
+  eventName,
+  carouselRef,
+  currentSlideIndex,
+  setCurrentSlideIndex,
+}) {
+  const isSyncingRef = useRef(false);
+  const scrollTimeoutRef = useRef(null);
 
-  // Log when event changes (for debugging)
+  const goTo = useCallback(
+    (index) => {
+      const el = carouselRef?.current;
+      if (!el || !images || images.length === 0) return;
+      const clamped = ((index % images.length) + images.length) % images.length;
+      isSyncingRef.current = true;
+      el.scrollTo({ left: clamped * el.clientWidth, behavior: "smooth" });
+      setCurrentSlideIndex(clamped);
+      window.clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = window.setTimeout(() => {
+        isSyncingRef.current = false;
+      }, 500);
+    },
+    [carouselRef, images, setCurrentSlideIndex]
+  );
+
+  // Keep the scroll position in sync when currentSlideIndex changes from
+  // outside (auto-advance timer in the parent).
   useEffect(() => {
-    setImageIndex(0);
-    setImageLoadError(false);
-    if (event.images && event.images.length > 0) {
-      console.log(`Event "${event.eventName}" has ${event.images.length} image(s):`, event.images);
-    } else {
-      console.warn(`Event "${event.eventName}" has no images`);
+    const el = carouselRef?.current;
+    if (!el || isSyncingRef.current) return;
+    const target = currentSlideIndex * el.clientWidth;
+    if (Math.abs(el.scrollLeft - target) > 4) {
+      el.scrollTo({ left: target, behavior: "smooth" });
     }
-  }, [event]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSlideIndex]);
 
-  // Auto-rotate images every 4 seconds
-  useEffect(() => {
-    if (!event.images || event.images.length === 0) return;
+  const handleScroll = useCallback(() => {
+    const el = carouselRef?.current;
+    if (!el || !images || images.length === 0) return;
+    const index = Math.round(el.scrollLeft / Math.max(el.clientWidth, 1));
+    if (index !== currentSlideIndex) {
+      setCurrentSlideIndex(Math.min(index, images.length - 1));
+    }
+  }, [carouselRef, images, currentSlideIndex, setCurrentSlideIndex]);
 
-    let mounted = true;
-    const interval = setInterval(() => {
-      const current = imageIndexRef.current;
-      const next = current === event.images.length - 1 ? 0 : current + 1;
-      const nextUrl = event.images[next];
-      // Preload next image to avoid blinking
-      const img = new Image();
-      img.onload = () => {
-        if (!mounted) return;
-        setImageLoadError(false);
-        imageIndexRef.current = next;
-        setImageLoaded(false);
-        // small timeout to allow opacity transition out/in
-        setTimeout(() => {
-          setImageIndex(next);
-        }, 10);
-      };
-      img.onerror = () => {
-        if (!mounted) return;
-        console.warn(`Preload failed for image: ${nextUrl}`);
-        imageIndexRef.current = next;
-        setImageIndex(next);
-      };
-      img.src = nextUrl;
-    }, 6000);
-
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
-  }, [event.images]);
-
-  // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (!event.images || event.images.length === 0) return;
-
-      if (e.key === "ArrowLeft") {
-        setImageIndex((prev) => (prev === 0 ? event.images.length - 1 : prev - 1));
-      } else if (e.key === "ArrowRight") {
-        setImageIndex((prev) => (prev === event.images.length - 1 ? 0 : prev + 1));
-      }
+      if (!images || images.length === 0) return;
+      if (e.key === "ArrowLeft") goTo(currentSlideIndex - 1);
+      else if (e.key === "ArrowRight") goTo(currentSlideIndex + 1);
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [event.images]);
+  }, [images, currentSlideIndex, goTo]);
 
+  if (!images || images.length === 0) {
+    return (
+      <div style={styles.heroWrap}>
+        <div style={styles.noImage}>
+          <ImageIcon size={30} />
+          <span style={{ fontSize: "13px" }}>No photographs available for this event yet</span>
+        </div>
+        <div style={styles.heroGradient} />
+        <div style={styles.heroCaption}>
+          <div style={styles.eyebrow}>Music for Healing &amp; Meditation</div>
+          <h2 style={styles.eventName}>{eventName}</h2>
+        </div>
+      </div>
+    );
+  }
 
+  return (
+    <div style={styles.heroWrap}>
+      <div style={styles.heroTrack} ref={carouselRef} onScroll={handleScroll}>
+        {images.map((src, idx) => (
+          <div key={`${src}-${idx}`} style={styles.heroSlide}>
+            <img
+              src={src}
+              alt={`${eventName || "Event"} — photograph ${idx + 1}`}
+              style={{
+                ...styles.heroImg,
+                animation: `kenburns${idx % 2 === 0 ? "In" : "Out"} 9s ease-in-out infinite alternate`,
+              }}
+              loading={idx === 0 ? "eager" : "lazy"}
+              decoding="async"
+              onError={(e) => {
+                e.target.style.opacity = 0.15;
+              }}
+            />
+          </div>
+        ))}
+      </div>
+      <div style={styles.heroGradient} />
+      <div style={styles.heroCaption}>
+        <div style={styles.eyebrow}>Music for Healing &amp; Meditation</div>
+        <h2 style={styles.eventName}>{eventName}</h2>
+      </div>
+
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            aria-label="Previous photograph"
+            onClick={() => goTo(currentSlideIndex - 1)}
+            style={{ ...styles.navArrow, left: "12px" }}
+          >
+            <ChevronLeftIcon size={18} />
+          </button>
+          <button
+            type="button"
+            aria-label="Next photograph"
+            onClick={() => goTo(currentSlideIndex + 1)}
+            style={{ ...styles.navArrow, right: "12px" }}
+          >
+            <ChevronRightIcon size={18} />
+          </button>
+          <div style={styles.dots}>
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                aria-label={`Go to photograph ${idx + 1}`}
+                onClick={() => goTo(idx)}
+                style={{
+                  ...styles.dot,
+                  background: idx === currentSlideIndex ? color.gold : "rgba(255,255,255,0.35)",
+                  width: idx === currentSlideIndex ? "18px" : "7px",
+                  borderRadius: idx === currentSlideIndex ? "4px" : "50%",
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+});
+
+function EventMeta({ event }) {
+  const dateLabel = event.date
+    ? new Date(event.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+    : null;
+
+  const items = [
+    event.place || event.location ? { icon: PinIcon, label: event.place || event.location } : null,
+    event.city ? { icon: CityIcon, label: event.city } : null,
+    dateLabel ? { icon: CalendarIcon, label: dateLabel } : null,
+    event.eventNumber ? { icon: HashIcon, label: `Event ${event.eventNumber} of 365` } : null,
+  ].filter(Boolean);
+
+  if (items.length === 0) return null;
+
+  return (
+    <div style={styles.metaRow}>
+      {items.map(({ icon: Icon, label }, idx) => (
+        <div key={idx} style={styles.metaItem}>
+          <Icon size={15} style={styles.metaIcon} />
+          <span>{label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EventDescription({ description }) {
+  if (!description) return null;
+
+  const lines = description.split("\n").filter((line) => line.trim());
+
+  return (
+    <div style={styles.panel}>
+      <h3 style={styles.panelTitle}>About this offering</h3>
+      <div style={styles.descriptionScroll}>
+        <ul style={styles.descList}>
+          {lines.map((line, idx) => {
+            const trimmed = line.trim();
+            const cleaned = cleanDescriptionLine(line);
+
+            if (trimmed.toLowerCase().includes("ragas played")) {
+              return (
+                <React.Fragment key={idx}>
+                  <OmDivider size={16} />
+                  <strong style={styles.ragasLabel}>{cleaned}</strong>
+                </React.Fragment>
+              );
+            }
+
+            return (
+              <li key={idx} style={{ listStyle: lines.length > 1 ? "disc" : "none", marginLeft: lines.length > 1 ? "2px" : "-18px" }}>
+                {cleaned}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function EventMedia({ event }) {
+  if (!event.audioUrl) return null;
+
+  return (
+    <div>
+      <div style={styles.mediaFrame}>
+        <Suspense fallback={<div style={{ padding: "24px", color: color.textMuted, fontSize: "13px" }}>Loading media…</div>}>
+          {isYouTubeLink(event.audioUrl) ? (
+            <YouTubePlayer videoUrl={event.audioUrl} title={event.eventName || "Event video"} />
+          ) : (
+            <AudioPlayer audioUrl={event.audioUrl} autoPlay muted={false} />
+          )}
+        </Suspense>
+      </div>
+      {event.placeholder && <div style={styles.footnote}>{String(event.placeholder)}</div>}
+    </div>
+  );
+}
+
+export default memo(function EventModal({ event, onClose, carouselRef, currentSlideIndex, setCurrentSlideIndex }) {
+  if (!event) return null;
+
+  // Reset to the first photograph whenever a different event is opened.
   useEffect(() => {
-    imageIndexRef.current = imageIndex;
-  }, [imageIndex]);
+    setCurrentSlideIndex(0);
+    const el = carouselRef?.current;
+    if (el) el.scrollLeft = 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event.eventNumber, event.eventName]);
 
-  const handleImageError = () => {
-    console.error(`Failed to load image: ${event.images[imageIndex]}`);
-    setImageLoadError(true);
-  };
+  // Stop any playing audio elements when the modal closes.
+  useEffect(() => {
+    return () => {
+      document.querySelectorAll("audio").forEach((audio) => {
+        audio.pause();
+      });
+    };
+  }, []);
 
   return (
     <motion.div
-      initial={{ y: "100%" }}
-      animate={{ y: 0 }}
-      exit={{ y: "100%" }}
-      style={styles.modal}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      style={styles.overlay}
       onClick={(e) => e.stopPropagation()}
     >
-      <div style={{...styles.modalContent, paddingBottom: "10px"}}>
-        {/* Header */}
-        <div style={{...styles.modalHeader, marginBottom: "10px", paddingBottom: "8px"}}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: "clamp(18px, 3vw, 24px)", color: "#ffd700" }}>
-              {event.eventName}
-            </h2>
-            <p style={{ color: "#ffd700", margin: "5px 0 0 0", fontSize: "12px" }}>
-              Event #{event.eventNumber}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            style={{...styles.closeButton}}
-            onMouseEnter={(e) => {
-              e.target.style.background = "rgba(255, 215, 0, 0.3)";
-              e.target.style.boxShadow = "0 0 10px rgba(255, 215, 0, 0.5)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "rgba(255, 215, 0, 0.2)";
-              e.target.style.boxShadow = "none";
-            }}
-          >
-            ✕
-          </button>
+      <style>{`
+        @keyframes kenburnsIn { from { transform: scale(1); } to { transform: scale(1.08); } }
+        @keyframes kenburnsOut { from { transform: scale(1.08); } to { transform: scale(1); } }
+      `}</style>
+      <motion.div
+        initial={{ y: 24, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.32, ease: "easeOut", delay: 0.05 }}
+        style={styles.shell}
+      >
+        <button type="button" onClick={onClose} style={styles.closeButton} aria-label="Close event details">
+          <CloseIcon size={18} />
+        </button>
+
+        <EventGallery
+          images={event.images}
+          eventName={event.eventName}
+          carouselRef={carouselRef}
+          currentSlideIndex={currentSlideIndex}
+          setCurrentSlideIndex={setCurrentSlideIndex}
+        />
+
+        <div style={styles.body}>
+          <EventMeta event={event} />
+          <EventDescription description={event.description} />
+          <EventMedia event={event} />
         </div>
-
-        {/* Event Details */}
-        <div style={styles.eventDetails}>
-          <div style={styles.detailItem}>
-            <strong style={{ color: "#ffd700" }}>📍 Location</strong>
-            <p style={{ margin: "5px 0 0 0" }}>{event.place || event.location || "Unknown"}</p>
-          </div>
-          <div style={styles.detailItem}>
-            <strong style={{ color: "#ffd700" }}>🏙️ City</strong>
-            <p style={{ margin: "5px 0 0 0" }}>{event.city || "Unknown"}</p>
-          </div>
-          <div style={styles.detailItem}>
-            <strong style={{ color: "#ffd700" }}>📅 Date</strong>
-            <p style={{ margin: "5px 0 0 0" }}>
-              {event.date 
-                ? new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-                : "Unknown"}
-            </p>
-          </div>
-          <div style={styles.detailItem}>
-            <strong style={{ color: "#ffd700" }}>#️⃣ Event Number</strong>
-            <p style={{ margin: "5px 0 0 0" }}>{event.eventNumber}</p>
-          </div>
-        </div>
-
-        {/* Image Gallery - Auto-Rotating Single Image */}
-        {event.images && event.images.length > 0 && (
-          <div style={styles.imageGallery}>
-            {imageLoadError ? (
-              <div style={styles.imageLoadingError}>
-                ⚠️ Failed to load image. Image URL might be invalid.
-              </div>
-            ) : (
-              <img
-                key={`${event.eventNumber}-${imageIndex}`}
-                src={event.images[imageIndex]}
-                alt={`${event.eventName} ${imageIndex + 1}`}
-                style={{...styles.mainImage, transition: 'opacity 1000ms ease-in-out', opacity: imageLoaded ? 1 : 0}}
-                onError={handleImageError}
-                onLoad={() => setImageLoaded(true)}
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-            
-            {/* Image Navigation Controls */}
-            <div style={styles.imageControls}>
-              <div style={styles.imageCounter}>
-                Image {imageIndex + 1} / {event.images.length}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* No Images Message */}
-        {(!event.images || event.images.length === 0) && (
-          <div style={{
-            padding: "15px",
-            background: "rgba(255, 215, 0, 0.1)",
-            borderRadius: "8px",
-            border: "1px dashed rgba(255, 215, 0, 0.3)",
-            color: "#ffd700",
-            textAlign: "center",
-            marginBottom: "8px",
-            fontSize: "12px",
-          }}>
-            📷 No images available for this event
-          </div>
-        )}
-
-        {/* Description with improved scrolling */}
-        {event.description && (
-          <div style={{ marginBottom: "8px", maxHeight: "200px", overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "10px", background: "rgba(255, 215, 0, 0.1)", borderRadius: "8px", border: "2px solid rgba(255, 215, 0, 0.3)" }}>
-            <strong style={{ color: "#ffd700", display: "block", marginBottom: "6px", fontSize: "14px" }}>Description</strong>
-            <ul style={{ margin: "0", paddingLeft: "16px", lineHeight: "1.6", color: "#fff", fontSize: "12px" }}>
-              {event.description.split('\n').filter(line => line.trim()).map((line, idx) => {
-                const trimmedLine = line.trim();
-                const cleanedLine = trimmedLine
-                  .replace(/^[-•*]\s*/, '')
-                  .replace(/[^\w\s.,;:\-–—'""()\[\]&]/g, '')
-                  .replace(/–|—/g, '-')
-                  .replace(/['']/g, "'")
-                  .replace(/[""]/g, '"')
-                  .trim();
-                
-                // Check if this line is "Ragas Played" - render as subtitle
-                if (trimmedLine.toLowerCase().includes('ragas played')) {
-                  return (
-                    <div key={idx} style={{ marginBottom: "8px", marginTop: "8px" }}>
-                      <strong style={{ color: "#ffd700", display: "block", fontSize: "13px", marginBottom: "4px" }}>
-                        {cleanedLine}
-                      </strong>
-                    </div>
-                  );
-                }
-                
-                return (
-                  <li key={idx} style={{ marginBottom: "3px" }}>
-                    {cleanedLine}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
-
-        {/* Audio/Video Player with optional footnote */}
-        {event.audioUrl && (
-          <div style={{ marginBottom: "0", marginTop: "8px", padding: "0", background: "transparent", borderRadius: "0", border: "none", overflow: "hidden", marginLeft: "-20px", marginRight: "-20px", width: "calc(100% + 40px)" }}>
-            <div style={{ position: "relative" }}>
-              <Suspense fallback={<p>Loading media...</p>}>
-                {isYouTubeLink(event.audioUrl) ? (
-                  <YouTubePlayer videoUrl={event.audioUrl} title={event.eventName || "Event video"} />
-                ) : (
-                  <AudioPlayer audioUrl={event.audioUrl} autoPlay={true} muted={false} />
-                )}
-              </Suspense>
-
-              {/* Superscript footnote indicator removed: keep no numeric marker */}
-            </div>
-
-            {/* Placeholder notice shown below the media (numeric marker removed) */}
-            {event.placeholder && (
-              <div style={{ marginTop: "8px", padding: "8px 12px", background: "rgba(255, 215, 0, 0.06)", borderLeft: "4px solid rgba(255, 215, 0, 0.3)", color: "#fff", fontSize: "12px", borderRadius: "4px" }}>
-                <span>{String(event.placeholder)}</span>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      </motion.div>
     </motion.div>
   );
 });

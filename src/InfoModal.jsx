@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { color, font, radius, shadow, zIndex } from "./theme";
+import { CloseIcon, OmDivider } from "./icons";
 
 const styles = {
   backdrop: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0, 0, 0, 0.72)",
-    backdropFilter: "blur(4px)",
-    zIndex: 1100,
+    background: "rgba(3, 3, 8, 0.78)",
+    backdropFilter: "blur(6px)",
+    zIndex: zIndex.infoModal,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -18,73 +20,51 @@ const styles = {
   panel: {
     width: "100%",
     maxWidth: "820px",
-    background: "rgba(6, 8, 17, 0.98)",
-    border: "1px solid rgba(255, 215, 0, 0.22)",
-    boxShadow: "0 22px 70px rgba(0, 0, 0, 0.65)",
-    borderRadius: "24px",
+    background: color.surfaceStrong,
+    border: `1px solid ${color.surfaceBorder}`,
+    boxShadow: shadow.panel,
+    borderRadius: radius.lg,
     overflow: "hidden",
     position: "relative",
-    color: "#fff",
+    color: color.textPrimary,
+    fontFamily: font.body,
   },
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    padding: "22px 24px 16px",
-    borderBottom: "1px solid rgba(255, 215, 0, 0.16)",
+    padding: "24px 26px 14px",
   },
   title: {
-    fontSize: "clamp(20px, 2vw, 26px)",
-    fontWeight: "700",
+    fontFamily: font.display,
+    fontSize: "clamp(21px, 2.4vw, 28px)",
+    fontWeight: "500",
     margin: 0,
-    color: "#ffd700",
-    lineHeight: 1.1,
+    color: color.gold,
+    lineHeight: 1.15,
   },
   closeButton: {
-    border: "none",
-    background: "rgba(255, 215, 0, 0.14)",
-    color: "#ffd700",
-    borderRadius: "14px",
-    padding: "10px 14px",
+    border: `1px solid ${color.surfaceBorderSoft}`,
+    background: color.goldFaint,
+    color: color.gold,
+    borderRadius: radius.pill,
+    width: "40px",
+    height: "40px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     cursor: "pointer",
-    fontSize: "18px",
-    fontWeight: "700",
-    minWidth: "44px",
-    lineHeight: 1,
+    flexShrink: 0,
   },
   body: {
-    padding: "18px 24px 24px",
-    maxHeight: "80vh",
+    padding: "0 26px 26px",
+    maxHeight: "78vh",
     overflowY: "auto",
     WebkitOverflowScrolling: "touch",
     scrollBehavior: "smooth",
     display: "flex",
     flexDirection: "column",
     gap: "18px",
-  },
-  section: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-  question: {
-    fontSize: "clamp(16px, 1.4vw, 20px)",
-    fontWeight: "700",
-    color: "#ffd700",
-    margin: 0,
-    lineHeight: 1.3,
-  },
-  insightLabel: {
-    fontSize: "12px",
-    letterSpacing: "0.2em",
-    color: "rgba(255, 215, 0, 0.85)",
-    textTransform: "uppercase",
-  },
-  insight: {
-    fontSize: "clamp(13px, 1.2vw, 16px)",
-    color: "#f7f2e7",
-    lineHeight: 1.75,
-    margin: 0,
   },
 };
 
@@ -131,18 +111,17 @@ export default function InfoModal({ title, isOpen, onClose, children }) {
             initial={{ y: 30, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 30, opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.24, ease: "easeOut" }}
+            transition={{ duration: 0.26, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={styles.header}>
               <h2 style={styles.title}>{title}</h2>
-              <button
-                type="button"
-                style={styles.closeButton}
-                onClick={onClose}
-              >
-                ✕
+              <button type="button" style={styles.closeButton} onClick={onClose} aria-label="Close">
+                <CloseIcon size={16} />
               </button>
+            </div>
+            <div style={{ padding: "0 26px" }}>
+              <OmDivider size={16} style={{ margin: "0 0 6px" }} />
             </div>
             <div style={styles.body}>{children}</div>
           </motion.div>
