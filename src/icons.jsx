@@ -171,6 +171,43 @@ export const OmIcon = (props) => (
   </Svg>
 );
 
+export const ListIcon = (props) => (
+  <Svg {...props}>
+    <path {...base} d="M8.5 6h11M8.5 12h11M8.5 18h11" />
+    <circle cx="4" cy="6" r="1.1" fill="currentColor" stroke="none" />
+    <circle cx="4" cy="12" r="1.1" fill="currentColor" stroke="none" />
+    <circle cx="4" cy="18" r="1.1" fill="currentColor" stroke="none" />
+  </Svg>
+);
+
+export const ClockIcon = (props) => (
+  <Svg {...props}>
+    <circle cx="12" cy="12" r="8.5" {...base} />
+    <path {...base} d="M12 7.5V12l3.2 1.9" />
+  </Svg>
+);
+
+export const StarIcon = ({ filled, ...props }) => (
+  <Svg {...props}>
+    <path
+      d="M12 4.2l2.24 4.86 5.26.66-3.9 3.68 1.02 5.28L12 15.98l-4.62 2.7 1.02-5.28-3.9-3.68 5.26-.66L12 4.2Z"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export const ShareIcon = (props) => (
+  <Svg {...props}>
+    <circle cx="18" cy="6" r="2.6" {...base} />
+    <circle cx="6" cy="12" r="2.6" {...base} />
+    <circle cx="18" cy="18" r="2.6" {...base} />
+    <path {...base} d="M8.3 10.7 15.7 7.3M8.3 13.3l7.4 3.4" />
+  </Svg>
+);
+
 /**
  * A small Om-inspired divider glyph used between sections of devotional
  * text — a quiet visual pause rather than a plain <hr>.

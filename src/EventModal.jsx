@@ -11,7 +11,14 @@ import {
   ChevronRightIcon,
   ImageIcon,
   OmDivider,
+  StarIcon,
+  ShareIcon,
+  MusicIcon,
 } from "./icons";
+
+// Public site domain used to build shareable/deep-linkable event URLs —
+// matches the production host regardless of where this build happens to run.
+const SITE_URL = "https://sgs-raga-ragini-atlas.com";
 
 // Lazy load media players to split vendor code
 const AudioPlayer = lazy(() => import("./AudioPlayer.jsx"));
@@ -44,12 +51,35 @@ const styles = {
     fontFamily: font.body,
     paddingBottom: "clamp(24px, 5vh, 56px)",
   },
-  closeButton: {
+  topActionsRow: {
     position: "sticky",
     top: "16px",
-    marginLeft: "auto",
-    marginRight: "clamp(12px, 3vw, 24px)",
     zIndex: 5,
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "10px",
+    marginRight: "clamp(12px, 3vw, 24px)",
+  },
+  iconActionButton: {
+    background: "rgba(5, 6, 12, 0.65)",
+    color: color.gold,
+    border: `1px solid ${color.surfaceBorder}`,
+    borderRadius: radius.pill,
+    width: "42px",
+    height: "42px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    backdropFilter: "blur(6px)",
+    boxShadow: shadow.panelSoft,
+  },
+  iconActionButtonActive: {
+    background: `linear-gradient(135deg, ${color.gold}, ${color.marigold})`,
+    color: "#1a1206",
+    borderColor: "transparent",
+  },
+  closeButton: {
     background: "rgba(5, 6, 12, 0.65)",
     color: color.gold,
     border: `1px solid ${color.surfaceBorder}`,
@@ -246,6 +276,56 @@ const styles = {
     color: color.textMuted,
     fontSize: "12.5px",
     borderRadius: "6px",
+  },
+  relatedScroll: {
+    display: "flex",
+    gap: "12px",
+    overflowX: "auto",
+    paddingBottom: "4px",
+    WebkitOverflowScrolling: "touch",
+  },
+  relatedCard: {
+    flex: "0 0 auto",
+    width: "160px",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "left",
+    background: color.bgMid,
+    border: `1px solid ${color.surfaceBorderSoft}`,
+    borderRadius: radius.sm,
+    overflow: "hidden",
+    cursor: "pointer",
+    padding: 0,
+  },
+  relatedThumbWrap: {
+    width: "100%",
+    aspectRatio: "16 / 10",
+    background: "rgba(0,0,0,0.4)",
+  },
+  relatedThumb: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+  },
+  relatedThumbFallback: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: color.goldDim,
+  },
+  relatedTitle: {
+    padding: "8px 10px 10px",
+    fontFamily: font.display,
+    fontSize: "12.5px",
+    lineHeight: 1.3,
+    color: color.textPrimary,
+    overflow: "hidden",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
   },
 };
 
@@ -480,7 +560,48 @@ function EventMedia({ event }) {
   );
 }
 
-export default memo(function EventModal({ event, onClose, carouselRef, currentSlideIndex, setCurrentSlideIndex }) {
+function RelatedEvents({ events, raga, onSelect }) {
+  if (!events || events.length === 0) return null;
+
+  return (
+    <div style={styles.panel}>
+      <h3 style={styles.panelTitle}>More in {raga || "this Raga"}</h3>
+      <div style={styles.relatedScroll}>
+        {events.map((related) => (
+          <button
+            key={related.eventNumber ?? related.no ?? related.eventName}
+            type="button"
+            style={styles.relatedCard}
+            onClick={() => onSelect(related)}
+          >
+            <div style={styles.relatedThumbWrap}>
+              {related.images && related.images[0] ? (
+                <img src={related.images[0]} alt="" style={styles.relatedThumb} loading="lazy" />
+              ) : (
+                <div style={styles.relatedThumbFallback}>
+                  <MusicIcon size={18} />
+                </div>
+              )}
+            </div>
+            <div style={styles.relatedTitle}>{related.eventName || "Untitled Event"}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default memo(function EventModal({
+  event,
+  onClose,
+  carouselRef,
+  currentSlideIndex,
+  setCurrentSlideIndex,
+  isFavorite,
+  toggleFavorite,
+  relatedEvents,
+  onSelectRelated,
+}) {
   if (!event) return null;
 
   // Reset to the first photograph whenever a different event is opened.
@@ -499,6 +620,34 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
       });
     };
   }, []);
+
+  const favorited = isFavorite ? isFavorite(event.eventNumber) : false;
+
+  const handleShare = useCallback(async () => {
+    const shareUrl =
+      event.eventNumber != null ? `${SITE_URL}/?event=${event.eventNumber}` : SITE_URL;
+    const shareData = {
+      title: event.eventName || "SGS Raga Ragini Atlas",
+      text: `${event.eventName || "A Music for Healing & Meditation event"} — SGS Raga Ragini Atlas`,
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+    } catch (err) {
+      // User cancelled the native share sheet, or it's unsupported — fall
+      // through to the clipboard copy below.
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+    } catch (err) {
+      console.warn("EventModal: could not copy share link", err);
+    }
+  }, [event.eventNumber, event.eventName]);
 
   return (
     <motion.div
@@ -519,9 +668,35 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
         transition={{ duration: 0.32, ease: "easeOut", delay: 0.05 }}
         style={styles.shell}
       >
-        <button type="button" onClick={onClose} style={styles.closeButton} aria-label="Close event details">
-          <CloseIcon size={18} />
-        </button>
+        <div style={styles.topActionsRow}>
+          {toggleFavorite && (
+            <button
+              type="button"
+              onClick={() => toggleFavorite(event.eventNumber)}
+              style={{
+                ...styles.iconActionButton,
+                ...(favorited ? styles.iconActionButtonActive : null),
+              }}
+              aria-pressed={favorited}
+              aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+              title={favorited ? "Remove from favorites" : "Add to favorites"}
+            >
+              <StarIcon size={18} filled={favorited} />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={handleShare}
+            style={styles.iconActionButton}
+            aria-label="Share this event"
+            title="Share this event"
+          >
+            <ShareIcon size={18} />
+          </button>
+          <button type="button" onClick={onClose} style={styles.closeButton} aria-label="Close event details">
+            <CloseIcon size={18} />
+          </button>
+        </div>
 
         <EventGallery
           images={event.images}
@@ -535,6 +710,9 @@ export default memo(function EventModal({ event, onClose, carouselRef, currentSl
           <EventMeta event={event} />
           <EventDescription description={event.description} />
           <EventMedia event={event} />
+          {onSelectRelated && (
+            <RelatedEvents events={relatedEvents} raga={event.raga} onSelect={onSelectRelated} />
+          )}
         </div>
       </motion.div>
     </motion.div>

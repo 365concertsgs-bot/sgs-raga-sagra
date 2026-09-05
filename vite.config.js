@@ -4,6 +4,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/',
   plugins: [react()],
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   build: {
     outDir: 'dist',
     sourcemap: false,

@@ -15,7 +15,10 @@ import {
   ExternalLinkIcon,
   SparkleIcon,
   OmDivider,
+  ListIcon,
+  ClockIcon,
 } from "./icons";
+import useFavorites from "./useFavorites";
 
 // Lazy load the Globe to reduce initial bundle size
 const Globe = lazy(() => import("react-globe.gl"));
@@ -24,6 +27,11 @@ import InfoModal from "./InfoModal";
 
 // Lazy load EventModal component to reduce main bundle
 const EventModal = lazy(() => import("./EventModal"));
+
+// Lazy load the alternative exploration views — same filteredEvents data,
+// no reason to pay for their bundle cost until a user opens one.
+const EventList = lazy(() => import("./EventList"));
+const EventTimeline = lazy(() => import("./EventTimeline"));
 
 /* 🌍 CONTINENT LIST */
 const continents = [
@@ -92,6 +100,19 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   const [isMobileDevice, setIsMobileDevice] = useState(false);
   const [showMobileReleaseNotice, setShowMobileReleaseNotice] = useState(false);
   const [globeViewAltitude, setGlobeViewAltitude] = useState(1.7);
+
+  // View switcher (Globe / List / Timeline) + raga filter + favorites
+  const [activeView, setActiveView] = useState("globe");
+  const [selectedRaga, setSelectedRaga] = useState("");
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
+
+  // Deep-link support: capture ?event=<number> once at first mount, before
+  // any URL-sync effect below has a chance to strip it.
+  const initialEventParamRef = useRef(
+    typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("event") : null
+  );
+  const deepLinkHandledRef = useRef(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -694,10 +715,41 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         ) {
           return false;
         }
+        if (selectedRaga && event.raga !== selectedRaga) {
+          return false;
+        }
+        if (favoritesOnly && !isFavorite(event.eventNumber)) {
+          return false;
+        }
         return true;
       }),
-    [events, selectedYear, selectedEventNumber, selectedContinent, searchCountry, searchEventName]
+    [
+      events,
+      selectedYear,
+      selectedEventNumber,
+      selectedContinent,
+      searchCountry,
+      searchEventName,
+      selectedRaga,
+      favoritesOnly,
+      isFavorite,
+    ]
   );
+
+  const allRagas = useMemo(
+    () => Array.from(new Set(events.map((event) => event.raga).filter(Boolean))).sort(),
+    [events]
+  );
+
+  const relatedEvents = useMemo(() => {
+    if (!selectedEvent || !selectedEvent.raga) return [];
+    return events
+      .filter(
+        (event) =>
+          event.raga === selectedEvent.raga && event.eventNumber !== selectedEvent.eventNumber
+      )
+      .slice(0, 4);
+  }, [events, selectedEvent]);
 
   const years = useMemo(
     () =>
@@ -775,6 +827,39 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     globeRef.current.pointOfView(target, 1500);
   }, [buildFocusTarget]);
 
+  // Deep link: once events have loaded, open the ?event=<number> from the
+  // URL (if any) exactly once.
+  useEffect(() => {
+    if (deepLinkHandledRef.current) return;
+    if (!events.length) return;
+
+    const param = initialEventParamRef.current;
+    if (param) {
+      const match = events.find((event) => event.eventNumber === Number(param));
+      if (match) {
+        setSelectedEvent(match);
+        focusEventOnGlobe(match);
+      }
+    }
+    deepLinkHandledRef.current = true;
+  }, [events, focusEventOnGlobe]);
+
+  // Keep the URL's ?event= param in sync with the open event, so the page
+  // is shareable/bookmarkable — but only once the initial deep link (if
+  // any) has been handled, so we never strip it before we've read it.
+  useEffect(() => {
+    if (!deepLinkHandledRef.current) return;
+    if (typeof window === "undefined") return;
+
+    const url = new URL(window.location.href);
+    if (selectedEvent && selectedEvent.eventNumber != null) {
+      url.searchParams.set("event", String(selectedEvent.eventNumber));
+    } else {
+      url.searchParams.delete("event");
+    }
+    window.history.replaceState({}, "", url.toString());
+  }, [selectedEvent]);
+
   // Handle year change and focus globe
   const handleYearChange = (year) => {
     setSelectedYear(year);
@@ -802,7 +887,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setSelectedContinent(continent);
     if (continent) {
       const continentEvent = events.find((e) => e.continent === continent);
-      if (continentEvent) {
+      if (continentEvent && globeRef.current) {
         const center = getContinentCenter(continent);
         const currentView = globeRef.current.pointOfView();
         const latOffset = center.lat >= 0 ? 8 : -8;
@@ -826,6 +911,8 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setSearchCountry("");
     setSearchEventName("");
     setSelectedContinent("");
+    setSelectedRaga("");
+    setFavoritesOnly(false);
     setFilteredCountries([]);
     setShowCountrySuggestions(false);
     setFilteredEventNames([]);
@@ -888,9 +975,39 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     [globeViewAltitude]
   );
 
+  /* 🌍 STABLE GLOBE ACCESSORS — avoid react-globe.gl re-diffing points/labels
+     on every render by keeping these function references identity-stable. */
+  const getPointColor = useCallback(() => themeColor.marigold, []);
+
+  const getPointLabel = useCallback(
+    (point) =>
+      `<div style="background: rgba(8,6,17,0.96); padding: 12px 16px; border-radius: 12px; color: #f2c14e; font-size: 14px; font-family: 'Marcellus', Georgia, serif; white-space: normal; max-width: 240px; word-wrap: break-word; overflow-wrap: anywhere; border: 1px solid rgba(242,193,78,0.45); box-shadow: 0 0 20px rgba(242, 193, 78, 0.35);">
+        <div style="font-weight: 500; margin-bottom: 6px; font-size: 15px;">${point.eventName}</div>
+        <div style="font-size: 12px; color: #f7f2e7; font-family: 'Inter', Arial, sans-serif; margin-bottom: 2px;">${point.place || point.location || 'Venue'}</div>
+        <div style="font-size: 12px; color: rgba(247,242,231,0.75); font-family: 'Inter', Arial, sans-serif;">${point.city || 'City'}</div>
+      </div>`,
+    []
+  );
+
+  const handlePointClick = useCallback(
+    (point) => {
+      setSelectedEvent(point);
+      focusEventOnGlobe(point);
+    },
+    [focusEventOnGlobe]
+  );
+
+  const getLabelSize = useCallback((label) => (label.type === "city" ? 0.45 : 0.9), []);
+
+  const getLabelColor = useCallback(
+    (label) => (label.type === "city" ? "rgba(214, 236, 255, 0.9)" : "rgba(255,255,255,0.85)"),
+    []
+  );
 
   /* 🌍 AUTO ROTATE */
   useEffect(() => {
+    if (activeView !== "globe") return undefined;
+
     let frame;
 
 
@@ -913,7 +1030,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
     rotate();
     return () => cancelAnimationFrame(frame);
-  }, [isUserActive]);
+  }, [isUserActive, activeView]);
 
 
   /* 👆 USER ACTIVITY */
@@ -1370,47 +1487,90 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       </motion.div>
 
 
+      {/* 🔭 VIEW SWITCHER — Globe / List / Timeline, same underlying data */}
+      <div style={styles.viewSwitcher} data-view-switcher>
+        {[
+          { key: "globe", label: "Globe", Icon: GlobeIcon },
+          { key: "list", label: "List", Icon: ListIcon },
+          { key: "timeline", label: "Timeline", Icon: ClockIcon },
+        ].map(({ key, label, Icon }) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setActiveView(key)}
+            aria-pressed={activeView === key}
+            aria-label={`${label} view`}
+            title={`${label} view`}
+            style={{
+              ...styles.viewSwitcherButton,
+              ...(activeView === key ? styles.viewSwitcherButtonActive : null),
+            }}
+          >
+            <Icon size={16} />
+          </button>
+        ))}
+      </div>
+
       {/* 🌍 GLOBE */}
-      <Globe
-        ref={globeRef}
-        style={{
-          width: "100%",
-          height: "100%",
-          maxWidth: "100%",
-          maxHeight: "100%",
-          pointerEvents: activeInfoModal || showMenu || selectedEvent ? "none" : "auto",
-          opacity: activeInfoModal || selectedEvent ? 0.6 : 1,
-        }}
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-        rendererConfig={{ antialias: true, alpha: true, precision: "highp" }}
-        backgroundColor="rgba(0,0,0,0)"
-        pointsData={filteredEvents}
-        pointLat="lat"
-        pointLng="lng"
-        pointAltitude={0.022}
-        pointRadius={0.42}
-        pointColor={() => themeColor.marigold}
-        pointResolution={8}
-        pointLabel={(point) =>
-          `<div style="background: rgba(8,6,17,0.96); padding: 12px 16px; border-radius: 12px; color: #f2c14e; font-size: 14px; font-family: 'Marcellus', Georgia, serif; white-space: normal; max-width: 240px; word-wrap: break-word; overflow-wrap: anywhere; border: 1px solid rgba(242,193,78,0.45); box-shadow: 0 0 20px rgba(242, 193, 78, 0.35);">
-            <div style="font-weight: 500; margin-bottom: 6px; font-size: 15px;">${point.eventName}</div>
-            <div style="font-size: 12px; color: #f7f2e7; font-family: 'Inter', Arial, sans-serif; margin-bottom: 2px;">${point.place || point.location || 'Venue'}</div>
-            <div style="font-size: 12px; color: rgba(247,242,231,0.75); font-family: 'Inter', Arial, sans-serif;">${point.city || 'City'}</div>
-          </div>`
-        }
-        onPointClick={(point) => {
-          setSelectedEvent(point);
-          focusEventOnGlobe(point);
-        }}
-        labelsData={visibleGlobeLabels}
-        labelLat="lat"
-        labelLng="lng"
-        labelText="text"
-        labelSize={(label) => (label.type === "city" ? 0.45 : 0.9)}
-        labelColor={(label) => (label.type === "city" ? "rgba(214, 236, 255, 0.9)" : "rgba(255,255,255,0.85)")}
-        labelResolution={2}
-        labelAltitude={0.02}
-      />
+      {activeView === "globe" && (
+        <Globe
+          ref={globeRef}
+          style={{
+            width: "100%",
+            height: "100%",
+            maxWidth: "100%",
+            maxHeight: "100%",
+            pointerEvents: activeInfoModal || showMenu || selectedEvent ? "none" : "auto",
+            opacity: activeInfoModal || selectedEvent ? 0.6 : 1,
+          }}
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+          bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+          bumpScale={12}
+          atmosphereColor="#f2c14e"
+          atmosphereAltitude={0.18}
+          rendererConfig={{ antialias: true, alpha: true, precision: "highp" }}
+          backgroundColor="rgba(0,0,0,0)"
+          pointsData={filteredEvents}
+          pointLat="lat"
+          pointLng="lng"
+          pointAltitude={0.022}
+          pointRadius={0.42}
+          pointColor={getPointColor}
+          pointResolution={4}
+          pointLabel={getPointLabel}
+          onPointClick={handlePointClick}
+          labelsData={visibleGlobeLabels}
+          labelLat="lat"
+          labelLng="lng"
+          labelText="text"
+          labelSize={getLabelSize}
+          labelColor={getLabelColor}
+          labelResolution={2}
+          labelAltitude={0.02}
+        />
+      )}
+
+      {activeView === "list" && (
+        <Suspense fallback={null}>
+          <EventList
+            events={filteredEvents}
+            onSelectEvent={handlePointClick}
+            isFavorite={isFavorite}
+            toggleFavorite={toggleFavorite}
+          />
+        </Suspense>
+      )}
+
+      {activeView === "timeline" && (
+        <Suspense fallback={null}>
+          <EventTimeline
+            events={filteredEvents}
+            onSelectEvent={handlePointClick}
+            isFavorite={isFavorite}
+            toggleFavorite={toggleFavorite}
+          />
+        </Suspense>
+      )}
 
       {/* ☰ TOP LEFT MENU */}
       <button
@@ -1626,6 +1786,38 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
               </div>
             )}
           </div>
+        </div>
+
+        <div style={styles.filterRow}>
+          <label style={styles.label}>Raga</label>
+          <select
+            value={selectedRaga}
+            onChange={(e) => setSelectedRaga(e.target.value)}
+            style={{
+              ...styles.selectInput,
+              color: selectedRaga ? "#000" : "#999",
+              fontWeight: "500",
+            }}
+          >
+            <option value="">All Ragas</option>
+            {allRagas.map((raga) => (
+              <option key={raga} value={raga}>
+                {raga}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div style={styles.filterRow}>
+          <label style={styles.favoritesToggleRow}>
+            <input
+              type="checkbox"
+              checked={favoritesOnly}
+              onChange={(e) => setFavoritesOnly(e.target.checked)}
+              style={styles.favoritesCheckbox}
+            />
+            Favorites only
+          </label>
         </div>
       </div>
 
@@ -1894,12 +2086,16 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       <AnimatePresence>
         {selectedEvent && (
           <Suspense fallback={<div>Loading...</div>}>
-            <EventModal 
-              event={selectedEvent} 
+            <EventModal
+              event={selectedEvent}
               onClose={() => setSelectedEvent(null)}
               carouselRef={carouselRef}
               currentSlideIndex={currentSlideIndex}
               setCurrentSlideIndex={setCurrentSlideIndex}
+              isFavorite={isFavorite}
+              toggleFavorite={toggleFavorite}
+              relatedEvents={relatedEvents}
+              onSelectRelated={handlePointClick}
             />
           </Suspense>
         )}
@@ -1980,20 +2176,20 @@ const styles = {
     top: "clamp(20px, 4vh, 28px)",
     left: "50%",
     transform: "translateX(-50%)",
-    display: "flex",
-    flexWrap: "wrap",
+    display: "grid",
+    gridTemplateColumns: "1fr auto 1fr",
     alignItems: "center",
-    justifyContent: "center",
-    gap: "clamp(10px, 2vw, 14px)",
+    justifyItems: "center",
+    gap: "clamp(10px, 2vw, 16px)",
     zIndex: 19,
-    maxWidth: "min(90vw, 760px)",
+    width: "min(92vw, 860px)",
     padding: "0 clamp(16px, 4vw, 24px)",
   },
 
   titleLogo: {
-    height: "clamp(40px, 9vh, 70px)",
+    height: "clamp(52px, 11vh, 92px)",
     width: "auto",
-    maxWidth: "clamp(70px, 8vw, 120px)",
+    maxWidth: "clamp(90px, 10vw, 150px)",
     objectFit: "contain",
     filter: "drop-shadow(0 0 15px rgba(242, 193, 78, 0.4))",
   },
@@ -2043,6 +2239,41 @@ const styles = {
     fontWeight: "bold",
     boxShadow: "0 0 24px rgba(0,0,0,0.45)",
     transition: "all 0.2s ease",
+  },
+
+  viewSwitcher: {
+    position: "fixed",
+    top: "clamp(15px, 3vh, 25px)",
+    left: "clamp(15px, 3vw, 25px)",
+    zIndex: 21,
+    display: "flex",
+    gap: "4px",
+    background: "rgba(11, 9, 22, 0.75)",
+    border: "1px solid rgba(242, 193, 78, 0.3)",
+    borderRadius: "16px",
+    padding: "4px",
+    boxShadow: "0 0 24px rgba(0,0,0,0.45)",
+    backdropFilter: "blur(6px)",
+  },
+
+  viewSwitcherButton: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "12px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "rgba(247, 242, 231, 0.65)",
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  },
+
+  viewSwitcherButtonActive: {
+    background: "linear-gradient(135deg, #f2c14e, #ff9a3d)",
+    color: "#1a1206",
+    boxShadow: "0 0 14px rgba(242, 193, 78, 0.45)",
   },
 
   menuBackdrop: {
@@ -2443,6 +2674,26 @@ const styles = {
     fontWeight: "700",
     letterSpacing: "0.04em",
     textTransform: "uppercase",
+  },
+
+  favoritesToggleRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    color: "#f2c14e",
+    fontSize: "clamp(12px, 1.1vw, 14px)",
+    fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
+    fontWeight: "700",
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
+    cursor: "pointer",
+  },
+
+  favoritesCheckbox: {
+    width: "16px",
+    height: "16px",
+    accentColor: "#f2c14e",
+    cursor: "pointer",
   },
 
   mediaLinksSection: {

@@ -76,6 +76,7 @@ export const shadow = {
 export const zIndex = {
   stars: 1,
   globe: 5,
+  contentView: 8, // full-view List/Timeline panels — above globe, below chrome
   labels: 10,
   chrome: 20,
   menuBackdrop: 35,
