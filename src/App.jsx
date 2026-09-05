@@ -103,7 +103,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
 
   // View switcher (Globe / List / Timeline) + raga filter + favorites
   const [activeView, setActiveView] = useState("globe");
-  const [selectedRaga, setSelectedRaga] = useState("");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
 
@@ -715,9 +714,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         ) {
           return false;
         }
-        if (selectedRaga && event.raga !== selectedRaga) {
-          return false;
-        }
         if (favoritesOnly && !isFavorite(event.eventNumber)) {
           return false;
         }
@@ -730,15 +726,9 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
       selectedContinent,
       searchCountry,
       searchEventName,
-      selectedRaga,
       favoritesOnly,
       isFavorite,
     ]
-  );
-
-  const allRagas = useMemo(
-    () => Array.from(new Set(events.map((event) => event.raga).filter(Boolean))).sort(),
-    [events]
   );
 
   const relatedEvents = useMemo(() => {
@@ -911,7 +901,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
     setSearchCountry("");
     setSearchEventName("");
     setSelectedContinent("");
-    setSelectedRaga("");
     setFavoritesOnly(false);
     setFilteredCountries([]);
     setShowCountrySuggestions(false);
@@ -1789,26 +1778,6 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         </div>
 
         <div style={styles.filterRow}>
-          <label style={styles.label}>Raga</label>
-          <select
-            value={selectedRaga}
-            onChange={(e) => setSelectedRaga(e.target.value)}
-            style={{
-              ...styles.selectInput,
-              color: selectedRaga ? "#000" : "#999",
-              fontWeight: "500",
-            }}
-          >
-            <option value="">All Ragas</option>
-            {allRagas.map((raga) => (
-              <option key={raga} value={raga}>
-                {raga}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div style={styles.filterRow}>
           <label style={styles.favoritesToggleRow}>
             <input
               type="checkbox"
@@ -2174,8 +2143,13 @@ const styles = {
   titleRow: {
     position: "absolute",
     top: "clamp(20px, 4vh, 28px)",
-    left: "50%",
-    transform: "translateX(-50%)",
+    // Centered with left/right/margin (not transform: translateX(-50%)) —
+    // Framer Motion's animate={{y}} on this element manages the `transform`
+    // CSS property itself and silently drops any transform set via style,
+    // which is what pushed this row off-center to the right.
+    left: 0,
+    right: 0,
+    margin: "0 auto",
     display: "grid",
     gridTemplateColumns: "1fr auto 1fr",
     alignItems: "center",
