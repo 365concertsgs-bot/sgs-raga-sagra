@@ -17,6 +17,7 @@ import {
   OmDivider,
   ListIcon,
   ClockIcon,
+  PulseIcon,
 } from "./icons";
 import useFavorites from "./useFavorites";
 
@@ -33,6 +34,10 @@ const EventModal = lazy(() => import("./EventModal"));
 const EventList = lazy(() => import("./EventList"));
 const EventTimeline = lazy(() => import("./EventTimeline"));
 const RecentEvents = lazy(() => import("./RecentEvents"));
+
+// Lazy load the Guided Healing & Meditation (Beta) session player — its own
+// full-screen experience, opened on demand from a floating call-to-action.
+const GuidedHealing = lazy(() => import("./GuidedHealing"));
 
 /* 🌍 CONTINENT LIST */
 const continents = [
@@ -106,6 +111,10 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
   // individual events; there is no "favorites only" filter anymore)
   const [activeView, setActiveView] = useState("globe");
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  // Guided Healing & Meditation (Beta) — its own full-screen session player,
+  // opened from a floating call-to-action rather than the view switcher.
+  const [showGuidedHealing, setShowGuidedHealing] = useState(false);
 
   // Deep-link support: capture ?event=<number> once at first mount, before
   // any URL-sync effect below has a chance to strip it.
@@ -1807,6 +1816,25 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
         </Suspense>
       )}
 
+      {/* 🕉️ GUIDED HEALING & MEDITATION — floating call-to-action, opens its
+          own full-screen session player. Beta, so it stays clearly labeled. */}
+      {!showGuidedHealing && (
+        <button
+          type="button"
+          onClick={() => setShowGuidedHealing(true)}
+          style={styles.guidedHealingButton}
+          aria-label="Open Guided Healing & Meditation, beta feature"
+          title="Guided Healing & Meditation (Beta)"
+        >
+          <span style={styles.guidedHealingGlow} />
+          <PulseIcon size={17} style={{ position: "relative", zIndex: 1, flexShrink: 0 }} />
+          <span style={{ position: "relative", zIndex: 1, whiteSpace: "nowrap" }}>
+            {isMobile ? "Guided Healing" : "Guided Healing & Meditation"}
+          </span>
+          <span style={styles.guidedHealingBetaTag}>BETA</span>
+        </button>
+      )}
+
       {/*  MODAL */}
       <InfoModal
         title="About"
@@ -2060,6 +2088,15 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </Suspense>
         )}
       </AnimatePresence>
+
+      {/*  GUIDED HEALING & MEDITATION MODAL */}
+      <AnimatePresence>
+        {showGuidedHealing && (
+          <Suspense fallback={null}>
+            <GuidedHealing events={events} onClose={() => setShowGuidedHealing(false)} />
+          </Suspense>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -2239,6 +2276,49 @@ const styles = {
     background: "linear-gradient(135deg, #f2c14e, #ff9a3d)",
     color: "#1a1206",
     boxShadow: "0 0 14px rgba(242, 193, 78, 0.45)",
+  },
+
+  guidedHealingButton: {
+    position: "fixed",
+    bottom: "clamp(18px, 4vh, 30px)",
+    right: "clamp(15px, 3vw, 25px)",
+    zIndex: 22,
+    display: "flex",
+    alignItems: "center",
+    gap: "9px",
+    background: "linear-gradient(135deg, #f2c14e, #ff9a3d)",
+    color: "#1a1206",
+    border: "none",
+    borderRadius: "999px",
+    padding: "13px 16px",
+    fontFamily: "'Inter', 'Roboto', Arial, sans-serif",
+    fontWeight: 800,
+    fontSize: "clamp(11px, 1.4vw, 13px)",
+    cursor: "pointer",
+    boxShadow: "0 0 22px rgba(242, 193, 78, 0.45), 0 10px 30px rgba(0,0,0,0.45)",
+    overflow: "visible",
+    maxWidth: "min(78vw, 300px)",
+  },
+
+  guidedHealingGlow: {
+    position: "absolute",
+    inset: "-6px",
+    borderRadius: "999px",
+    background: "rgba(242, 193, 78, 0.35)",
+    animation: "healingPulse 2.6s ease-in-out infinite",
+    zIndex: 0,
+  },
+
+  guidedHealingBetaTag: {
+    position: "relative",
+    zIndex: 1,
+    fontSize: "9px",
+    fontWeight: 800,
+    letterSpacing: "0.06em",
+    background: "rgba(26, 18, 6, 0.28)",
+    borderRadius: "999px",
+    padding: "3px 7px",
+    flexShrink: 0,
   },
 
   menuBackdrop: {

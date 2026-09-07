@@ -83,6 +83,7 @@ export const zIndex = {
   panel: 36,
   mobilePanel: 40,
   modal: 50,
+  healingModal: 55,
   infoModal: 1100,
 };
 

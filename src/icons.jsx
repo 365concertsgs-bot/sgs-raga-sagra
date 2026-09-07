@@ -208,6 +208,52 @@ export const ShareIcon = (props) => (
   </Svg>
 );
 
+export const PulseIcon = (props) => (
+  <Svg {...props}>
+    <path {...base} d="M3 12h4l2-6 4 12 2-6h6" />
+  </Svg>
+);
+
+export const HeadIcon = (props) => (
+  <Svg {...props}>
+    <path {...base} d="M8 13c0-3.5 2.5-6.5 6-6.5s6 3 6 6.5c0 2-.8 3.4-1.8 4.6-.5.6-.7 1-.7 1.8v1.1H10.5v-1.1c0-.8-.2-1.2-.7-1.8C8.8 16.4 8 15 8 13Z" />
+    <path {...base} d="M10.5 20.5h5M4.5 10.5l1.8 1M19.5 10.5l-1.8 1" />
+  </Svg>
+);
+
+export const JointIcon = (props) => (
+  <Svg {...props}>
+    <path {...base} d="M9 4.5v6.5l5 3.5v6" />
+    <circle cx="14" cy="14.5" r="2" {...base} />
+    <path {...base} d="M11 20.5h6" />
+  </Svg>
+);
+
+export const HeartIcon = (props) => (
+  <Svg {...props}>
+    <path {...base} d="M12 20s-7-4.6-9.4-9C1 8 2 4.5 5.5 4c2-.3 3.8.8 4.5 2.4C10.7 4.8 12.5 3.7 14.5 4 18 4.5 19 8 17.4 11 15 15.4 12 20 12 20Z" />
+  </Svg>
+);
+
+export const MoonIcon = (props) => (
+  <Svg {...props}>
+    <path {...base} d="M15.5 4.5a8 8 0 1 0 4 12.6A9 9 0 0 1 15.5 4.5Z" />
+  </Svg>
+);
+
+export const LeafIcon = (props) => (
+  <Svg {...props}>
+    <path {...base} d="M6 18C4 12 8 5 18 4c1 8-4 14-12 14Z" />
+    <path {...base} d="M6 18c2-4 5-7 10-10" />
+  </Svg>
+);
+
+export const BoltIcon = (props) => (
+  <Svg {...props}>
+    <path {...base} d="M13 3 5 14h5l-1 7 8-11h-5l1-7Z" />
+  </Svg>
+);
+
 /**
  * A small Om-inspired divider glyph used between sections of devotional
  * text — a quiet visual pause rather than a plain <hr>.
