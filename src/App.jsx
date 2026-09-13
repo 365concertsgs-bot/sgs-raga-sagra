@@ -1470,7 +1470,7 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           <div style={styles.title} data-title>
             SGS Raga Ragini Atlas
           </div>
-          <div style={styles.tagline}>Jaya Guru Datta! Shree Guru Datta!</div>
+          <div style={styles.tagline}>Jaya Guru Datta! Sri Guru Datta!</div>
         </div>
 
         {rightLogoUrl && (
