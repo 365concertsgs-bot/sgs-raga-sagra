@@ -1895,9 +1895,12 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
           <div style={{ paddingTop: "4px" }}>
             <OmDivider size={15} />
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
-              Impact of Sri Datta ji’s Music
-            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+              <span aria-hidden="true" style={{ color: "#4bb9ff", fontSize: "24px", lineHeight: 1, fontWeight: 700 }}>→</span>
+              <h3 style={{ margin: 0, display: "inline-block", borderBottom: "2px solid #38f0a5", paddingBottom: "4px", fontSize: "17px", lineHeight: 1.5, fontWeight: 500, fontFamily: themeFont.display, color: "#f2c14e" }}>
+                Music as Medicine - Nada Chikitsa
+              </h3>
+            </div>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
               Sri Datta Swamiji’s Raga Sagaras weave together music, the panchabhutas (five elements), and sacred mudras. His compositions stimulate 72,000 astral nerves (nadis), restoring balance and health. Rooted in the principle of Nada Brahma—sound as the origin of creation—His music heals by aligning human consciousness with cosmic vibrations and emerges from the Raga Ragini Vidya of the Vedas.
             </p>
@@ -1907,9 +1910,12 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
           </div>
           <div style={{ paddingTop: "4px" }}>
             <OmDivider size={15} />
-            <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0, fontWeight: 700 }}>
-              Impact of Sri Datta ji’s Music
-            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+              <span aria-hidden="true" style={{ color: "#4bb9ff", fontSize: "24px", lineHeight: 1, fontWeight: 700 }}>→</span>
+              <h3 style={{ margin: 0, fontSize: "17px", lineHeight: 1.5, fontWeight: 500, fontFamily: themeFont.display, color: "#f2c14e" }}>
+                Impact of Sri Datta ji’s Music
+              </h3>
+            </div>
             <p style={{ fontSize: "15px", lineHeight: 1.7, margin: 0 }}>
               Sri Datta Swamiji’s music has touched lives across the world:</p>
             <ul style={{ margin: "8px 0 0 18px", padding: 0, color: "#fff", fontSize: "14px", lineHeight: 1.6 }}>
