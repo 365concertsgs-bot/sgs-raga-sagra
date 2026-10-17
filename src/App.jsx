@@ -2411,7 +2411,7 @@ const styles = {
     borderRadius: "10px",
     padding: "8px 10px",
     cursor: "pointer",
-    fontSize: "14px",
+    fontSize: "12px",
     fontWeight: "600",
     minWidth: "40px",
     lineHeight: 1,
