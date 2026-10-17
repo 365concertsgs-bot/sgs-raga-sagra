@@ -2022,6 +2022,11 @@ export default function App({ leftLogoUrl = "https://i.imgur.com/lPDE0zB.jpeg", 
             Raga Ragini Vidya - Documentary
             <ExternalLinkIcon size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
           </a>
+          <a className="quick-link-item" href="https://youtu.be/_3PmWQ0lENE?si=mxItoiXoT7_z_Osd" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
+            <span style={styles.quickLinkIcon}><VideoIcon size={16} /></span>
+            10-Minute Divine Flute Meditation
+            <ExternalLinkIcon size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
+          </a>
           <a className="quick-link-item" href="https://www.sgsragasagara.com/" target="_blank" rel="noreferrer" style={styles.quickLinkItem}>
             <span style={styles.quickLinkIcon}><GlobeIcon size={16} /></span>
             SGS Raga Sagara
