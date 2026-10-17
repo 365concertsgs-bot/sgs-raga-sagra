@@ -241,8 +241,10 @@ const styles = {
   thumb: {
     width: "100%",
     height: "100%",
-    objectFit: "cover",
+    objectFit: "contain",
+    objectPosition: "center center",
     display: "block",
+    background: "rgba(0,0,0,0.35)",
   },
   thumbFallback: {
     width: "100%",
